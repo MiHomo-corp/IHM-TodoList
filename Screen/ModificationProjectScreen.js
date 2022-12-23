@@ -5,7 +5,7 @@ import { TokenContext } from '../Context/Context'
 
 export default function ModificationProjectScreen(route){
     const { project } = route.route.params;
-
+    console.log(route)
     return (
         <TokenContext.Consumer>
           {([token, setToken]) => {

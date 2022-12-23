@@ -25,8 +25,8 @@ const GETUSERID =
 const UPDATETASKLIST =
   'mutation($id:ID!,$newTitle:String!,$newDate:Date!,$newDescription:String){updateTaskLists(where: {id: $id} update:{title: $newTitle, date: $newDate, description:$newDescription}){taskLists {id date title description}}}'
 
-//const DELTASKLIST =
-
+const DELTASKLIST =
+  'mutation($id:ID!){deleteTaskLists(where: {id: $id}){nodesDeleted relationshipsDeleted}}'
 //const DELTASK = 
 
 
@@ -266,7 +266,7 @@ export function updateTaskList(token,id,title,date,description){
   })
 }
 
-export function deleteTaskList(title,token){
+export function deleteTaskList(id,token){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -274,9 +274,9 @@ export function deleteTaskList(title,token){
       'Authorization': "Bearer "+token
     },
     body: JSON.stringify({
-      query: CREATETASK,
+      query: DELTASKLIST,
       variables: {
-        title: title
+        id: id
       }
     })
   })
