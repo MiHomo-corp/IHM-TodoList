@@ -1,5 +1,5 @@
 import React from 'react'
-import TodoLists from "../components/Todolists"
+import Todolists from "../components/Todolists"
 
 import { TokenContext } from '../Context/Context'
 import { UsernameContext } from '../Context/Context'
@@ -11,7 +11,7 @@ export default function TodoList(){
           {([token, setToken]) => (
             <UsernameContext.Consumer>
               {([username, setUsername]) => {
-                return (<TodoLists username={username} token={token}/>)
+                return (<Todolists username={username} token={token}/>)
               }}
             </UsernameContext.Consumer>
           )}

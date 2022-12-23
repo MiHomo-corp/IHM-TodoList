@@ -1,6 +1,6 @@
 import React from 'react'
 
-import TodoList from '../components/TodoList'
+import TodoList from '../components/Todolist'
 import { TokenContext, UsernameContext } from '../Context/Context'
 
 export default function TodoListScreen({navigation,route}){
