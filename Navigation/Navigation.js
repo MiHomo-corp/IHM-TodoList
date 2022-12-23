@@ -14,6 +14,7 @@ import SignOutScreen from '../Screen/SignOutScreen'
 import TodoListScreen from '../Screen/TodoListScreen'
 import CreationProjectScreen from '../Screen/CreateProjectScreen'
 import ModificationProjectScreen from '../Screen/ModificationProjectScreen';
+import TaskScreen from '../Screen/TaskScreen';
 import { TokenContext } from '../Context/Context'
 
 const Tab = createBottomTabNavigator()
@@ -38,6 +39,7 @@ export default function Navigation () {
               <Stack.Screen name='TodoList' component={TodoListScreen}/>
               <Stack.Screen name='CreateProject' component={CreationProjectScreen}/>
               <Stack.Screen name='ModificationProject' component={ModificationProjectScreen}/>
+              <Stack.Screen name='Task' component={TaskScreen}/>
             </Tab.Navigator>
           )}
         </NavigationContainer>

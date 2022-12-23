@@ -60,7 +60,11 @@ export default function TodoList({username,token,title}){
           renderItem={({item}) => 
             <View style={{flexDirection: 'row'}}>
               <TouchableOpacity onPress={() => {
-                console.log(item.done)
+                navigation.navigate("Task", {
+                  title: item.content,
+                  id: item.id,
+                  token: token
+                });
               }}>
                 <Text style={[{color: '#D6D5A8', textDecorationLine: 'underline'}]}>{item.content}</Text>
               </TouchableOpacity>

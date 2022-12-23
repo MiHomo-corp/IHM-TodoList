@@ -12,7 +12,10 @@ const TASKLIST =
 
 const TASKS =
   'query($title: String!,$username: String!){ tasks(where: {belongsTo: {title: $title}}) {id content done},taskLists(where: {title: $title,owner:{username:$username}}) {id title date status description}}'
-  
+
+const TASK = 
+  'query task ($title: String!, $id: ID!){tasks(where: {belongsTo: {title: $title}id: $id}) {content description done}}'
+
 const CREATETASKLIST = 
   'mutation($title:String!,$date:Date!,$description:String,$owner:String!){createTaskLists(input:{title:$title, date:$date, description:$description, owner:{connect:{where:{username:$owner}}}}) {taskLists{id title date description owner {username}}}}'
 
@@ -159,6 +162,35 @@ export function getTasks(username,token,title){
       variables: {
         username: username,
         title: title
+      }
+    })
+  })
+  .then(response => {
+    return response.json()
+  })
+  .then(jsonResponse => {
+    if (jsonResponse.errors != null) {
+      throw jsonResponse.errors[0]
+    }
+    return jsonResponse.data
+  })
+  .catch(error => {
+    throw error
+  })
+}
+
+export function getTask(token,title,id){
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer "+token
+    },
+    body: JSON.stringify({
+      query: TASK,
+      variables: {
+        title: title,
+        id: id
       }
     })
   })
