@@ -2,7 +2,7 @@ import React,{useEffect, useState} from "react";
 
 import { StyleSheet, View, TextInput, Button, Text, SafeAreaView} from 'react-native';
 
-//import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 import { createTaskList } from "../API/todoAPI"
 
@@ -14,6 +14,9 @@ export default function CreationProject({username,token}){
   const [description, onChangeDescription] = useState("");
   const [dateProject, onChangeDateProject] = useState("")
   const [diasbled, setDiasbled] = useState(true)
+
+  const navigation = useNavigation()
+
   const date = new Date();
   const day = date.getDate();
   const month = date.getMonth()+1;
@@ -56,7 +59,7 @@ export default function CreationProject({username,token}){
       <Button 
         disabled={diasbled}
         title={"Création de "+projectTitle}
-        onPress={()=>createTaskList(username,token,projectTitle,dateProject,description).then(console.log("test"))}
+        onPress={()=>createTaskList(username,token,projectTitle,dateProject,description).then(navigation.navigate("TodoLists"))}
       />
     </View>
   )

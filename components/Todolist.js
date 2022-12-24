@@ -33,6 +33,7 @@ export default function TodoList({username,token,title}){
     <Root>
       <View>
         <Text>Ma tasklist</Text>
+        <Button title="Go back" onPress={() => navigation.goBack()} />
         <Button
             title="Modification projet"
             onPress={() => { navigation.navigate("ModificationProject", {

@@ -1,7 +1,6 @@
 // npm i --save @react-navigation/bottom-tabs @react-navigation/native 
 
 import React from 'react'
-import { View, Text } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, StackActions } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -31,14 +30,13 @@ export default function Navigation () {
               <Tab.Screen name='SignUp' component={SignUpScreen} />
             </Tab.Navigator>
           ) : (
-            <Tab.Navigator>
-              <Tab.Screen name='Home' component={HomeScreen} />
-              <Tab.Screen name='TodoLists' component={TodoListsScreen} />
-              <Tab.Screen name='SignOut' component={SignOutScreen} />
-              <Stack.Screen name='TodoList' component={TodoListScreen}/>
-              <Stack.Screen name='CreateProject' component={CreationProjectScreen}/>
-              <Stack.Screen name='ModificationProject' component={ModificationProjectScreen}/>
-            </Tab.Navigator>
+            <Stack.Navigator initialRouteName='TodoLists'>
+              <Stack.Screen name='TodoLists' component={TodoListsScreen} options={{title:"Vos Projets"}}/>
+              <Stack.Screen name='SignOut' component={SignOutScreen} options={{title: "Décconnexion"}}/>
+              <Stack.Screen name='TodoList' component={TodoListScreen} options={({route,navigation}) => ({title: route.params.title})}/>
+              <Stack.Screen name='CreateProject' component={CreationProjectScreen} options={{title: " Nouveau Projet"}}/>
+              <Stack.Screen name='ModificationProject' component={ModificationProjectScreen} options={({route}) => ({title: "Modification de "+ route.params.project[0].title})}/>
+            </Stack.Navigator>
           )}
         </NavigationContainer>
       )}
