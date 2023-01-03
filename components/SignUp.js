@@ -1,15 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Text,
   TextInput,
   Button,
   View,
   StyleSheet,
-  ActivityIndicator
+  ActivityIndicator,
+  FlatList
 } from 'react-native'
 
 import { RadioButton } from 'react-native-paper';
-import { signUp } from '../API/todoAPI'
+import { getManager, signUp } from '../API/todoAPI'
+
+import { useNavigation } from "@react-navigation/native";
 
 import { TokenContext } from '../Context/Context'
 import { UsernameContext } from '../Context/Context'
@@ -21,16 +24,30 @@ export default function SignUp () {
   const [error, setError] = useState('')
   const [visible, setVisible] = useState(true)
   const [checked, setChecked] = useState('');
+  const [managerChecked, setManagerChecked] = useState('')
+  const [managerList, setManagerList] = useState([])
+  const navigation = useNavigation();
+
+
+  const callback = () => {
+    getManager().then(managers => {
+      setManagerList(managers)
+    })
+  }
+  
+  useEffect(()=> {
+    callback()
+  }, [])
 
   const getSignedUp = (setToken, setUsername) => {
     setError('')
-    if (login === '' || password === '' || copyPassword === '' || checked === '') return
-    if (password != copyPassword){
+    if (login === '' || password === '' || copyPassword === '' || checked === '' || (checked === "ProjectChef" && managerChecked === "")) return
+    if (password !== copyPassword){
         setError("Passwords don't match")
         return
     } 
     setVisible(false)
-    signUp(checked,login, password)
+    signUp(checked, login, password, managerChecked)
       .then(token => {
         setUsername(login)
         setToken(token)
@@ -38,7 +55,7 @@ export default function SignUp () {
       .catch(err => {
         setError(err.message)
       })
-    setVisible(true)
+    navigation.navigate("SignIn")
   }
 
   return (
@@ -88,16 +105,28 @@ export default function SignUp () {
                     <View style={{ flexDirection: 'row' }}>
                       <Text style={styles.label}>Etes-vous un :</Text>
                       <RadioButton
-                        status={ checked === 'chef' ? 'checked' : 'unchecked' }
-                        onPress={() => setChecked('chef')}
+                        status={ checked === 'ProjectChef' ? 'checked' : 'unchecked' }
+                        onPress={() => setChecked('ProjectChef')}
                       />
                       <Text style={styles.label}>Chef de projet</Text>
                       <RadioButton
-                        status={ checked === 'manager' ? 'checked' : 'unchecked' }
-                        onPress={() => setChecked('manager')}
+                        status={ checked === 'Manager' ? 'checked' : 'unchecked' }
+                        onPress={() => setChecked('Manager')}
                       />
-                      <Text style={styles.label}>Manager</Text>
+                      <Text style={styles.label}>Responsable</Text>
                     </View>
+                    {checked === "ProjectChef" ? (
+                      <FlatList
+                      style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
+                      data={managerList}
+                      renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
+                        <RadioButton
+                          status={ managerChecked === item.username ? 'checked' : 'unchecked' }
+                          onPress={() => setManagerChecked(item.username)}
+                        />
+                        <Text style={styles.label}>{item.username}</Text>
+                    </View>}/>
+                    ) : []}
                     <Button
                       onPress={() => getSignedUp(setToken, setUsername)}
                       title='Sign Up'
@@ -133,3 +162,6 @@ const styles = StyleSheet.create({
     margin: 5
   }
 })
+
+
+/**/

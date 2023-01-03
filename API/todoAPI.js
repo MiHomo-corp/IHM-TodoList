@@ -87,14 +87,14 @@ export function getManager () {
       if (jsonResponse.errors != null) {
         throw jsonResponse.errors[0]
       }
-      return jsonResponse.data.signIn
+      return jsonResponse.data.managers
     })
     .catch(error => {
       throw error
     })
 }
 
-export function signUp (hierarchy, username, password) {
+export function signUp (hierarchy, username, password,manager) {
   if(hierarchy === "Manager"){
     return fetch(API_URL, {
       method: 'POST',
@@ -133,7 +133,7 @@ export function signUp (hierarchy, username, password) {
         variables: {
           username: username,
           password: password,
-          conect: manager
+          manager: manager
         }
       })
     })

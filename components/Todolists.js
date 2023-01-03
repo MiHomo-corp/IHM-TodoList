@@ -56,7 +56,7 @@ export default function Todolists({hierarchy,username,token}){
                   token: token
                 });
               } }>
-                <Text style={[{ color: '#D6D5A8', textDecorationLine: 'underline' }]}>{item.title}</Text>
+                <Text style={[{ /*color: '#D6D5A8', textDecorationLine: 'underline'*/ }]}>{item.title} {hierarchy === "Manager" ? " - Chef de Projet : "+item.owner.username : ""}</Text>
               </TouchableOpacity>
           </View>} /></>    
       )}
