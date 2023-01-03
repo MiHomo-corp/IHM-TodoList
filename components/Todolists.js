@@ -3,42 +3,46 @@ import React,{useEffect, useState} from "react";
 import { StyleSheet, View, Button, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 
-import { getTaskList, deleteTaskList, getUserId } from "../API/todoAPI"
+import { deleteTaskList, getChefsOfManager, getTaskLists } from "../API/todoAPI"
 import { TokenContext } from '../Context/Context'
 
-export default function Todolists({username,token}){
+export default function Todolists({hierarchy,username,token}){
   
   const [todos, setTodos] = useState([]);
   const [userId, setUserId] = useState();
   const [newTodoText, setNewTodoText] = useState("");
   const navigation = useNavigation();
   
-  const callback = (username, token) => {
-    getTaskList(username,token).then(taskList =>{
-      setTodos(taskList)
-    })
+  const callback = (hierarchy, username, token) => {
+      if(hierarchy === "Manager"){
+        let usernameInArray = []
+        getChefsOfManager(username,token).then(projectChefs => {
+          projectChefs.forEach(element => {
+            usernameInArray.push(element.username)
+          })
+        }).then(() => getTaskLists(usernameInArray,token).then(taskList =>{
+          setTodos(taskList)
+        }))
+      }
+      else if(hierarchy === "ProjectChef"){
+        getTaskLists([username],token).then(taskList =>{
+          setTodos(taskList)
+        })
+      }
   }
 
   useEffect(()=> {
-    callback(username, token)
-  }, [username, token])
+    callback(hierarchy,username, token)
+  }, [hierarchy, username, token])
   
-  const getId = (username, token) => {
-    getUserId(username, token).then(id => {
-      setUserId(id[0].id)
-    })
-  }
-
-  useEffect(()=> {
-    getId(username, token)
-  }, [username, token])
-
   return(
     <TokenContext.Consumer>
       {([token, setToken]) => (
-        <><Button
-          title="Créer un projet"
-          onPress={() => navigation.navigate("CreateProject")} />
+        <>
+          {hierarchy === "ProjectChef" ? (
+            <Button
+              title="Créer un projet"
+              onPress={() => navigation.navigate("CreateProject")} />) : []}
           <Button
           title="Déconnexion"
           onPress={() => navigation.navigate("SignOut")} />

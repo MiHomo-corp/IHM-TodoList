@@ -8,6 +8,7 @@ import {
   ActivityIndicator
 } from 'react-native'
 
+import { RadioButton } from 'react-native-paper';
 import { signUp } from '../API/todoAPI'
 
 import { TokenContext } from '../Context/Context'
@@ -19,16 +20,17 @@ export default function SignUp () {
   const [copyPassword, setCopyPassword] = useState('')
   const [error, setError] = useState('')
   const [visible, setVisible] = useState(true)
+  const [checked, setChecked] = useState('');
 
   const getSignedUp = (setToken, setUsername) => {
     setError('')
-    if (login == '' || password == '' || copyPassword == '') return
+    if (login === '' || password === '' || copyPassword === '' || checked === '') return
     if (password != copyPassword){
         setError("Passwords don't match")
         return
     } 
     setVisible(false)
-    signUp(login, password)
+    signUp(checked,login, password)
       .then(token => {
         setUsername(login)
         setToken(token)
@@ -82,6 +84,19 @@ export default function SignUp () {
                         }
                         value={copyPassword}
                       />
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={styles.label}>Etes-vous un :</Text>
+                      <RadioButton
+                        status={ checked === 'chef' ? 'checked' : 'unchecked' }
+                        onPress={() => setChecked('chef')}
+                      />
+                      <Text style={styles.label}>Chef de projet</Text>
+                      <RadioButton
+                        status={ checked === 'manager' ? 'checked' : 'unchecked' }
+                        onPress={() => setChecked('manager')}
+                      />
+                      <Text style={styles.label}>Manager</Text>
                     </View>
                     <Button
                       onPress={() => getSignedUp(setToken, setUsername)}
