@@ -20,7 +20,7 @@ const CREATETASKLIST =
   'mutation($title:String!,$date:Date!,$description:String,$owner:String!){createTaskLists(input:{title:$title, date:$date, description:$description, owner:{connect:{where:{username:$owner}}}}) {taskLists{id title date description owner {username}}}}'
 
 const CREATETASK = 
-  'mutation($content:String!,$title:String!){createTasks(input:{content:$content,done:false,belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}}}}'
+  'mutation($content:String!,$title:String!,$description:String!){createTasks(input:{content:$content,done:false,description:$description,belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}}}'
 
 const GETUSERID = 
  'query userID($username:String!){users(where: {username: $username}) {id}}'
@@ -28,10 +28,14 @@ const GETUSERID =
 const UPDATETASKLIST =
   'mutation($id:ID!,$newTitle:String!,$newDate:Date!,$newDescription:String){updateTaskLists(where: {id: $id} update:{title: $newTitle, date: $newDate, description:$newDescription}){taskLists {id date title description}}}'
 
-//const DELTASKLIST =
+const UPDATESTATUSTASK = 
+  'mutation ($id:ID!,$done:Boolean!) {updateTasks(where:{id:$id}update:{done:$done}){tasks {id content done}}}'
 
-//const DELTASK = 
+const DELTASKLIST = 
+  "mutation($id:ID!){deleteTaskLists(where: {id: $id}){nodesDeleted relationshipsDeleted}}"
 
+const DELTASK =
+  "mutation($id:ID!){deleteTasks(where: {id: $id}){nodesDeleted relationshipsDeleted}}"
 
 
  //fonction suppr une task
@@ -239,7 +243,7 @@ export function createTaskList (username,token,title,date,description){
   })
 }
 
-export function createTask(title,token){
+export function createTask(title,token,content,description){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -249,7 +253,9 @@ export function createTask(title,token){
     body: JSON.stringify({
       query: CREATETASK,
       variables: {
-        title: title
+        title: title,
+        content: content,
+        description: description
       }
     })
   })
@@ -298,7 +304,7 @@ export function updateTaskList(token,id,title,date,description){
   })
 }
 
-export function deleteTaskList(title,token){
+export function updateTask(token,id,content,description){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -306,9 +312,11 @@ export function deleteTaskList(title,token){
       'Authorization': "Bearer "+token
     },
     body: JSON.stringify({
-      query: CREATETASK,
+      query: UPDATETASK,
       variables: {
-        title: title
+        id: id,
+        newContent: content,
+        newDescription: description
       }
     })
   })
@@ -326,7 +334,8 @@ export function deleteTaskList(title,token){
   })
 }
 
-export function deleteTask(title,token){
+
+export function deleteTaskList(id,token){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -334,9 +343,37 @@ export function deleteTask(title,token){
       'Authorization': "Bearer "+token
     },
     body: JSON.stringify({
-      query: CREATETASK,
+      query: DELTASKLIST,
       variables: {
-        title: title
+        id: id
+      }
+    })
+  })
+  .then(response => {
+    return response.json()
+  })
+  .then(jsonResponse => {
+    if (jsonResponse.errors != null) {
+      throw jsonResponse.errors[0]
+    }
+    return jsonResponse.data.taskLists
+  })
+  .catch(error => {
+    throw error
+  })
+}
+
+export function deleteTask(id,token){
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer "+token
+    },
+    body: JSON.stringify({
+      query: DELTASK,
+      variables: {
+        id: id
       }
     })
   })
@@ -354,6 +391,31 @@ export function deleteTask(title,token){
   })
 }
 
-export function setStatusTask(title, token){
-  return console.log("coucou")
+export function setCheckTask(id,token,done){
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer "+token
+    },
+    body: JSON.stringify({
+      query: UPDATESTATUSTASK,
+      variables: {
+        id: id,
+        done: done
+      }
+    })
+  })
+  .then(response => {
+    return response.json()
+  })
+  .then(jsonResponse => {
+    if (jsonResponse.errors != null) {
+      throw jsonResponse.errors[0]
+    }
+    return jsonResponse.data.tasks
+  })
+  .catch(error => {
+    throw error
+  })
 }

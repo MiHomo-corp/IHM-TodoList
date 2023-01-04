@@ -14,6 +14,8 @@ import SignOutScreen from '../Screen/SignOutScreen'
 import TodoListScreen from '../Screen/TodoListScreen'
 import CreationProjectScreen from '../Screen/CreateProjectScreen'
 import ModificationProjectScreen from '../Screen/ModificationProjectScreen';
+import CreationTaskScreen from '../Screen/CreateTaskScreen'
+import ModificationTaskScreen from '../Screen/ModificationTaskScreen';
 import TaskScreen from '../Screen/TaskScreen';
 import { TokenContext } from '../Context/Context'
 
@@ -39,6 +41,8 @@ export default function Navigation () {
               <Stack.Screen name='TodoList' component={TodoListScreen}/>
               <Stack.Screen name='CreateProject' component={CreationProjectScreen}/>
               <Stack.Screen name='ModificationProject' component={ModificationProjectScreen}/>
+              <Stack.Screen name='CreateTask' component={CreationTaskScreen}/>
+              <Stack.Screen name='ModificationTask' component={ModificationTaskScreen}/>
               <Stack.Screen name='Task' component={TaskScreen}/>
             </Tab.Navigator>
           )}

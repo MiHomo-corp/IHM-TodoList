@@ -7,15 +7,14 @@ import { getTaskList, deleteTaskList, getUserId } from "../API/todoAPI"
 import { TokenContext } from '../Context/Context'
 
 export default function Todolists({username,token}){
-  
   const [todos, setTodos] = useState([]);
   const [userId, setUserId] = useState();
   const [newTodoText, setNewTodoText] = useState("");
   const navigation = useNavigation();
   
   const callback = (username, token) => {
-    getTaskList(username,token).then(taskList =>{
-      setTodos(taskList)
+    getTaskList(username,token).then((taskLists) =>{
+      setTodos(taskLists)
     })
   }
 
@@ -28,6 +27,13 @@ export default function Todolists({username,token}){
       setUserId(id[0].id)
     })
   }
+
+  const handleDeleteTaskList = (todoId) => {
+    deleteTaskList(todoId, token).then((response) => {
+      // Mettre à jour la liste de tasklists en filtrant la tasklist qui a l'identifiant de la tasklist supprimée
+      setTodos(todos.filter((todo) => todo.id !== todoId));
+    });
+  };
 
   useEffect(()=> {
     getId(username, token)
@@ -46,7 +52,9 @@ export default function Todolists({username,token}){
               <TouchableOpacity onPress={() => {
                 navigation.navigate("TodoList", {
                   title: item.title,
-                  token: token
+                  id: item.id,
+                  token: token,
+                  onDeleteTaskList: handleDeleteTaskList,
                 });
               } }>
                 <Text style={[{ color: '#D6D5A8', textDecorationLine: 'underline' }]}>{item.title}</Text>
@@ -55,6 +63,4 @@ export default function Todolists({username,token}){
       )}
     </TokenContext.Consumer>
   )
-
-
 }
