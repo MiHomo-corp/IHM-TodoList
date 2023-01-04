@@ -24,7 +24,6 @@ export default function SignIn () {
   function parseJwt (token) {
     return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()).status;
   }
-
   const getSignedIn = (setToken, setUsername, setHierarchy) => {
     setError('')
     if (login == '' || password == '') return
@@ -34,7 +33,6 @@ export default function SignIn () {
         setUsername(login)
         setToken(token)
         setHierarchy(parseJwt(token))
-        console.log(token)
       })
       .catch(err => {
         setError(err.message)
