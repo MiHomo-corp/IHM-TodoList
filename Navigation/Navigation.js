@@ -32,7 +32,7 @@ export default function Navigation () {
           ) : (
             <Stack.Navigator initialRouteName='TodoLists'>
               <Stack.Screen name='TodoLists' component={TodoListsScreen} options={{title:"Vos Projets"}}/>
-              <Stack.Screen name='SignOut' component={SignOutScreen} options={{title: "Décconnexion"}}/>
+              <Stack.Screen name='SignOut' component={SignOutScreen} options={{title: "Déconnexion"}}/>
               <Stack.Screen name='TodoList' component={TodoListScreen} options={({route,navigation}) => ({title: route.params.title})}/>
               <Stack.Screen name='CreateProject' component={CreationProjectScreen} options={{title: " Nouveau Projet"}}/>
               <Stack.Screen name='ModificationProject' component={ModificationProjectScreen} options={({route}) => ({title: "Modification de "+ route.params.project[0].title})}/>

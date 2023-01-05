@@ -3,7 +3,7 @@ import React,{useEffect, useState} from "react";
 import { StyleSheet, View, Button, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 
-import { deleteTaskList, getChefsOfManager, getTaskLists } from "../API/todoAPI"
+import { closeTaskList, getChefsOfManager, getTaskLists } from "../API/todoAPI"
 import { TokenContext } from '../Context/Context'
 
 export default function Todolists({hierarchy,username,token}){
@@ -53,7 +53,7 @@ export default function Todolists({hierarchy,username,token}){
               <TouchableOpacity onPress={() => {
                 navigation.navigate("TodoList", {
                   title: item.title,
-                  token: token
+                  usernameOfOwner : item.owner.username
                 });
               } }>
                 <Text style={[{ /*color: '#D6D5A8', textDecorationLine: 'underline'*/ }]}>{item.title} {hierarchy === "Manager" ? " - Chef de Projet : "+item.owner.username : ""}</Text>

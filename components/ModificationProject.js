@@ -31,7 +31,6 @@ export default function ModificationProject({token,project}){
 
   return(
     <View>
-      <Button title="Go back" onPress={() => navigation.goBack()} />
       <SafeAreaView>
         <Text>Titre du projet</Text>
         <TextInput
