@@ -8,7 +8,7 @@ import Todolists from './Todolists';
 
 export default function Profil (hierarchy,username,token){ //Pour une raison étrange (probablement dû au link dans la navigation), tous se trouve dans hierarchy
 
-    const [myManager, setMyManger] = useState('')
+    const [myManager, setMyManager] = useState('')
     const [listChefs, setListChefs] = useState([])
     const [pendingProject, setPendingProject] = useState([])
     const [managerChecked, setManagerChecked] = useState("")
@@ -32,7 +32,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
 
 
     const renderListItemProject = () => {
-        if(hierarchy.hierarchy === "Manager"){ // Nous pouvons pas le mettre dans le callback car il y avait des errereurs avec le "usernameInArray" qui était de longueur 0 même si il était rempli
+        if(hierarchy.hierarchy === "Manager"){ // Nous pouvons pas le mettre dans le callback car il y avait des erreurs avec le "usernameInArray" qui était de longueur 0 même si il était rempli
             getProjectStepDone(listChefs).then(project => {
                 setPendingProject(project)
             });
@@ -57,7 +57,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
     const callback = () => {
         if(hierarchy.hierarchy === "ProjectChef"){
             getMyManager(hierarchy.username).then(manager => {
-                setMyManger(manager)
+                setMyManager(manager)
             });
             getProjectStepDone([hierarchy.username]).then(project => {
                 setPendingProject(project)
