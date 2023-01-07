@@ -8,7 +8,7 @@ import { createTask } from "../API/todoAPI"
 
 //<Checkbox value={item.done} onValueChange={setStatusTask}/>
 
-export default function CreateTask({username,token}){
+export default function CreateTask({username,token,idProject}){
 
   const [taskContent, onChangeText] = useState("");
   const [description, onChangeDescription] = useState("");
@@ -44,7 +44,7 @@ export default function CreateTask({username,token}){
       <Button 
         disabled={disabled}
         title={"Création de "+taskContent}
-        onPress={()=>createTask(username,token,taskContent,description).then(navigation.goBack())}
+        onPress={()=>createTask(idProject,token,taskContent,description).then(navigation.goBack())}
       />
     </View>
   )

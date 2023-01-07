@@ -9,13 +9,13 @@ import { updateTask } from "../API/todoAPI"
 //<Checkbox value={item.done} onValueChange={setStatusTask}/>
 
 export default function ModificationTask({token,task}){
-  const [taskContent, onChangeText] = useState(task[0].content);
-  const [description, onChangeDescription] = useState(task[0].description);
+  const [taskContent, onChangeText] = useState(task.content);
+  const [description, onChangeDescription] = useState(task.description);
   const [diasbled, setDiasbled] = useState(true)
   const navigation = useNavigation();
 
   useEffect(() => {
-    if(taskContent === task[0].content && description === task[0].description){
+    if(taskContent === task.content && description === task.description){
       setDiasbled(true)
     }
     else{
@@ -35,13 +35,13 @@ export default function ModificationTask({token,task}){
         <Text>Description de la tâche</Text>
         <TextInput
           onChangeText={onChangeDescription}
-          value={description}
+          value={description === null ? "" : description}
         />
       </SafeAreaView>
       <Button 
         disabled={diasbled}
         title={"Modification de "+taskContent}
-        onPress={()=>updateTask(token,task[0].id,taskContent,description).then(navigation.navigate("TodoLists"))}
+        onPress={()=>updateTask(token,task.id,taskContent,description).then(navigation.navigate("TodoLists"))}
       />
     </View>
   )
