@@ -64,7 +64,10 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
         {hierarchy === "Manager" && project[0]?.projectStepDone && project[0]?.status !== "Finished" ? (
           <><Button
           title="Confirmation de l'étape"
-          onPress={() => nextStepProject(project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"))} /></>
+          onPress={() => nextStepProject(true,project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"))} />
+          <Button
+          title="Refuser la validation de l'étape"
+          onPress={() => nextStepProject(false,project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"))} /></>
         ) : []}
         <FlatList
           style={{ textAlign:'left', paddingLeft: 10, paddingTop:20}}

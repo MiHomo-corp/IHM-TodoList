@@ -17,6 +17,9 @@ const MANAGER_LIST =
 const CHEF_LIST = 
   'query managers($username: String!){managers(where:{username: $username}){projectChefs{username}}}'
 
+const GET_MY_MANAGER = 
+  'query projectChefs($username: String!){projectChefs(where:{username: $username}){manager{username}}}'
+
 const TASKLIST =
   'query taskLists($username: [String]!) {taskLists(where: { owner: { username_IN: $username } }) {id title date description status owner{username}}}'
 
@@ -45,8 +48,14 @@ const CLOSETASKLIST =
 const DELETETASKLIST =
   'mutation($id:ID!){deleteTasks(where:{belongsTo:{id:$id}}){nodesDeleted},deleteTaskLists(where: {id: $id}){nodesDeleted}}'
 
+const GETPROJECTSTEPDONE =
+  'query taskLists($username: [String]!) {taskLists(where: { owner: { username_IN: $username }, projectStepDone: true}) {title date status owner{username}}}'
+
 const UPDATEPROJECTSTEPDONE =
   'mutation($id:ID!){updateTaskLists(where: {id: $id},update:{projectStepDone:true}){taskLists{projectStepDone}}}'
+
+const REJECTPROJECTSTEPDONE =
+  'mutation($id:ID!){updateTaskLists(where: {id: $id},update:{projectStepDone:false}){taskLists{projectStepDone}}}'
 
 const DEVELOPMENTSTEP = 
   `mutation($id: ID!){
@@ -119,6 +128,60 @@ export function getManager () {
         throw jsonResponse.errors[0]
       }
       return jsonResponse.data.managers
+    })
+    .catch(error => {
+      throw error
+    })
+}
+
+export function getMyManager (username) {
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: GET_MY_MANAGER,
+      variables: {
+        username: username
+      }
+    })
+  })
+    .then(response => {
+      return response.json()
+    })
+    .then(jsonResponse => {
+      if (jsonResponse.errors != null) {
+        throw jsonResponse.errors[0]
+      }
+      return jsonResponse.data.projectChefs[0].manager.username
+    })
+    .catch(error => {
+      throw error
+    })
+}
+
+export function getProjectStepDone (username) {
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: GETPROJECTSTEPDONE,
+      variables: {
+        username: username
+      }
+    })
+  })
+    .then(response => {
+      return response.json()
+    })
+    .then(jsonResponse => {
+      if (jsonResponse.errors != null) {
+        throw jsonResponse.errors[0]
+      }
+      return jsonResponse.data.taskLists
     })
     .catch(error => {
       throw error
@@ -498,16 +561,19 @@ export function updateProjectStepDone(id,token){
   })
 }
 
-export function nextStepProject(id,status,token){
+export function nextStepProject(validation,id,status,token){
   let NEXTSTEPQUERY = ""
-
-  if(status === 'Initialization')
-    NEXTSTEPQUERY = DEVELOPMENTSTEP
-  if(status === 'Development')
-    NEXTSTEPQUERY = PRODUCTIONSTEP
-  if(status === "Prodution launch")
-    NEXTSTEPQUERY = FINISHEDSTEP
-
+  if(validation){
+    if(status === 'Initialization')
+      NEXTSTEPQUERY = DEVELOPMENTSTEP
+    if(status === 'Development')
+      NEXTSTEPQUERY = PRODUCTIONSTEP
+    if(status === "Prodution launch")
+      NEXTSTEPQUERY = FINISHEDSTEP
+  }
+  else{
+    NEXTSTEPQUERY = REJECTPROJECTSTEPDONE
+  }
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -517,7 +583,8 @@ export function nextStepProject(id,status,token){
     body: JSON.stringify({
       query: NEXTSTEPQUERY,
       variables: {
-        id: id
+        id: id,
+        validation: validation
       }
     })
   })

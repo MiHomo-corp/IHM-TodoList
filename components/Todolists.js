@@ -43,9 +43,6 @@ export default function Todolists({hierarchy,username,token}){
             <Button
               title="Créer un projet"
               onPress={() => navigation.navigate("CreateProject")} />) : []}
-          <Button
-          title="Déconnexion"
-          onPress={() => navigation.navigate("SignOut")} />
           <FlatList
             style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
             data={todos}
@@ -58,7 +55,9 @@ export default function Todolists({hierarchy,username,token}){
               } }>
                 <Text style={[{ /*color: '#D6D5A8', textDecorationLine: 'underline'*/ }]}>{item.title} {hierarchy === "Manager" ? " - Chef de Projet : "+item.owner.username : ""}</Text>
               </TouchableOpacity>
-          </View>} /></>    
+          </View>}
+        />
+        </>    
       )}
     </TokenContext.Consumer>
   )
