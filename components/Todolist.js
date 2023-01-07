@@ -1,10 +1,13 @@
 import React,{useEffect, useState} from "react";
-import { Modal, StyleSheet, View, TextInput, Button, Text, FlatList, Switch, TouchableOpacity, CheckBox } from 'react-native';
-import { Root, Popup } from 'react-native-popup-confirm-toast'
-import { useNavigation } from "@react-navigation/native";
-import { getTasks, createTask, setCheckTask, deleteTaskList, deleteTask } from "../API/todoAPI"
 
-export default function TodoList({username,token,title,id,onDeleteTaskList}){
+import { Modal, StyleSheet, View, TextInput, Button, Text, FlatList, Switch, TouchableOpacity, CheckBox, Alert } from 'react-native';
+import { Root, Popup } from 'react-native-popup-confirm-toast'
+
+import { useNavigation } from "@react-navigation/native";
+import { getTasks, createTask, setCheckTask, closeTaskList, deleteTaskList, deleteTask, updateProjectStepDone, nextStepProject } from "../API/todoAPI"
+
+
+export default function TodoList({hierarchy,username,token,title,id,usernameOfOwner, onDeleteTaskList}){
   const [tasks, setTask] = useState([]);
   const [project, setProject] = useState([]);
   const navigation = useNavigation();
@@ -23,9 +26,19 @@ export default function TodoList({username,token,title,id,onDeleteTaskList}){
       setTask(updatedTasks);
     });
   };
+  const verifDoneTask = ()=> {
+    for(let element of tasks){
+      if(!element.done){
+        return false
+      }
+    }
+    return true
+  }
+  //const [newTodoText, setNewTodoText] = useState("");
+  //const navigation = useNavigation();
 
-  const callback = (username, token, title) => {
-    getTasks(username,token,title).then(rep =>{
+  const callback = (username, token, title,usernameOfOwner) => {
+    getTasks(usernameOfOwner,token,title).then(rep =>{
       setTask(rep.tasks);
       setProject(rep.taskLists);
     })
@@ -39,29 +52,53 @@ export default function TodoList({username,token,title,id,onDeleteTaskList}){
   };
 
   useEffect(()=> {
-    callback(username, token, title)
-  }, [username, token, title])
+    callback(username, token, title,usernameOfOwner)
+  }, [username, token, title,usernameOfOwner])
 
   return(
     <Root>
       <View>
-        <Text>Ma tasklist</Text>
-        <Button
-            title="Modification projet"
-            onPress={console.log("test")}
-            />
-        <Button
-            title="Supprimer ce projet"
-            onPress={() => {
-              deleteTaskList(id, token).then(response => {
-              // Revenir à l'écran précédent une fois le projet supprimé
-              onDeleteTaskList(id);
-              navigation.goBack();
-              })}
-            }/>
-        <Button
+        <Text>Ce projet est à l'étape de : {project[0]?.status}</Text>
+        {hierarchy === "Manager" && project[0]?.status !== "Closed" ? (
+          <><Button
+              title="Modification projet"
+              onPress={() => {
+                navigation.navigate("ModificationProject", {
+                  project: project
+                });
+              } } />
+            <Button
+            title="Fermeture du projet"
+            onPress={() => closeTaskList(project[0].id, token).then(navigation.navigate("TodoLists"))} /></>) : []}
+        {project[0]?.status !== "Closed" && project[0]?.status !== "Finished" ? (
+          <Button
           title="Créer une tâche"
-          onPress={() => navigation.navigate("CreateTask")} />
+          onPress={() => {
+            navigation.navigate("CreateTask", {
+              titleProject: project[0].title,
+              idProject: project[0].id
+            });
+          }} /> 
+        ) : []}
+        {hierarchy === "ProjectChef" && (project[0]?.status === "Closed" || project[0]?.status === "Finished") ? (
+          <><Button
+              title="Suppresion du projet"
+              onPress={() => deleteTaskList(project[0].id, token).then(navigation.navigate("TodoLists"))} /></>
+        ) : []}
+        {hierarchy === "ProjectChef" && verifDoneTask() && project[0]?.status !== "Finished" ? (
+          <><Button
+          title={project[0]?.projectStepDone ? "Demande de validation en cours..." : "Demande de validation de l'étape"}
+          disabled = {project[0]?.projectStepDone}
+          onPress={() => updateProjectStepDone(project[0].id, token).then(navigation.navigate("TodoLists"))} /></>
+        ) : []}
+        {hierarchy === "Manager" && project[0]?.projectStepDone && project[0]?.status !== "Finished" ? (
+          <><Button
+          title="Confirmation de l'étape"
+          onPress={() => nextStepProject(true,project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"))} />
+          <Button
+          title="Refuser la validation de l'étape"
+          onPress={() => nextStepProject(false,project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"))} /></>
+        ) : []}
         <FlatList
           style={{ textAlign:'left', paddingLeft: 10, paddingTop:20}}
           data={tasks}

@@ -1,16 +1,20 @@
 import React from 'react'
 import { View, Text, Button } from 'react-native'
 
-import { TokenContext } from '../Context/Context'
+import { TokenContext, HierarchyContext } from '../Context/Context'
 
 export default function SignOut ({ navigation }) {
   return (
     <TokenContext.Consumer>
       {([token, setToken]) => (
-        <>
-          <Text>Sign Out</Text>
-          <Button title='Sign me out' onPress={() => setToken(null)} />
-        </>
+        <HierarchyContext.Consumer>
+          {([hierarchy, setHierarchy]) => (
+            <>
+              <Text>Sign Out</Text>
+              <Button title='Sign me out' onPress={() => {setHierarchy(null); setToken(null);}} />
+            </>
+          )}
+        </HierarchyContext.Consumer>
       )}
     </TokenContext.Consumer>
   )

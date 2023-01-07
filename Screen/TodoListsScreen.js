@@ -1,18 +1,20 @@
 import React from 'react'
 import Todolists from "../components/Todolists"
 
-import { TokenContext } from '../Context/Context'
-import { UsernameContext } from '../Context/Context'
+import {UsernameContext, HierarchyContext, TokenContext } from '../Context/Context'
 
 export default function TodoList(){
-    
     return (
         <TokenContext.Consumer>
           {([token, setToken]) => (
             <UsernameContext.Consumer>
-              {([username, setUsername]) => {
-                return (<Todolists username={username} token={token}/>)
-              }}
+              {([username, setUsername]) => (
+                <HierarchyContext.Consumer>
+                  {([hierarchy, setHierarchy]) => {
+                    return (<Todolists hierarchy={hierarchy} username={username} token={token}/>)
+                  }}
+                </HierarchyContext.Consumer>
+              )}
             </UsernameContext.Consumer>
           )}
         </TokenContext.Consumer>

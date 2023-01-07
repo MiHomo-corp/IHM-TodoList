@@ -3,8 +3,8 @@ import ModificationProject from "../components/ModificationProject"
 
 import { TokenContext } from '../Context/Context'
 
-export default function ModificationProjectScreen(route){
-    const { project } = route.route.params;
+export default function ModificationProjectScreen(navigation,route){
+    const { project } = navigation.route.params;
 
     return (
         <TokenContext.Consumer>
