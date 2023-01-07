@@ -1,16 +1,20 @@
 import React, {useEffect, useState } from 'react'
-import { View, Text, Button} from 'react-native'
-import { List } from 'react-native-paper';
+import { View, Text, Button, FlatList} from 'react-native'
+import { List, RadioButton } from 'react-native-paper';
 import { useNavigation } from "@react-navigation/native";
 
-
-import { getMyManager, getChefsOfManager, getProjectStepDone } from '../API/todoAPI';
+import { getMyManager, getChefsOfManager, getProjectStepDone, getManager, updateManager } from '../API/todoAPI';
+import Todolists from './Todolists';
 
 export default function Profil (hierarchy,username,token){ //Pour une raison étrange (probablement dû au link dans la navigation), tous se trouve dans hierarchy
 
     const [myManager, setMyManger] = useState('')
     const [listChefs, setListChefs] = useState([])
     const [pendingProject, setPendingProject] = useState([])
+    const [managerChecked, setManagerChecked] = useState("")
+    const [managerList, setManagerList] = useState([])
+    const [visible, setVsisble] = useState(false)
+
     const navigation = useNavigation();
 
     const renderListItemChefs = () => {
@@ -58,6 +62,9 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
             getProjectStepDone([hierarchy.username]).then(project => {
                 setPendingProject(project)
             })
+        getManager().then(managers => {
+            setManagerList(managers)
+            })
         }
         else{
             const usernameInArray = []
@@ -102,6 +109,21 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
             </>
                 )}
         </List.Section>
+        { hierarchy.hierarchy === "ProjectChef" ? (
+            <Button title={visible ? "Annuler" : "Changer de responsable"} onPress={() => { setVsisble(!visible) } } />
+            ) : []} 
+        {visible ? (
+            <><FlatList
+                style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
+                data={managerList}
+                renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
+                    <RadioButton
+                        status={managerChecked === item.username ? 'checked' : 'unchecked'}
+                        onPress={() => setManagerChecked(item.username)} />
+                    <Text>{item.username}</Text>
+                </View>} />
+                <Button title='Valider' onPress={() => { updateManager(hierarchy.username,myManager,managerChecked,hierarchy.token).then(navigation.navigate("TodoLists"))} } /></>
+        ) : []}
         </View>
     )
 }

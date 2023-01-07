@@ -12,7 +12,7 @@ const SIGN_UP_MANAGER =
   'mutation($username:String!, $password:String!){signUpManager(username:$username, password:$password)}'
 
 const MANAGER_LIST = 
-  'query{managers{username}}'
+  'query{managers{username}}' //sortir l'id
 
 const CHEF_LIST = 
   'query managers($username: String!){managers(where:{username: $username}){projectChefs{username}}}'
@@ -25,6 +25,9 @@ const TASKLIST =
 
 const TASKS =
   'query($title: String!,$username: String!){ tasks(where: {belongsTo: {title: $title}}) {id content done},taskLists(where: {title: $title,owner:{username:$username}}) {id title date status projectStepDone description}}'
+
+const UPDATEMANAGER = 
+  'mutation($username: String!, $exManager: String!, $newManager: String!){updateProjectChefs(where:{username:$username},update:{manager:{connect:{where:{username:$newManager}},disconnect:{where:{username:$exManager}}}}){projectChefs{username manager{username}}}}'
 
 const CREATETASKLIST = 
   `mutation($title:String!,$date:Date!,$description:String,$owner:String!){
@@ -412,6 +415,36 @@ export function createTask(title,token){
       throw jsonResponse.errors[0]
     }
     return jsonResponse.data.tasks
+  })
+  .catch(error => {
+    throw error
+  })
+}
+
+export function updateManager(username,exManager,newManager,token){
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer "+token
+    },
+    body: JSON.stringify({
+      query: UPDATEMANAGER,
+      variables: {
+        username: username,
+        exManager: exManager,
+        newManager: newManager
+      }
+    })
+  })
+  .then(response => {
+    return response.json()
+  })
+  .then(jsonResponse => {
+    if (jsonResponse.errors != null) {
+      throw jsonResponse.errors[0]
+    }
+    return jsonResponse.data.taskLists
   })
   .catch(error => {
     throw error
