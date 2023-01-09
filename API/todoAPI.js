@@ -12,25 +12,16 @@ const SIGN_UP_MANAGER =
   'mutation($username:String!, $password:String!){signUpManager(username:$username, password:$password)}'
 
 const MANAGER_LIST = 
-  'query{managers{username}}' //sortir l'id
+  'query{managers{username}}'
 
 const CHEF_LIST = 
   'query managers($username: String!){managers(where:{username: $username}){projectChefs{username}}}'
-
-const GET_MY_MANAGER = 
-  'query projectChefs($username: String!){projectChefs(where:{username: $username}){manager{username}}}'
 
 const TASKLIST =
   'query taskLists($username: [String]!) {taskLists(where: { owner: { username_IN: $username } }) {id title date description status owner{username}}}'
 
 const TASKS =
   'query($title: String!,$username: String!){ tasks(where: {belongsTo: {title: $title}}) {id content done},taskLists(where: {title: $title,owner:{username:$username}}) {id title date status projectStepDone description}}'
-
-const TASK = 
-  'query task($id: ID!){tasks(where:{id: $id}){id content description done}}'
-
-const UPDATEMANAGER = 
-  'mutation($username: String!, $exManager: String!, $newManager: String!){updateProjectChefs(where:{username:$username},update:{manager:{connect:{where:{username:$newManager}},disconnect:{where:{username:$exManager}}}}){projectChefs{username manager{username}}}}'
 
 const CREATETASKLIST = 
   `mutation($title:String!,$date:Date!,$description:String,$owner:String!){
@@ -43,34 +34,19 @@ const CREATETASKLIST =
   }`
 
 const CREATETASK = 
-  'mutation($content:String!,$id:ID!,$description:String!){createTasks(input:{content:$content,description:$description,belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}}}'
-
-const GETUSERID = 
- 'query userID($username:String!){users(where: {username: $username}) {id}}'
-
-const UPDATETASK =
- 'mutation($id:ID!,$newContent:String!,$newDescription:String!){updateTasks(where:{id:$id} update:{content:$newContent,description:$newDescription,}){tasks{content description}}}'
+  'mutation($content:String!,$title:String!){createTasks(input:{content:$content,belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}}}}'
 
 const UPDATETASKLIST =
   'mutation($id:ID!,$newTitle:String!,$newDate:Date!,$newDescription:String){updateTaskLists(where: {id: $id} update:{title: $newTitle, date: $newDate, description:$newDescription}){taskLists {id date title description}}}'
 
-const UPDATESTATUSTASK = 
-  'mutation ($id:ID!,$done:Boolean!) {updateTasks(where:{id:$id}update:{done:$done}){tasks {id content done}}}'
-  
 const CLOSETASKLIST = 
   'mutation($id:ID!){updateTaskLists(where: {id:$id}, update:{status:"Closed"}){taskLists{title status}}}'
 
 const DELETETASKLIST =
   'mutation($id:ID!){deleteTasks(where:{belongsTo:{id:$id}}){nodesDeleted},deleteTaskLists(where: {id: $id}){nodesDeleted}}'
 
-const GETPROJECTSTEPDONE =
-  'query taskLists($username: [String]!) {taskLists(where: { owner: { username_IN: $username }, projectStepDone: true}) {title date status owner{username}}}'
-
 const UPDATEPROJECTSTEPDONE =
   'mutation($id:ID!){updateTaskLists(where: {id: $id},update:{projectStepDone:true}){taskLists{projectStepDone}}}'
-
-const REJECTPROJECTSTEPDONE =
-  'mutation($id:ID!){updateTaskLists(where: {id: $id},update:{projectStepDone:false}){taskLists{projectStepDone}}}'
 
 const DEVELOPMENTSTEP = 
   `mutation($id: ID!){
@@ -92,8 +68,7 @@ const PRODUCTIONSTEP =
 const FINISHEDSTEP =
   'mutation($id:ID!){updateTaskLists(where: {id: $id},update:{projectStepDone:false, status:"Finished"}){taskLists{projectStepDone}}}'
 
-const DELTASK =
-  "mutation($id:ID!){deleteTasks(where: {id: $id}){nodesDeleted relationshipsDeleted}}"
+//const DELTASK = 
 
  //fonction suppr une task
  //fonction changer statut d'une task
@@ -144,60 +119,6 @@ export function getManager () {
         throw jsonResponse.errors[0]
       }
       return jsonResponse.data.managers
-    })
-    .catch(error => {
-      throw error
-    })
-}
-
-export function getMyManager (username) {
-  return fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      query: GET_MY_MANAGER,
-      variables: {
-        username: username
-      }
-    })
-  })
-    .then(response => {
-      return response.json()
-    })
-    .then(jsonResponse => {
-      if (jsonResponse.errors != null) {
-        throw jsonResponse.errors[0]
-      }
-      return jsonResponse.data.projectChefs[0].manager.username
-    })
-    .catch(error => {
-      throw error
-    })
-}
-
-export function getProjectStepDone (username) {
-  return fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      query: GETPROJECTSTEPDONE,
-      variables: {
-        username: username
-      }
-    })
-  })
-    .then(response => {
-      return response.json()
-    })
-    .then(jsonResponse => {
-      if (jsonResponse.errors != null) {
-        throw jsonResponse.errors[0]
-      }
-      return jsonResponse.data.taskLists
     })
     .catch(error => {
       throw error
@@ -261,7 +182,7 @@ export function signUp (hierarchy, username, password,manager) {
       })  
   }
 }
-/*
+
 export function getManagerList (username,token){
   return fetch(API_URL, {
     method: 'POST',
@@ -288,7 +209,7 @@ export function getManagerList (username,token){
   .catch(error => {
     throw error
   })
-}*/
+}
 
 export function getTaskLists (username,token){
   return fetch(API_URL, {
@@ -375,34 +296,6 @@ export function getTasks(username,token,title){
   })
 }
 
-export function getTask(token,id){
-  return fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer "+token
-    },
-    body: JSON.stringify({
-      query: TASK,
-      variables: {
-        id: id
-      }
-    })
-  })
-  .then(response => {
-    return response.json()
-  })
-  .then(jsonResponse => {
-    if (jsonResponse.errors != null) {
-      throw jsonResponse.errors[0]
-    }
-    return jsonResponse.data
-  })
-  .catch(error => {
-    throw error
-  })
-}
-
 export function createTaskList (username,token,title,date,description){
   return fetch(API_URL, {
     method: 'POST',
@@ -434,7 +327,7 @@ export function createTaskList (username,token,title,date,description){
   })
 }
 
-export function createTask(id,token,content,description){
+export function createTask(title,token){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -444,9 +337,7 @@ export function createTask(id,token,content,description){
     body: JSON.stringify({
       query: CREATETASK,
       variables: {
-        id: id,
-        content: content,
-        description: description
+        title: title
       }
     })
   })
@@ -458,36 +349,6 @@ export function createTask(id,token,content,description){
       throw jsonResponse.errors[0]
     }
     return jsonResponse.data.tasks
-  })
-  .catch(error => {
-    throw error
-  })
-}
-
-export function updateManager(username,exManager,newManager,token){
-  return fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer "+token
-    },
-    body: JSON.stringify({
-      query: UPDATEMANAGER,
-      variables: {
-        username: username,
-        exManager: exManager,
-        newManager: newManager
-      }
-    })
-  })
-  .then(response => {
-    return response.json()
-  })
-  .then(jsonResponse => {
-    if (jsonResponse.errors != null) {
-      throw jsonResponse.errors[0]
-    }
-    return jsonResponse.data.taskLists
   })
   .catch(error => {
     throw error
@@ -519,36 +380,6 @@ export function updateTaskList(token,id,title,date,description){
       throw jsonResponse.errors[0]
     }
     return jsonResponse.data.taskLists
-  })
-  .catch(error => {
-    throw error
-  })
-}
-
-export function updateTask(token,id,content,description){
-  return fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer "+token
-    },
-    body: JSON.stringify({
-      query: UPDATETASK,
-      variables: {
-        id: id,
-        newContent: content,
-        newDescription: description
-      }
-    })
-  })
-  .then(response => {
-    return response.json()
-  })
-  .then(jsonResponse => {
-    if (jsonResponse.errors != null) {
-      throw jsonResponse.errors[0]
-    }
-    return jsonResponse.data.tasks
   })
   .catch(error => {
     throw error
@@ -611,8 +442,7 @@ export function deleteTaskList(id,token){
   })
 }
 
-
-/*export function deleteTaskList(id,token){
+export function deleteTask(title,token){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -620,66 +450,9 @@ export function deleteTaskList(id,token){
       'Authorization': "Bearer "+token
     },
     body: JSON.stringify({
-      query: DELTASKLIST,
+      query: CREATETASK,
       variables: {
-        id: id
-      }
-    })
-  })
-  .then(response => {
-    return response.json()
-  })
-  .then(jsonResponse => {
-    if (jsonResponse.errors != null) {
-      throw jsonResponse.errors[0]
-    }
-    return jsonResponse.data.taskLists
-  })
-  .catch(error => {
-    throw error
-  })
-}*/
-
-export function deleteTask(id,token){
-  return fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer "+token
-    },
-    body: JSON.stringify({
-      query: DELTASK,
-      variables: {
-        id: id
-      }
-    })
-  })
-  .then(response => {
-    return response.json()
-  })
-  .then(jsonResponse => {
-    if (jsonResponse.errors != null) {
-      throw jsonResponse.errors[0]
-    }
-    return jsonResponse.data.tasks
-  })
-  .catch(error => {
-    throw error
-  })
-}
-
-export function setCheckTask(id,token,done){
-  return fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer "+token
-    },
-    body: JSON.stringify({
-      query: UPDATESTATUSTASK,
-      variables: {
-        id: id,
-        done: done
+        title: title
       }
     })
   })
@@ -725,19 +498,16 @@ export function updateProjectStepDone(id,token){
   })
 }
 
-export function nextStepProject(validation,id,status,token){
+export function nextStepProject(id,status,token){
   let NEXTSTEPQUERY = ""
-  if(validation){
-    if(status === 'Initialization')
-      NEXTSTEPQUERY = DEVELOPMENTSTEP
-    if(status === 'Development')
-      NEXTSTEPQUERY = PRODUCTIONSTEP
-    if(status === "Prodution launch")
-      NEXTSTEPQUERY = FINISHEDSTEP
-  }
-  else{
-    NEXTSTEPQUERY = REJECTPROJECTSTEPDONE
-  }
+
+  if(status === 'Initialization')
+    NEXTSTEPQUERY = DEVELOPMENTSTEP
+  if(status === 'Development')
+    NEXTSTEPQUERY = PRODUCTIONSTEP
+  if(status === "Prodution launch")
+    NEXTSTEPQUERY = FINISHEDSTEP
+
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -747,8 +517,7 @@ export function nextStepProject(validation,id,status,token){
     body: JSON.stringify({
       query: NEXTSTEPQUERY,
       variables: {
-        id: id,
-        validation: validation
+        id: id
       }
     })
   })

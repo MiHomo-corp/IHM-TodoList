@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import {
   Text,
   TextInput,
-  Button,
   View,
   StyleSheet,
   ActivityIndicator,
-  FlatList
+  FlatList,
+  Image,
+  Pressable
 } from 'react-native'
 
 import { RadioButton } from 'react-native-paper';
@@ -65,72 +66,79 @@ export default function SignUp () {
           {([username, setUsername]) => {
             return (
               <View>
+                <Image style={{ marginTop: -200 }} source={require('../images/todovlop.png')}/>
                 {visible ? (
                   <>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={styles.label}>Login</Text>
-                      <TextInput
-                        style={styles.text_input}
-                        onChangeText={setLogin}
-                        onSubmitEditing={() =>
-                          getSignedUp(setToken, setUsername)
-                        }
-                        value={login}
-                      />
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={styles.label}>Password</Text>
-                      <TextInput
-                        style={styles.text_input}
-                        onChangeText={setPassword}
-                        secureTextEntry={true}
-                        onSubmitEditing={() =>
-                          getSignedUp(setToken, setUsername)
-                        }
-                        value={password}
-                      />
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={styles.label}>Password Again</Text>
-                      <TextInput
-                        style={styles.text_input}
-                        onChangeText={setCopyPassword}
-                        secureTextEntry={true}
-                        onSubmitEditing={() =>
-                          getSignedUp(setToken, setUsername)
-                        }
-                        value={copyPassword}
-                      />
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={styles.label}>Etes-vous un :</Text>
-                      <RadioButton
-                        status={ checked === 'ProjectChef' ? 'checked' : 'unchecked' }
-                        onPress={() => setChecked('ProjectChef')}
-                      />
-                      <Text style={styles.label}>Chef de projet</Text>
-                      <RadioButton
-                        status={ checked === 'Manager' ? 'checked' : 'unchecked' }
-                        onPress={() => setChecked('Manager')}
-                      />
-                      <Text style={styles.label}>Responsable</Text>
-                    </View>
-                    {checked === "ProjectChef" ? (
-                      <FlatList
-                      style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
-                      data={managerList}
-                      renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
-                        <RadioButton
-                          status={ managerChecked === item.username ? 'checked' : 'unchecked' }
-                          onPress={() => setManagerChecked(item.username)}
+                    <View style={{ justifyContent: 'center', alignItems:"center"}}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <TextInput
+                          style={styles.text_input}
+                          placeholder="  Identifiant"
+                          onChangeText={setLogin}
+                          onSubmitEditing={() =>
+                            getSignedUp(setToken, setUsername)
+                          }
+                          value={login}
                         />
-                        <Text style={styles.label}>{item.username}</Text>
-                    </View>}/>
-                    ) : []}
-                    <Button
-                      onPress={() => getSignedUp(setToken, setUsername)}
-                      title='Sign Up'
-                    />
+                      </View>
+                      <View style={{ flexDirection: 'row' }}>
+                        <TextInput
+                          style={styles.text_input}
+                          placeholder="  Mot de passe"
+                          onChangeText={setPassword}
+                          secureTextEntry={true}
+                          onSubmitEditing={() =>
+                            getSignedUp(setToken, setUsername)
+                          }
+                          value={password}
+                        />
+                      </View>
+                      <View style={{ flexDirection: 'row' }}>
+                        <TextInput
+                          style={styles.text_input}
+                          placeholder="  Vérification MDP"
+                          onChangeText={setCopyPassword}
+                          secureTextEntry={true}
+                          onSubmitEditing={() =>
+                            getSignedUp(setToken, setUsername)
+                          }
+                          value={copyPassword}
+                        />
+                      </View>
+                      <View style={{ flexDirection: 'column' }}>
+                        <Text style={styles.label}>Etes-vous un :</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                          <RadioButton
+                            status={ checked === 'ProjectChef' ? 'checked' : 'unchecked' }
+                            onPress={() => setChecked('ProjectChef')}
+                          />
+                          <Text style={styles.label}>Chef de projet</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                          <RadioButton
+                            status={ checked === 'Manager' ? 'checked' : 'unchecked' }
+                            onPress={() => setChecked('Manager')}
+                          />
+                          <Text style={styles.label}>Responsable</Text>
+                        </View>
+                      </View>
+                    
+                      {checked === "ProjectChef" ? (
+                        <FlatList
+                        style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
+                        data={managerList}
+                        renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
+                          <RadioButton
+                            status={ managerChecked === item.username ? 'checked' : 'unchecked' }
+                            onPress={() => setManagerChecked(item.username)}
+                          />
+                          <Text style={styles.label}>{item.username}</Text>
+                      </View>}/>
+                      ) : []}
+                      <Pressable style={styles.button}onPress={() => getSignedUp(setToken, setUsername)}>
+                        <Text style={styles.buttonText}>S'INSCRIRE</Text>
+                      </Pressable>
+                    </View>
                     {error ? (
                       <Text style={styles.text_error}>{error}</Text>
                     ) : (
@@ -150,16 +158,41 @@ export default function SignUp () {
 }
 
 const styles = StyleSheet.create({
+  login: {
+    marginRight:2,
+  },
+  button: {
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:'#90D7B4',
+    width:300,
+    height:40,
+    marginTop:25,
+    marginBottom:10,
+    elevation:1
+  },
+  buttonText:{
+    color:'#22577A',
+    fontSize:18,
+    fontWeight:"bold",
+  },
   label: {
-    width: 70
+    marginTop:7,
+    textAlign: 'center',
+    minWidth: 70,
+    marginRight:5
   },
   text_error: {
     color: 'red'
   },
   text_input: {
-    //borderWidth: 1,
     backgroundColor: 'white',
-    margin: 5
+    margin: 10,
+    width:200,
+    height:30,
+    borderWidth:1,
+    borderColor:"gray",
+    elevation:5
   }
 })
 
