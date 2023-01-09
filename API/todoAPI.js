@@ -1,6 +1,6 @@
 import React from 'react'
 
-const API_URL = 'http://localhost:4000'
+const API_URL = 'http://192.168.1.18:4000' //Rentrer l'ip du Métro
 
 const SIGN_IN =
   'mutation($username:String!, $password:String!){signIn(username:$username, password:$password)}'

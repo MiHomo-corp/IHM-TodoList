@@ -13,6 +13,8 @@ export default function Todolists({hierarchy,username,token}){
   const [newTodoText, setNewTodoText] = useState("");
   const navigation = useNavigation();
   
+  console.log(hierarchy,username,token)
+
   const callback = (hierarchy, username, token) => {
       if(hierarchy === "Manager"){
         let usernameInArray = []
@@ -24,7 +26,7 @@ export default function Todolists({hierarchy,username,token}){
           setTodos(taskList)
         }))
       }
-      else if(hierarchy === "ProjectChef"){
+      else{
         getTaskLists([username],token).then(taskList =>{
           setTodos(taskList)
         })

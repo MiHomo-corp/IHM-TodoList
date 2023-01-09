@@ -32,7 +32,7 @@
     "react-native-popup-confirm-toast": "^2.2.7",
     "react-native-safe-area-context": "4.4.1",
     "react-native-status-bar-height": "^2.6.0",
-    "react-native-svg": "^13.6.0",
+    "react-native-svg": "13.4.0",
     "react-native-web": "~0.18.7",
     "stardog": "^4.3.1"
   },
