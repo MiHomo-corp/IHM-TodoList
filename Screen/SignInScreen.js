@@ -8,6 +8,7 @@ export default function SignInScreen () {
   return (
     <View
       style={{
+        backgroundColor:"#EBF7F3",
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
@@ -15,12 +16,12 @@ export default function SignInScreen () {
     >
       <SignIn/>
       <Text>
-        If you prefer, you can{' '}
+        Ou s'inscrire{' '}
         <Link
-          style={{ textDecorationLine: 'underline' }}
+           style={{ fontWeight:  'bold',color:"#01796F" }}
           to={{ screen: 'SignUp' }}
         >
-          Sign Up
+          ici
         </Link>
       </Text>
     </View>
