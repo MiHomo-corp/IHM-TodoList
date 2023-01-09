@@ -45,9 +45,6 @@ export default function Todolists({hierarchy,username,token}){
             <Button
               title="Créer un projet"
               onPress={() => navigation.navigate("CreateProject")} />) : []}
-          <Button
-          title="Déconnexion"
-          onPress={() => navigation.navigate("SignOut")} />
           <FlatList
             style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
             data={todos}
