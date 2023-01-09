@@ -29,7 +29,7 @@ export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarc
           title="Supprimer cette Task"
           onPress={() => {
             deleteTask(id, token).then(response => {
-              setTask(task.filter(t => t.id !== id));
+              setTask(task.filter(t => t.id !== id)); //???
               onDeleteTask(id);
               // Revenir à l'écran précédent une fois le projet supprimé
               navigation.goBack();

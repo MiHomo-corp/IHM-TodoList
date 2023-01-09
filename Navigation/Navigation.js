@@ -34,7 +34,7 @@ export default function Navigation () {
             </Stack.Navigator>
           ) : (
             <Stack.Navigator initialRouteName='TodoLists'>
-              <Stack.Screen name='TodoLists' component={TodoListsScreen} options={{title:"Vos Projets", headerRight:() => <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:40}}><FontAwesomeIcon icon={faUser}/></Link>}}/>
+              <Stack.Screen name='TodoLists' component={TodoListsScreen} options={{title:"Vos Projets", headerRight:() => <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:20}}><FontAwesomeIcon icon={faUser}/></Link>}}/>
               <Stack.Screen name='ProfilScreen' component={ProfilScreen} options={{title: "Votre Profil"}}/>
               <Stack.Screen name='TodoList' component={TodoListScreen} options={({route,navigation}) => ({title: route.params.title})}/>
               <Stack.Screen name='CreateProject' component={CreationProjectScreen} options={{title: " Nouveau Projet"}}/>

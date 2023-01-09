@@ -6,24 +6,30 @@ import { useNavigation } from "@react-navigation/native";
 
 import { createTaskList } from "../API/todoAPI"
 
+import { Calendar } from 'react-native-calendars';
+
 //<Checkbox value={item.done} onValueChange={setStatusTask}/>
 
 export default function CreationProject({username,token}){
 
   const [projectTitle, onChangeText] = useState("");
   const [description, onChangeDescription] = useState("");
-  const [dateProject, onChangeDateProject] = useState("")
+  const [dateProject, setDateProject] = useState("")
   const [diasbled, setDiasbled] = useState(true)
 
   const navigation = useNavigation()
 
   const date = new Date();
-  const day = date.getDate();
-  const month = date.getMonth()+1;
+  let day = date.getDate();
+  let month = date.getMonth()+1;
   const year = date.getFullYear();
+  if(day<10) day="0"+day;
+  if(month<10) month="0"+month;
+  const currentDate = ''+year+'-'+month+'-'+day
 
-  //const [newTodoText, setNewTodoText] = useState("");
-  //const navigation = useNavigation();
+  const handleDayPress = (day) => {
+    setDateProject(day.dateString);
+  }
   
   useEffect(() => {
     if(projectTitle === "" || dateProject === ""){
@@ -43,12 +49,22 @@ export default function CreationProject({username,token}){
           value={projectTitle}
         />
         <Text>Date de fin</Text>
-        <input 
-          type="date" 
-          value={dateProject} 
-          min={year+"-"+month+"-"+day}
-          onChange={d => onChangeDateProject(d.target.value)}/>
-
+        <Calendar
+          onDayPress={handleDayPress}
+          minDate={currentDate}
+          markedDates={{
+            [dateProject] : {selected: true, selectedColor:"#90D7B4"},
+            [currentDate] : {marked:true, dotColor:'#01796f'}
+          }}
+          theme={{
+            arrowColor: '#01796f',
+            todayTextColor: '#01796f',
+            dayTextColor: '#01796f',
+            selectedDayTextColor: '#22577A',
+            monthTextColor: '#01796f',
+            textSectionTitleColor: '#01796f',
+          }}
+        />
         <Text>Description du projet</Text>
 
         <TextInput
@@ -77,3 +93,11 @@ const styles = StyleSheet.create({
     margin: 5
   }
 })
+
+/*
+<input 
+          type="date" 
+          value={dateProject} 
+          min={year+"-"+month+"-"+day}
+          onChange={d => onChangeDateProject(d.target.value)}/>
+*/
