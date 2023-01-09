@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
+
 import {Text,TextInput,Button,View,StyleSheet,ActivityIndicator,Image,Pressable} from 'react-native'
+
 import { signIn } from '../API/todoAPI'
 import { TokenContext } from '../Context/Context'
 import { UsernameContext } from '../Context/Context'
@@ -13,8 +15,9 @@ export default function SignIn () {
   const [visible, setVisible] = useState(true)
 
   function parseJwt (token) {
-    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()).status;
+    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()).status
   }
+
   const getSignedIn = (setToken, setUsername, setHierarchy) => {
     setError('')
     if (login == '' || password == '') return
@@ -22,8 +25,8 @@ export default function SignIn () {
     signIn(login, password)
       .then(token => {
         setUsername(login)
-        setToken(token)
         setHierarchy(parseJwt(token))
+        setToken(token)
       })
       .catch(err => {
         setError(err.message)
