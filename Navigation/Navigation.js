@@ -1,9 +1,6 @@
-// npm i --save @react-navigation/bottom-tabs @react-navigation/native 
-
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, Link } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser'
 

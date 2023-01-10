@@ -1,11 +1,10 @@
 import React,{useEffect, useState} from "react";
 
-import { Modal, StyleSheet, View, TextInput, Button, Text, FlatList, Switch, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Button, Text, FlatList, TouchableOpacity } from 'react-native';
 import Checkbox from 'expo-checkbox';
-import { Root, Popup } from 'react-native-popup-confirm-toast'
 
 import { useNavigation } from "@react-navigation/native";
-import { getTasks, createTask, setCheckTask, closeTaskList, deleteTaskList, deleteTask, updateProjectStepDone, nextStepProject } from "../API/todoAPI"
+import { getTasks, setCheckTask, closeTaskList, deleteTaskList, deleteTask, updateProjectStepDone, nextStepProject } from "../API/todoAPI"
 
 
 export default function TodoList({hierarchy,username,token,title,id,usernameOfOwner, onDeleteTaskList}){
@@ -57,7 +56,6 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
   }, [username, token, title,usernameOfOwner])
 
   return(
-    <Root>
       <View>
         <Text>Ce projet est à l'étape de : {project[0]?.status}</Text>
         {hierarchy === "Manager" && project[0]?.status !== "Closed" ? (
@@ -122,8 +120,6 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
           }
         />
       </View>
-      
-    </Root>
   )
 }
 
