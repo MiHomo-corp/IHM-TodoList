@@ -1,8 +1,12 @@
 import React,{useEffect, useState} from "react";
 
-import { StyleSheet, View, TextInput, Button, Text, SafeAreaView} from 'react-native';
+import { StyleSheet, View, TextInput, Text, SafeAreaView} from 'react-native';
 
 import { useNavigation } from "@react-navigation/native";
+
+import AwesomeAlert from 'react-native-awesome-alerts';
+
+import { Button } from 'react-native-paper';
 
 import { createTaskList } from "../API/todoAPI"
 
@@ -15,7 +19,8 @@ export default function CreationProject({username,token}){
   const [projectTitle, onChangeText] = useState("");
   const [description, onChangeDescription] = useState("");
   const [dateProject, setDateProject] = useState("")
-  const [diasbled, setDiasbled] = useState(true)
+  const [disabled, setDiasbled] = useState(true)
+  const [showable,setShowable] = useState(false)
 
   const navigation = useNavigation()
 
@@ -29,8 +34,8 @@ export default function CreationProject({username,token}){
 
   const handleDayPress = (day) => {
     setDateProject(day.dateString);
-  }
-  
+  }    
+
   useEffect(() => {
     if(projectTitle === "" || dateProject === ""){
       setDiasbled(true)
@@ -72,11 +77,31 @@ export default function CreationProject({username,token}){
           value={description}
         />
       </SafeAreaView>
-      <Button 
-        disabled={diasbled}
-        title={"Création de "+projectTitle}
-        onPress={()=>createTaskList(username,token,projectTitle,dateProject,description).then(navigation.navigate("TodoLists"))}
+
+      <AwesomeAlert
+        show={showable}
+        title={projectTitle}
+        message="Etes-vous sur de vouloir créer ce projet ?"
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="Annuler"
+        confirmText="Confirmer"
+        confirmButtonColor="#90D7B4"
+        cancelButtonColor="#01796f"
+        onCancelPressed={() => {
+          setShowable(false);
+        }}
+        onConfirmPressed={() => {
+          setShowable(false);
+        }}
       />
+      {disabled ? (
+      <Button disabled={disabled} icon="alert" mode="contained" onPress={() => setShowable(true)}>
+        Tout les champs ne sont pas remplis...
+      </Button>) : (<Button labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="briefcase-plus" mode="contained" onPress={() => setShowable(true)}>
+       <Text style={{textTransform: 'uppercase'}}> Creer {projectTitle}</Text>
+      </Button>)}
+      
     </View>
   )
 }
@@ -95,9 +120,5 @@ const styles = StyleSheet.create({
 })
 
 /*
-<input 
-          type="date" 
-          value={dateProject} 
-          min={year+"-"+month+"-"+day}
-          onChange={d => onChangeDateProject(d.target.value)}/>
+createTaskList(username,token,projectTitle,dateProject,description).then(navigation.navigate("TodoLists"))  
 */
