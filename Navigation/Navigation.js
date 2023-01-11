@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer, Link,} from '@react-navigation/native'
-import { Button } from 'react-native-paper';
+import { NavigationContainer, Link,useNavigation} from '@react-navigation/native'
+import { IconButton } from 'react-native-paper';
 /*import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser'*/
 
@@ -34,10 +34,10 @@ export default function Navigation () {
             </Stack.Navigator>
           ) : (
             <Stack.Navigator initialRouteName='TodoLists'>
-              <Stack.Screen name='TodoLists' component={TodoListsScreen} options={{title:"Vos Projets", headerRight:() => <Button icon="account" labelStyle={{color: '#90D7B4'}} mode="text"/>}}/>
+              <Stack.Screen name='TodoLists' component={TodoListsScreen} options={{title:"Vos Projets", headerRight:() =>  <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:15}}><IconButton icon="account" iconColor= '#22577A' containerColor='#90D7B4' mode="contained"/></Link>}}/>
               <Stack.Screen name='ProfilScreen' component={ProfilScreen} options={{title: "Votre Profil"}}/>
               <Stack.Screen name='TodoList' component={TodoListScreen} options={({route,navigation}) => ({title: route.params.title})}/>
-              <Stack.Screen name='CreateProject' component={CreationProjectScreen} options={{title: " Nouveau Projet"}}/>
+              <Stack.Screen name='CreateProject' component={CreationProjectScreen} options={{title: ""}}/>
               <Stack.Screen name='ModificationProject' component={ModificationProjectScreen} options={({route}) => ({title: "Modification de "+ route.params.project[0].title})}/>
               <Stack.Screen name='ModificationTask' component={ModificationTaskScreen} options={({route}) => ({title: "Modification de la tâche "+route.params.task.content})}/>
               <Stack.Screen name='CreateTask' component={CreationTaskScreen} options={({route}) => ({title:" Nouvelle tâche pour "+route.params.titleProject})}/> 
