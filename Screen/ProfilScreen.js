@@ -1,10 +1,10 @@
 import React from 'react'
-import Todolists from "../components/Todolists"
-import { View, StyleSheet } from 'react-native'
+import { Button, View, StyleSheet } from 'react-native';
+import { HierarchyContext, TokenContext, UsernameContext } from '../Context/Context'
+import Profil from '../components/Profil'; 
 
-import {UsernameContext, HierarchyContext, TokenContext } from '../Context/Context'
+export default function ProfilScreen () {
 
-export default function TodoList(){
   return (
     <View style={styles.container}>
       <TokenContext.Consumer>
@@ -13,7 +13,12 @@ export default function TodoList(){
             {([username, setUsername]) => (
               <HierarchyContext.Consumer>
                 {([hierarchy, setHierarchy]) => {
-                  return (<Todolists hierarchy={hierarchy} username={username} token={token}/>)
+                  return (
+                  <>
+                    <Profil hierarchy={hierarchy} username={username} token={token} />
+                    <Button title='Déconnexion' onPress={() => { setHierarchy(null); setToken(null); } } />
+                  </>
+                  )
                 }}
               </HierarchyContext.Consumer>
             )}

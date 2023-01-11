@@ -7,21 +7,21 @@ import SignIn from '../components/SignIn'
 export default function SignInScreen () {
   return (
     <View
-      style={{
-        backgroundColor:"#EBF7F3",
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
+    style={{
+      backgroundColor:"#EBF7F3",
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}
     >
       <SignIn/>
       <Text>
-        Ou s'inscrire{' '}
+        If you prefer, you can{' '}
         <Link
-           style={{ fontWeight:  'bold',color:"#01796F" }}
+          style={{ textDecorationLine: 'underline' }}
           to={{ screen: 'SignUp' }}
         >
-          ici
+          Sign Up
         </Link>
       </Text>
     </View>

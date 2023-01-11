@@ -1,16 +1,16 @@
 import React from 'react'
-import ModificationProject from "../components/ModificationProject"
+import ModificationTask from "../components/ModificationTask"
 import { View, StyleSheet } from 'react-native';
 import { TokenContext } from '../Context/Context'
 
-export default function ModificationProjectScreen(navigation,route){
-  const { project } = navigation.route.params;
+export default function ModificationProjectScreen(route){
+  const { task } = route.route.params;
 
   return (
     <View style={styles.container}>
       <TokenContext.Consumer>
         {([token, setToken]) => {
-              return(<ModificationProject token={token} project={project}/>)
+              return(<ModificationTask token={token} task={task}/>)
         }}
       </TokenContext.Consumer>
     </View>

@@ -1,18 +1,19 @@
 import React from 'react'
-import CreateProject from "../components/CreateProject"
-import { View, StyleSheet} from 'react-native';
+import CreateTask from "../components/CreateTask"
+import { View, StyleSheet } from 'react-native';
 import { TokenContext, UsernameContext } from '../Context/Context'
 
-export default function CreateProjectScreen(){
+export default function CreateTaskScreen({navigation,route}){
+    
+  const {idProject} = route.params
+
   return (
     <View style={styles.container}>
       <TokenContext.Consumer>
         {([token, setToken]) => (
           <UsernameContext.Consumer>
             {([username, setUsername]) => {
-              return (
-                <CreateProject username={username} token={token}/>
-              )
+              return (<CreateTask username={username} token={token} idProject={idProject}/>)
             }}
           </UsernameContext.Consumer>
         )}
