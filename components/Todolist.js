@@ -34,8 +34,6 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
     }
     return true
   }
-  //const [newTodoText, setNewTodoText] = useState("");
-  //const navigation = useNavigation();
 
   const callback = (username, token, title,usernameOfOwner) => {
     getTasks(usernameOfOwner,token,title).then(rep =>{
@@ -58,6 +56,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
   return(
       <View>
         <Text>Ce projet est à l'étape de : {project[0]?.status}</Text>
+        
         {hierarchy === "Manager" && project[0]?.status !== "Closed" ? (
           <><Button
               title="Modification projet"
@@ -69,6 +68,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
             <Button
             title="Fermeture du projet"
             onPress={() => closeTaskList(project[0].id, token).then(navigation.navigate("TodoLists"))} /></>) : []}
+
         {project[0]?.status !== "Closed" && project[0]?.status !== "Finished" ? (
           <Button
           title="Créer une tâche"
@@ -79,17 +79,20 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
             });
           }} /> 
         ) : []}
+
         {hierarchy === "ProjectChef" && (project[0]?.status === "Closed" || project[0]?.status === "Finished") ? (
           <><Button
               title="Suppresion du projet"
               onPress={() => deleteTaskList(project[0].id, token).then(navigation.navigate("TodoLists"))} /></>
         ) : []}
+
         {hierarchy === "ProjectChef" && verifDoneTask() && project[0]?.status !== "Finished" ? (
           <><Button
           title={project[0]?.projectStepDone ? "Demande de validation en cours..." : "Demande de validation de l'étape"}
           disabled = {project[0]?.projectStepDone}
           onPress={() => updateProjectStepDone(project[0].id, token).then(navigation.navigate("TodoLists"))} /></>
         ) : []}
+
         {hierarchy === "Manager" && project[0]?.projectStepDone && project[0]?.status !== "Finished" ? (
           <><Button
           title="Confirmation de l'étape"
@@ -98,6 +101,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
           title="Refuser la validation de l'étape"
           onPress={() => nextStepProject(false,project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"))} /></>
         ) : []}
+
         <FlatList
           style={{ textAlign:'left', paddingLeft: 10, paddingTop:20}}
           data={tasks}

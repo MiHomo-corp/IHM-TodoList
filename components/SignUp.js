@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import {
   Text,
-  TextInput,
   View,
   StyleSheet,
   ActivityIndicator,
   FlatList,
   Image,
-  Pressable
 } from 'react-native'
 
-import { RadioButton } from 'react-native-paper';
+import { RadioButton,Button,TextInput } from 'react-native-paper';
 import { getManager, signUp } from '../API/todoAPI'
 
 import { useNavigation } from "@react-navigation/native";
@@ -27,8 +25,8 @@ export default function SignUp () {
   const [checked, setChecked] = useState('');
   const [managerChecked, setManagerChecked] = useState('')
   const [managerList, setManagerList] = useState([])
+  const [disabled, setDisabled] = useState(true)
   const navigation = useNavigation();
-
 
   const callback = () => {
     getManager().then(managers => {
@@ -40,9 +38,17 @@ export default function SignUp () {
     callback()
   }, [])
 
+  useEffect(() => {
+    if (login === '' || password === '' || copyPassword === '' || checked === '' || (checked === "ProjectChef" && managerChecked === "")){
+      setDisabled(true)
+    }
+    else{
+      setDisabled(false)
+    }
+  })
+
   const getSignedUp = (setToken, setUsername) => {
     setError('')
-    if (login === '' || password === '' || copyPassword === '' || checked === '' || (checked === "ProjectChef" && managerChecked === "")) return
     if (password !== copyPassword){
         setError("Passwords don't match")
         return
@@ -50,8 +56,8 @@ export default function SignUp () {
     setVisible(false)
     signUp(checked, login, password, managerChecked)
       .then(token => {
-        setUsername(login)
-        setToken(token)
+        //setUsername(login)
+        //setToken(token)
       })
       .catch(err => {
         setError(err.message)
@@ -73,7 +79,12 @@ export default function SignUp () {
                       <View style={{ flexDirection: 'row' }}>
                         <TextInput
                           style={styles.text_input}
-                          placeholder="  Identifiant"
+                          label="Identifiant"
+                          mode="outlined"
+                          cursorColor="#01796f"
+                          outlineColor="#01796f"
+                          textColor="#01796f"
+                          activeOutlineColor="#01796f"
                           onChangeText={setLogin}
                           onSubmitEditing={() =>
                             getSignedUp(setToken, setUsername)
@@ -84,7 +95,12 @@ export default function SignUp () {
                       <View style={{ flexDirection: 'row' }}>
                         <TextInput
                           style={styles.text_input}
-                          placeholder="  Mot de passe"
+                          label="Mot de passe"
+                          mode="outlined"
+                          cursorColor="#01796f"
+                          outlineColor="#01796f"
+                          textColor="#01796f"
+                          activeOutlineColor="#01796f"
                           onChangeText={setPassword}
                           secureTextEntry={true}
                           onSubmitEditing={() =>
@@ -94,9 +110,14 @@ export default function SignUp () {
                         />
                       </View>
                       <View style={{ flexDirection: 'row' }}>
-                        <TextInput
+                      <TextInput
                           style={styles.text_input}
-                          placeholder="  Vérification MDP"
+                          label="Verification Mot de passe"
+                          mode="outlined"
+                          cursorColor="#01796f"
+                          outlineColor="#01796f"
+                          textColor="#01796f"
+                          activeOutlineColor="#01796f"
                           onChangeText={setCopyPassword}
                           secureTextEntry={true}
                           onSubmitEditing={() =>
@@ -109,35 +130,40 @@ export default function SignUp () {
                         <Text style={styles.label}>Etes-vous un :</Text>
                         <View style={{ flexDirection: 'row' }}>
                           <RadioButton
+                            color='#90D7B4'
                             status={ checked === 'ProjectChef' ? 'checked' : 'unchecked' }
                             onPress={() => setChecked('ProjectChef')}
                           />
                           <Text style={styles.label}>Chef de projet</Text>
+                          {checked === "ProjectChef" ? (
+                          <FlatList
+                          style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
+                          data={managerList}
+                          renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
+                            <RadioButton
+                              color='#90D7B4'
+                              status={ managerChecked === item.username ? 'checked' : 'unchecked' }
+                              onPress={() => setManagerChecked(item.username)}
+                            />
+                            <Text style={styles.label}>{item.username}</Text>
+                        </View>}/>
+                        ) : []}
                         </View>
                         <View style={{ flexDirection: 'row' }}>
                           <RadioButton
+                            color='#90D7B4'
                             status={ checked === 'Manager' ? 'checked' : 'unchecked' }
                             onPress={() => setChecked('Manager')}
                           />
                           <Text style={styles.label}>Responsable</Text>
                         </View>
                       </View>
-                    
-                      {checked === "ProjectChef" ? (
-                        <FlatList
-                        style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
-                        data={managerList}
-                        renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
-                          <RadioButton
-                            status={ managerChecked === item.username ? 'checked' : 'unchecked' }
-                            onPress={() => setManagerChecked(item.username)}
-                          />
-                          <Text style={styles.label}>{item.username}</Text>
-                      </View>}/>
-                      ) : []}
-                      <Pressable style={styles.button}onPress={() => getSignedUp(setToken, setUsername)}>
-                        <Text style={styles.buttonText}>S'INSCRIRE</Text>
-                      </Pressable>
+                      {disabled ? (
+                        <Button style={styles.button} disabled={disabled} icon="alert" mode="contained">
+                          Tout les champs ne sont pas remplis...
+                        </Button>) : (<Button style={styles.button} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="clipboard-account-outline" mode="contained" onPress={() => getSignedUp(setToken, setUsername, setHierarchy)}>
+                          CONNEXION
+                        </Button>)}
                     </View>
                     {error ? (
                       <Text style={styles.text_error}>{error}</Text>
@@ -164,7 +190,6 @@ const styles = StyleSheet.create({
   button: {
     justifyContent:'center',
     alignItems:'center',
-    backgroundColor:'#90D7B4',
     width:300,
     height:40,
     marginTop:25,
@@ -176,25 +201,12 @@ const styles = StyleSheet.create({
     fontSize:18,
     fontWeight:"bold",
   },
-  label: {
-    marginTop:7,
-    textAlign: 'center',
-    minWidth: 70,
-    marginRight:5
-  },
   text_error: {
     color: 'red'
   },
   text_input: {
-    backgroundColor: 'white',
     margin: 10,
-    width:200,
+    width:250,
     height:30,
-    borderWidth:1,
-    borderColor:"gray",
-    elevation:5
   }
 })
-
-
-/**/

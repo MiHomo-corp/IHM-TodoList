@@ -16,8 +16,8 @@ import { Calendar } from 'react-native-calendars';
 
 export default function CreationProject({username,token}){
 
-  const [projectTitle, onChangeText] = useState("");
-  const [description, onChangeDescription] = useState("");
+  const [projectTitle, setProjectTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [dateProject, setDateProject] = useState("")
   const [disabled, setDiasbled] = useState(true)
   const [showable,setShowable] = useState(false)
@@ -47,8 +47,6 @@ export default function CreationProject({username,token}){
 
   return(
     <View>
-      <KeyboardAvoidingView>
-        <SafeAreaView>
         <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Nouveau Projet</Text>
           <TextInput
             style={{marginTop:15,marginHorizontal:15,textAlign:"center"}}
@@ -58,7 +56,7 @@ export default function CreationProject({username,token}){
             outlineColor="#01796f"
             textColor="#01796f"
             activeOutlineColor="#01796f"
-            onChangeText={onChangeText}
+            onChangeText={setProjectTitle}
             value={projectTitle}
           />
           <Text variant="titleMedium" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Date de fin</Text>
@@ -71,6 +69,7 @@ export default function CreationProject({username,token}){
               [currentDate] : {marked:true, dotColor:'#01796f'}
             }}
             theme={{
+              backgroundColor:"#EBF7F3",
               arrowColor: '#01796f',
               todayTextColor: '#01796f',
               dayTextColor: '#01796f',
@@ -86,7 +85,7 @@ export default function CreationProject({username,token}){
             outlineColor="#01796f"
             activeOutlineColor="#01796f"
             textColor="#01796f"
-            onChangeText={onChangeDescription}
+            onChangeText={setDescription}
             value={description}
           />
 
@@ -108,13 +107,11 @@ export default function CreationProject({username,token}){
           }}
         />
         {disabled ? (
-          <Button style={{marginHorizontal:35,marginTop:15}} disabled={disabled} icon="alert" mode="contained" onPress={() => setShowable(true)}>
+          <Button style={{marginHorizontal:35,marginTop:15}} disabled={disabled} icon="alert" mode="contained">
             Tout les champs ne sont pas remplis...
           </Button>) : (<Button style={{marginHorizontal:35,marginTop:15}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="briefcase-plus" mode="contained" onPress={() => setShowable(true)}>
           <Text style={{color: '#22577A',fontWeight:"bold",textTransform: 'uppercase'}}> Creer {projectTitle}</Text>
           </Button>)}
-        </SafeAreaView>
-      </KeyboardAvoidingView>
     </View>
   )
 }

@@ -32,11 +32,6 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
 
 
     const renderListItemProject = () => {
-        if(hierarchy.hierarchy === "Manager"){ // Nous pouvons pas le mettre dans le callback car il y avait des erreurs avec le "usernameInArray" qui était de longueur 0 même si il était rempli
-            getProjectStepDone(listChefs).then(project => {
-                setPendingProject(project)
-            });
-        }
         const listItems = []
         for(let item of Object.keys(pendingProject)){
             listItems.push(
@@ -72,10 +67,14 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
                 projectChefs.forEach(element => {
                     usernameInArray.push(element.username)
                 });
+                getProjectStepDone(usernameInArray).then(project => {
+                    setPendingProject(project)
+                });
                 setListChefs(usernameInArray)
             });
         }
-    }   
+    }
+
     useEffect(()=> {
         callback()
     }, [])
@@ -97,7 +96,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
                     </List.Accordion>
                 </>): (
                 <><List.Accordion
-                    title="Vos esclaves"
+                    title="Vos subordonnés"
                     left={props => <List.Icon {...props} icon="folder" />}>
                         {listChefs.length !== 0 ? renderListItemChefs() : []}
                 </List.Accordion>

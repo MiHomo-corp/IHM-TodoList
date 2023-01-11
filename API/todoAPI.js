@@ -34,7 +34,7 @@ const UPDATEMANAGER =
 
 const CREATETASKLIST = 
   `mutation($title:String!,$date:Date!,$description:String,$owner:String!){
-  	createTaskLists(input:{title:$title, date:$date, description:$description, status:"Initialization", owner:{connect:{where:{username:$owner}}}}) {taskLists{id title date description owner {username}}},
+  	createTaskLists(input:{title:$title, date:$date, description:$description, status:"Initialisation", owner:{connect:{where:{username:$owner}}}}) {taskLists{id title date description owner {username}}},
     task1: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
 	  task2: createTasks(input:{content:"Allocation budget",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
 	  task3: createTasks(input:{content:"Feuille de route du projet",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},

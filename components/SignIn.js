@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect,useState } from 'react'
 
-import {Text,TextInput,Button,View,StyleSheet,ActivityIndicator,Image,Pressable} from 'react-native'
+import {Text,View,StyleSheet,ActivityIndicator,Image} from 'react-native'
 import { Buffer } from 'buffer'
+import { TextInput,Button } from 'react-native-paper';
 
 import { signIn } from '../API/todoAPI'
 import { TokenContext } from '../Context/Context'
@@ -14,6 +15,7 @@ export default function SignIn () {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [visible, setVisible] = useState(true)
+  const [disabled, setDisabled] = useState(true)
 
   function parseJwt (token) {
     return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()).status
@@ -21,7 +23,6 @@ export default function SignIn () {
 
   const getSignedIn = (setToken, setUsername, setHierarchy) => {
     setError('')
-    if (login == '' || password == '') return
     setVisible(false)
     signIn(login, password)
       .then(token => {
@@ -34,6 +35,15 @@ export default function SignIn () {
       })
     setVisible(true)
   }
+
+  useEffect(() => {
+    if(login === "" || password === ""){
+      setDisabled(true)
+    }
+    else{
+      setDisabled(false)
+    }
+  })
 
   return (
     <TokenContext.Consumer>
@@ -49,31 +59,43 @@ export default function SignIn () {
                       <>
                         <View style={{ justifyContent: 'center', alignItems:"center"}}>
                           <View style={{ flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap'}}>
-                            <TextInput
-                              style={styles.text_input}
-                              placeholder="  Identifiant"
-                              onChangeText={setLogin}
-                              onSubmitEditing={() =>
-                                getSignedIn(setToken, setUsername,setHierarchy)
-                              }
-                              value={login}
-                            />
+                          <TextInput
+                            style={styles.text_input}
+                            label="Identifiant"
+                            mode="outlined"
+                            cursorColor="#01796f"
+                            outlineColor="#01796f"
+                            textColor="#01796f"
+                            activeOutlineColor="#01796f"
+                            onChangeText={setLogin}
+                            onSubmitEditing={() =>
+                              getSignedIn(setToken, setUsername,setHierarchy)
+                            }
+                            value={login}
+                          />
                           </View>
                           <View style={{ flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' }}>
                             <TextInput
                               style={styles.text_input}
-                              placeholder="  Mot de passe"
+                              label="Mot de Passe"
+                              mode="outlined"
+                              cursorColor="#01796f"
+                              outlineColor="#01796f"
+                              textColor="#01796f"
+                              activeOutlineColor="#01796f"
                               onChangeText={setPassword}
-                              secureTextEntry={true}
                               onSubmitEditing={() =>
-                                getSignedIn(setToken, setUsername, setHierarchy)
-                              }
+                                getSignedIn(setToken, setUsername,setHierarchy)
+                              } 
                               value={password}
                             />
                           </View>
-                          <Pressable style={styles.button}onPress={() => getSignedIn(setToken, setUsername, setHierarchy)}>
-                            <Text style={styles.buttonText}>CONNEXION</Text>
-                          </Pressable>
+                          {disabled ? (
+                            <Button style={styles.button} disabled={disabled} icon="login" mode="contained">
+                              CONNEXION
+                            </Button>) : (<Button style={styles.button}  labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="login" mode="contained" onPress={() => getSignedIn(setToken, setUsername, setHierarchy)}>
+                              CONNEXION
+                            </Button>)}
                         </View>
                         
                         {error ? (
@@ -101,19 +123,14 @@ const styles = StyleSheet.create({
     marginRight:2,
   },
   button: {
+    fontWeight:"bold",
     justifyContent:'center',
     alignItems:'center',
-    backgroundColor:'#90D7B4',
     width:300,
     height:40,
     marginTop:25,
     marginBottom:10,
     elevation:1
-  },
-  buttonText:{
-    color:'#22577A',
-    fontSize:18,
-    fontWeight:"bold",
   },
   label: {
     marginTop:7,
@@ -125,12 +142,8 @@ const styles = StyleSheet.create({
     color: 'red'
   },
   text_input: {
-    backgroundColor: 'white',
     margin: 10,
-    width:200,
+    width:250,
     height:30,
-    borderWidth:1,
-    borderColor:"gray",
-    elevation:5
   }
 })
