@@ -1,20 +1,26 @@
 import React,{useEffect, useState} from "react";
 
-import { StyleSheet, View, TextInput, Button, Text, SafeAreaView} from 'react-native';
+import { StyleSheet, View, SafeAreaView} from 'react-native';
 
 import { useNavigation } from "@react-navigation/native";
 
-import { updateTaskList } from "../API/todoAPI"
+import { Button, TextInput,Text } from 'react-native-paper';
 
+import AwesomeAlert from 'react-native-awesome-alerts';
+
+import { updateTaskList } from "../API/todoAPI"
 import { Calendar } from 'react-native-calendars';
 
-//<Checkbox value={item.done} onValueChange={setStatusTask}/>
+import Logo from '../images/undraw_text_field_htlv.svg';
+
 
 export default function ModificationProject({token,project}){
-  const [projectTitle, onChangeText] = useState(project[0].title);
-  const [description, onChangeDescription] = useState(project[0].description);
+  const [projectTitle, setProjectTitle] = useState(project[0].title);
+  const [description, setDescription] = useState(project[0].description);
   const [dateProject, setDateProject] = useState(project[0].date)
-  const [diasbled, setDiasbled] = useState(true)
+  const [disabled, setDisabled] = useState(true)
+  const [showable,setShowable] = useState(false)
+
   const navigation = useNavigation();
 
   const date = new Date();
@@ -31,22 +37,32 @@ export default function ModificationProject({token,project}){
 
   useEffect(() => {
     if(projectTitle === project[0].title && dateProject === project[0].date && description === project[0].description){
-      setDiasbled(true)
+      setDisabled(true)
     }
     else{
-      setDiasbled(false)
+      setDisabled(false)
     }
   })
 
   return(
     <View>
       <SafeAreaView>
-        <Text>Titre du projet</Text>
-        <TextInput
-          onChangeText={onChangeText}
-          value={projectTitle}
-        />
-        <Text>Date de fin</Text>
+        <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Modification du projet {project[0].title}</Text>
+          <View style={{marginTop:"5%", alignItems:"center"}}>
+            <Logo width={200} height={150} />
+          </View>
+          <TextInput
+            style={{marginTop:15,marginHorizontal:15,textAlign:"center"}}
+            label="Nom du Projet"
+            mode="outlined"
+            cursorColor="#01796f"
+            outlineColor="#01796f"
+            textColor="#01796f"
+            activeOutlineColor="#01796f"
+            onChangeText={setProjectTitle}
+            value={projectTitle}
+          />
+        <Text variant="titleMedium" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Date de fin</Text>
         <Calendar
           onDayPress={handleDayPress}
           minDate={currentDate}
@@ -64,18 +80,42 @@ export default function ModificationProject({token,project}){
           }}
         />
 
-        <Text>Description du projet</Text>
-
         <TextInput
-          onChangeText={onChangeDescription}
+          style={{marginHorizontal:15,marginTop:15 ,textAlign:"center"}}
+          mode="outlined"
+          label="Description du Projet"
+          outlineColor="#01796f"
+          activeOutlineColor="#01796f"
+          textColor="#01796f"
+          onChangeText={setDescription}
           value={description}
         />
+        
+        <AwesomeAlert
+          show={showable}
+          title={projectTitle}
+          message="Etes-vous sur de vouloir créer ce projet ?"
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Annuler"
+          confirmText="Confirmer"
+          confirmButtonColor="#90D7B4"
+          cancelButtonColor="#01796f"
+          onCancelPressed={() => {
+            setShowable(false);
+          }}
+          onConfirmPressed={() => {
+            updateTaskList(token,project[0].id,projectTitle,dateProject,description).then(navigation.navigate("TodoLists"))          }}
+        />
+        {disabled ? (
+          <Button style={{marginHorizontal:35,marginTop:15}} disabled={disabled} icon="alert" mode="contained">
+            Aucune modification détecté
+          </Button>) : (
+          <Button style={{marginHorizontal:35,marginTop:15}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="briefcase-edit" mode="contained" onPress={() => setShowable(true)}>
+            <Text style={{color: '#22577A',fontWeight:"bold",textTransform: 'uppercase'}}> Modifier {projectTitle}</Text>
+          </Button>)}
       </SafeAreaView>
-      <Button 
-        disabled={diasbled}
-        title={"Modification de "+projectTitle}
-        onPress={()=>updateTaskList(token,project[0].id,projectTitle,dateProject,description).then(navigation.navigate("TodoLists"))}
-      />
+      
     </View>
   )
 }

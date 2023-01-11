@@ -11,6 +11,8 @@ import { Button, TextInput,Text } from 'react-native-paper';
 import { createTaskList } from "../API/todoAPI"
 
 import { Calendar } from 'react-native-calendars';
+import Logo from '../images/undraw_project_team_lc5a.svg';
+
 
 //<Checkbox value={item.done} onValueChange={setStatusTask}/>
 
@@ -48,6 +50,9 @@ export default function CreationProject({username,token}){
   return(
     <View>
         <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Nouveau Projet</Text>
+          <View style={{marginTop:"5%", alignItems:"center"}}>
+            <Logo width={200} height={150} />
+          </View>
           <TextInput
             style={{marginTop:15,marginHorizontal:15,textAlign:"center"}}
             label="Nom du Projet"
@@ -109,8 +114,9 @@ export default function CreationProject({username,token}){
         {disabled ? (
           <Button style={{marginHorizontal:35,marginTop:15}} disabled={disabled} icon="alert" mode="contained">
             Tout les champs ne sont pas remplis...
-          </Button>) : (<Button style={{marginHorizontal:35,marginTop:15}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="briefcase-plus" mode="contained" onPress={() => setShowable(true)}>
-          <Text style={{color: '#22577A',fontWeight:"bold",textTransform: 'uppercase'}}> Creer {projectTitle}</Text>
+          </Button>) : (
+          <Button style={{marginHorizontal:35,marginTop:15}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="briefcase-plus" mode="contained" onPress={() => setShowable(true)}>
+            <Text style={{color: '#22577A',fontWeight:"bold",textTransform: 'uppercase'}}> Creer {projectTitle}</Text>
           </Button>)}
     </View>
   )

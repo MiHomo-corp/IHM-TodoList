@@ -4,7 +4,9 @@ import { List, RadioButton } from 'react-native-paper';
 import { useNavigation } from "@react-navigation/native";
 
 import { getMyManager, getChefsOfManager, getProjectStepDone, getManager, updateManager } from '../API/todoAPI';
+import Logo from '../images/undraw_profile_details_re_ch9r.svg';
 import Todolists from './Todolists';
+
 
 export default function Profil (hierarchy,username,token){ //Pour une raison étrange (probablement dû au link dans la navigation), tous se trouve dans hierarchy
 
@@ -82,6 +84,9 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
     return (
         <View>
             <Text style={{fontWeight:"bold", padding:20}}>{hierarchy.username}</Text>
+            <View style={{marginTop:"5%", alignItems:"center"}}>
+                <Logo width={200} height={150} />
+            </View>
             <List.Section>
                 {hierarchy.hierarchy === "ProjectChef" ? (
                  <><List.Accordion

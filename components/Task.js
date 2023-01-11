@@ -44,7 +44,7 @@ export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarc
       ) : []}
       
       <Text>Description : </Text>
-      <Text>{task[0]?.description}</Text>
+      <Text>{task?.description}</Text>
     </View>
   )
 }

@@ -1,18 +1,29 @@
 import React from 'react'
 import CreateTask from "../components/CreateTask"
+import { View } from 'react-native'
 
 import { TokenContext, UsernameContext } from '../Context/Context'
 
 export default function CreateTaskScreen({navigation,route}){
     
-    const {idProject} = route.params
+    const {idProject, titleProject} = route.params
 
     return (
         <TokenContext.Consumer>
           {([token, setToken]) => (
             <UsernameContext.Consumer>
               {([username, setUsername]) => {
-                return (<CreateTask username={username} token={token} idProject={idProject}/>)
+                return (
+                  <View
+                  style={{
+                    backgroundColor:"#EBF7F3",
+                    flex: 1,
+                    //justifyContent: 'center',
+                    //alignItems: 'center'
+                  }}
+                >
+                <CreateTask username={username} token={token} idProject={idProject} titleProject={titleProject}/>
+                </View>)
               }}
             </UsernameContext.Consumer>
           )}

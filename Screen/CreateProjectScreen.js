@@ -1,6 +1,6 @@
 import React from 'react'
 import CreateProject from "../components/CreateProject"
-import { View, Text, Button } from 'react-native'
+import { View } from 'react-native'
 
 import { TokenContext, UsernameContext } from '../Context/Context'
 

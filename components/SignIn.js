@@ -83,6 +83,7 @@ export default function SignIn () {
                               outlineColor="#01796f"
                               textColor="#01796f"
                               activeOutlineColor="#01796f"
+                              secureTextEntry={true}
                               onChangeText={setPassword}
                               onSubmitEditing={() =>
                                 getSignedIn(setToken, setUsername,setHierarchy)
