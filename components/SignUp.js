@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import {
-  Text,
   View,
   StyleSheet,
   ActivityIndicator,
@@ -8,7 +7,7 @@ import {
   Image,
 } from 'react-native'
 
-import { RadioButton,Button,TextInput } from 'react-native-paper';
+import { RadioButton,Button,TextInput,Text } from 'react-native-paper';
 import { getManager, signUp } from '../API/todoAPI'
 
 import { useNavigation } from "@react-navigation/native";
@@ -127,14 +126,14 @@ export default function SignUp () {
                         />
                       </View>
                       <View style={{ flexDirection: 'column' }}>
-                        <Text style={styles.label}>Etes-vous un :</Text>
+                      <Text variant="titleMedium" style={styles.radio}>Etes-vous un :</Text>
                         <View style={{ flexDirection: 'row' }}>
                           <RadioButton
                             color='#90D7B4'
                             status={ checked === 'ProjectChef' ? 'checked' : 'unchecked' }
                             onPress={() => setChecked('ProjectChef')}
                           />
-                          <Text style={styles.label}>Chef de projet</Text>
+                          <Text variant="titleMedium" style={styles.radio}>Chef de projet</Text>
                           {checked === "ProjectChef" ? (
                           <FlatList
                           style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
@@ -145,7 +144,7 @@ export default function SignUp () {
                               status={ managerChecked === item.username ? 'checked' : 'unchecked' }
                               onPress={() => setManagerChecked(item.username)}
                             />
-                            <Text style={styles.label}>{item.username}</Text>
+                            <Text variant="titleMedium" style={styles.radio}>{item.username}</Text>
                         </View>}/>
                         ) : []}
                         </View>
@@ -155,7 +154,7 @@ export default function SignUp () {
                             status={ checked === 'Manager' ? 'checked' : 'unchecked' }
                             onPress={() => setChecked('Manager')}
                           />
-                          <Text style={styles.label}>Responsable</Text>
+                          <Text variant="titleMedium" style={styles.radio}>Responsable</Text>
                         </View>
                       </View>
                       {disabled ? (
@@ -186,6 +185,10 @@ export default function SignUp () {
 const styles = StyleSheet.create({
   login: {
     marginRight:2,
+  },
+  radio:{
+    marginVertical:7, 
+    color:"#01796f"
   },
   button: {
     justifyContent:'center',
