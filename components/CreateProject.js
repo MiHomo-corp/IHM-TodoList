@@ -11,7 +11,7 @@ import { Button, TextInput,Text } from 'react-native-paper';
 import { createTaskList } from "../API/todoAPI"
 
 import { Calendar } from 'react-native-calendars';
-import Logo from '../images/undraw_project_team_lc5a.svg';
+import Logo from '../images/createProject.svg';
 
 
 //<Checkbox value={item.done} onValueChange={setStatusTask}/>

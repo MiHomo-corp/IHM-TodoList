@@ -9,7 +9,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import { useNavigation } from "@react-navigation/native";
 
 import { updateTask } from "../API/todoAPI"
-import Logo from '../images/undraw_task_re_wi3v.svg';
+import Logo from '../images/modifTask.svg';
 
 
 export default function ModificationTask({token,task}){

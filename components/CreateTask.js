@@ -9,7 +9,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import { useNavigation } from "@react-navigation/native";
 
 import { createTask } from "../API/todoAPI"
-import Logo from '../images/undraw_add_tasks_re_s5yj.svg';
+import Logo from '../images/createTask.svg';
 
 //<Checkbox value={item.done} onValueChange={setStatusTask}/>
 

@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from 'react-native-awesome-alerts';
 
 import { getMyManager, getChefsOfManager, getProjectStepDone, getManager, updateManager } from '../API/todoAPI';
-import Logo from '../images/undraw_profile_details_re_ch9r.svg';
+import Logo from '../images/profil.svg';
 import Todolists from './Todolists';
 
 

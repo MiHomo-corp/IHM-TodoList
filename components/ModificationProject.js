@@ -11,7 +11,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import { updateTaskList } from "../API/todoAPI"
 import { Calendar } from 'react-native-calendars';
 
-import Logo from '../images/undraw_text_field_htlv.svg';
+import Logo from '../images/modifProject.svg';
 
 
 export default function ModificationProject({token,project}){

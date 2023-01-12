@@ -54,7 +54,7 @@ export default function SignIn () {
               {([hierarchy, setHierarchy]) => {  
                 return (
                   <View>
-                    <Image style={{ marginTop: -200 }} source={require('../images/todovlop.png')}/>
+                    <Image style={{ marginTop: -200 }} source={require('../images/todovlopHeader.png')}/>
                     {visible ? (
                       <>
                         <View style={{ justifyContent: 'center', alignItems:"center"}}>
