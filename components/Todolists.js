@@ -70,15 +70,19 @@ export default function Todolists({hierarchy,username,token}){
                   <View style={{flexDirection: 'row'}}>
                     <TouchableOpacity 
                       onPress={() => {
-                        navigation.navigate("TodoList", {
+                        navigation.push("TodoList", {
                           title: item.title,
-                          id: item.id,
-                          token: token,
-                          onDeleteTaskList: handleDeleteTaskList,
                           usernameOfOwner : item.owner.username
                         });
                       } } style={{width:"100%"}}>
-                      <Text variant="headlineSmall" style={styles.title}>{item.title} {hierarchy === "Manager" ? " - Chef de Projet : "+item.owner.username : ""}</Text>
+                      <View flexDirection="row">
+                      <Text variant="headlineSmall" style={styles.title}>{item.title} </Text>
+                      {hierarchy === "Manager" ?(
+                        <>
+                          <Text variant="labelSmall" style={styles.author}>- par {item.owner.username}</Text>
+                        </>
+                      ):[]}
+                      </View>
                       <View flexDirection="row">
                         <View style={styles.container}>
                           <Text variant="labelLarge" style={styles.label}>Statut : </Text>
@@ -125,6 +129,10 @@ const styles = StyleSheet.create({
     marginTop:25,
     marginBottom:10,
     elevation:1
+  },
+  author:{
+    color:"#01796F",
+    marginTop:20
   },
   buttonText:{
     color:'#22577A',
