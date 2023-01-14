@@ -5,7 +5,7 @@ import { HierarchyContext, TokenContext, UsernameContext } from '../Context/Cont
 
 export default function TodoListScreen({navigation,route}){
   const { usernameOfOwner } = route.params;
-  const { title, onDeleteTaskList } = route.params
+  const { title, onDeleteTaskList, onModificationProject} = route.params
 
   return (
       <TokenContext.Consumer>
@@ -14,7 +14,7 @@ export default function TodoListScreen({navigation,route}){
               {([username, setUsername]) => (
                 <HierarchyContext.Consumer>
                   {([hierarchy, setHierarchy]) => {
-                    return(<TodoList hierarchy={hierarchy} username={username} token={token} title={title} usernameOfOwner={usernameOfOwner} onDeleteTaskList={onDeleteTaskList}/>)
+                    return(<TodoList hierarchy={hierarchy} username={username} token={token} title={title} usernameOfOwner={usernameOfOwner} onDeleteTaskList={onDeleteTaskList} onModificationProject={onModificationProject}/>)
                   }}
                 </HierarchyContext.Consumer>
               )}

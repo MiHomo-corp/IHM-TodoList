@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import { TokenContext } from '../Context/Context'
 
 export default function ModificationProjectScreen(route){
-    const { task } = route.route.params;
+    const { task,onUpdateTask } = route.route.params;
 
     return (
         <TokenContext.Consumer>
@@ -19,7 +19,7 @@ export default function ModificationProjectScreen(route){
                     //alignItems: 'center'
                   }}
                 >
-                  <ModificationTask token={token} task={task}/>
+                  <ModificationTask token={token} task={task} onUpdateTask={onUpdateTask} />
                 </View>)
           }}
         </TokenContext.Consumer>

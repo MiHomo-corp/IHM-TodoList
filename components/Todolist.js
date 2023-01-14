@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { getTasks, setCheckTask, closeTaskList, deleteTaskList, deleteTask, updateProjectStepDone, nextStepProject } from "../API/todoAPI"
 
 
-export default function TodoList({hierarchy,username,token,title,id,usernameOfOwner, onDeleteTaskList}){
+export default function TodoList({hierarchy,username,token,title,id,usernameOfOwner, onDeleteTaskList, onModificationProject}){
   const [tasks, setTask] = useState([]);
   const [project, setProject] = useState([]);
   const navigation = useNavigation();
@@ -42,6 +42,12 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
     })
   }
 
+  const handleModificationTask = updatedTask => {
+    setTask(tasks.map(task => task.id === updatedTask.id ? updatedTask : task));
+  }
+
+  
+
   const handleDeleteTask = (taskId) => {
     deleteTask(taskId, token).then((response) => {
       // Mettre à jour la liste de tâches en filtrant les tâches qui ont l'identifiant de la tâche supprimée
@@ -49,8 +55,13 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
     });
   };
 
-  const updateTask = (newTask) => {
+  const handleNewTask = (newTask) => {
     setTask([...tasks, newTask]);
+  }
+
+  const handleUpdateProject = (updatedProject) => {
+    setProject(updatedProject);
+    onModificationProject(updatedProject)
   }
 
   useEffect(()=> {
@@ -66,6 +77,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
               title="Modification projet"
               onPress={() => {
                 navigation.navigate("ModificationProject", {
+                  onUpdateProject:handleUpdateProject,
                   project: project
                 });
               } } />
@@ -80,7 +92,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
             navigation.navigate("CreateTask", {
               titleProject: project[0].title,
               idProject: project[0].id,
-              onUpdateTask: updateTask
+              onHandleNewTask: handleNewTask
             });
           }} /> 
         ) : []}
@@ -116,6 +128,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
             <TouchableOpacity onPress={() => {
               navigation.navigate("Task", {
                 onDeleteTask:handleDeleteTask,
+                onModificationTask:handleModificationTask,
                 title: item.content,
                 id: item.id,
               });

@@ -49,10 +49,10 @@ const GETUSERID =
  'query userID($username:String!){users(where: {username: $username}) {id}}'
 
 const UPDATETASK =
- 'mutation($id:ID!,$newContent:String!,$newDescription:String!){updateTasks(where:{id:$id} update:{content:$newContent,description:$newDescription,}){tasks{content description}}}'
+ 'mutation($id:ID!,$newContent:String!,$newDescription:String!){updateTasks(where:{id:$id} update:{content:$newContent,description:$newDescription,}){tasks{id content done description belongsTo{owner{username}}}}}'
 
 const UPDATETASKLIST =
-  'mutation($id:ID!,$newTitle:String!,$newDate:Date!,$newDescription:String){updateTaskLists(where: {id: $id} update:{title: $newTitle, date: $newDate, description:$newDescription}){taskLists {id date title description}}}'
+  'mutation($id:ID!,$newTitle:String!,$newDate:Date!,$newDescription:String){updateTaskLists(where: {id: $id} update:{title: $newTitle, date: $newDate, description:$newDescription}){taskLists {id date title description status owner {username}}}}'
 
 const UPDATESTATUSTASK = 
   'mutation ($id:ID!,$done:Boolean!) {updateTasks(where:{id:$id}update:{done:$done}){tasks {id content done}}}'
@@ -518,7 +518,7 @@ export function updateTaskList(token,id,title,date,description){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.taskLists
+    return jsonResponse.data
   })
   .catch(error => {
     throw error
@@ -548,7 +548,7 @@ export function updateTask(token,id,content,description){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.tasks
+    return jsonResponse.data
   })
   .catch(error => {
     throw error

@@ -35,8 +35,12 @@ export default function Todolists({hierarchy,username,token}){
     setTodos(todos => todos.filter(t => t.id !== todosId));
   };
 
-  const updateTaskList = (newTaskList) => {
+  const handleNewTaskList = (newTaskList) => {
     setTodos([...todos, newTaskList]);
+  }
+
+  const handleModificationTaskList = (updatedTaskList) => {
+    setTodos(todos.map(taskList => taskList.id === updatedTaskList.id ? updatedTaskList : taskList));
   }
 
   useEffect(()=> {
@@ -52,7 +56,7 @@ export default function Todolists({hierarchy,username,token}){
               title="Créer un projet"
               onPress={() => { 
                 navigation.navigate("CreateProject", {
-                  onUpdateTaskList:updateTaskList
+                  onHandleNewTaskList:handleNewTaskList
                 });
               }} />) : []}
 
@@ -64,6 +68,7 @@ export default function Todolists({hierarchy,username,token}){
                 navigation.navigate("TodoList", {
                   title: item.title,
                   usernameOfOwner : item.owner.username,
+                  onModificationProject:handleModificationTaskList,
                   onDeleteTaskList:handleDeleteTaskList,
                 });
               } }>

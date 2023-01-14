@@ -6,7 +6,7 @@ import { TokenContext, UsernameContext } from '../Context/Context'
 
 export default function CreateTaskScreen({navigation,route}){
     
-    const {idProject, titleProject, onUpdateTask} = route.params
+    const {idProject, titleProject, onHandleNewTask} = route.params
 
     return (
         <TokenContext.Consumer>
@@ -22,7 +22,7 @@ export default function CreateTaskScreen({navigation,route}){
                     //alignItems: 'center'
                   }}
                 >
-                <CreateTask username={username} token={token} idProject={idProject} titleProject={titleProject} onUpdateTask={onUpdateTask}/>
+                <CreateTask username={username} token={token} idProject={idProject} titleProject={titleProject} onHandleNewTask={onHandleNewTask}/>
                 </View>)
               }}
             </UsernameContext.Consumer>

@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput, Button, Text, FlatList, Switch, TouchableO
 import { useNavigation } from "@react-navigation/native";
 import { getTask , deleteTask } from "../API/todoAPI"
 
-export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarchie
+export default function Task({hierarchy,token,title,id,onDeleteTask,onModificationTask}){ //Hierarchie
 
   const [task, setTask] = useState([]);
   const navigation = useNavigation();
@@ -13,6 +13,11 @@ export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarc
       setTask(rep.tasks[0]);
     })
   }
+
+  const handleUpdateTask = (updatedTask) => {
+    setTask(updatedTask);
+    onModificationTask(updatedTask)
+}
 
   useEffect(()=> {
     callback(token, id)
@@ -37,6 +42,7 @@ export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarc
             title="Modifier cette Task"
             onPress={() => {
               navigation.navigate("ModificationTask", {
+                onUpdateTask:handleUpdateTask,
                 task:task,
               });
             }}/></>

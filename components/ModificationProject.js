@@ -11,10 +11,9 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import { updateTaskList } from "../API/todoAPI"
 import { Calendar } from 'react-native-calendars';
 
-import Logo from '../images/modifProject.svg';
 
 
-export default function ModificationProject({token,project}){
+export default function ModificationProject({token,project,onUpdateProject}){
   const [projectTitle, setProjectTitle] = useState(project[0].title);
   const [description, setDescription] = useState(project[0].description);
   const [dateProject, setDateProject] = useState(project[0].date)
@@ -50,7 +49,6 @@ export default function ModificationProject({token,project}){
         <SafeAreaView>
           <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Modification du projet {project[0].title}</Text>
             <View style={{marginTop:"5%", alignItems:"center"}}>
-              <Logo width={200} height={150} />
             </View>
             <TextInput
               style={{marginVertical:15,marginHorizontal:15,textAlign:"center"}}
@@ -107,7 +105,11 @@ export default function ModificationProject({token,project}){
               setShowable(false);
             }}
             onConfirmPressed={() => {
-              updateTaskList(token,project[0].id,projectTitle,dateProject,description).then(navigation.navigate("TodoLists")) 
+              updateTaskList(token,project[0].id,projectTitle,dateProject,description).then((response) => {
+                console.log(response.updateTaskLists.taskLists[0])
+                onUpdateProject(response.updateTaskLists.taskLists[0])
+                navigation.navigate("TodoLists")
+              }) 
          }}
           />
           {disabled ? (

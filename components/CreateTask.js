@@ -12,7 +12,7 @@ import { createTask } from "../API/todoAPI"
 
 //<Checkbox value={item.done} onValueChange={setStatusTask}/>
 
-export default function CreateTask({username,token,idProject,titleProject,onUpdateTask}){
+export default function CreateTask({username,token,idProject,titleProject,onHandleNewTask}){
 
   const [taskContent, setTaskContent] = useState("");
   const [description, onChangeDescription] = useState("");
@@ -75,7 +75,7 @@ export default function CreateTask({username,token,idProject,titleProject,onUpda
           }}
           onConfirmPressed={() => {
             createTask(idProject, token, taskContent, description).then((response) => {
-              onUpdateTask(response.createTasks.tasks[0]);
+              onHandleNewTask(response.createTasks.tasks[0]);
               navigation.goBack();
             });
           }}

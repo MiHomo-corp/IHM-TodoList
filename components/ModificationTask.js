@@ -9,10 +9,9 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import { useNavigation } from "@react-navigation/native";
 
 import { updateTask } from "../API/todoAPI"
-import Logo from '../images/modifTask.svg';
 
 
-export default function ModificationTask({token,task}){
+export default function ModificationTask({token,task,onUpdateTask}){
   const [taskContent, onChangeText] = useState(task.content);
   const [description, onChangeDescription] = useState(task.description);
   const [disabled, setDisabled] = useState(true)
@@ -33,7 +32,6 @@ export default function ModificationTask({token,task}){
       <SafeAreaView>
         <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Modification de {task.content}</Text>
         <View style={{marginTop:"5%", alignItems:"center"}}>
-          <Logo width={200} height={150} />
         </View>
         <TextInput
           style={{marginTop:15,marginHorizontal:15,textAlign:"center"}}
@@ -71,7 +69,10 @@ export default function ModificationTask({token,task}){
             setShowable(false);
           }}
           onConfirmPressed={() => {
-            updateTask(token,task.id,taskContent,description).then(navigation.navigate("TodoLists"))
+            updateTask(token,task.id,taskContent,description).then((response)=>{
+              onUpdateTask(response.updateTasks.tasks[0])
+              navigation.navigate("TodoLists")
+            })
           }}
         />
         {disabled ? (

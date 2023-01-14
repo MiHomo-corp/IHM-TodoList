@@ -15,7 +15,7 @@ import { Calendar } from 'react-native-calendars';
 
 //<Checkbox value={item.done} onValueChange={setStatusTask}/>
 
-export default function CreationProject({username,token,onUpdateTaskList}){
+export default function CreationProject({username,token,onHandleNewTaskList}){
 
   const [projectTitle, setProjectTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -108,7 +108,7 @@ export default function CreationProject({username,token,onUpdateTaskList}){
             }}
             onConfirmPressed={() => {
               createTaskList(username,token,projectTitle,dateProject,description).then((response)=>{
-                onUpdateTaskList(response.createTaskLists.taskLists[0]);
+                onHandleNewTaskList(response.createTaskLists.taskLists[0]);
                 navigation.goBack() 
               })
             }}

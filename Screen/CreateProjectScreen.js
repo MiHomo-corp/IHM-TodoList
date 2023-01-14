@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import { TokenContext, UsernameContext } from '../Context/Context'
 
 export default function CreateProjectScreen({navigation, route}){
-  const {onUpdateTaskList} = route.params
+  const {onHandleNewTaskList} = route.params
 
   return (
       <TokenContext.Consumer>
@@ -21,7 +21,7 @@ export default function CreateProjectScreen({navigation, route}){
                   //alignItems: 'center'
                 }}
               >
-              <CreateProject username={username} token={token} onUpdateTaskList={onUpdateTaskList}/> 
+              <CreateProject username={username} token={token} onHandleNewTaskList={onHandleNewTaskList}/> 
               </View>
               )
             }}
