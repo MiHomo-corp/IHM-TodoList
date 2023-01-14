@@ -5,7 +5,7 @@ import { View, StyleSheet } from 'react-native'
 import { TokenContext } from '../Context/Context'
 
 export default function ModificationProjectScreen(route){
-    const { task } = route.route.params;
+    const { task, onUpdateTask  } = route.route.params;
 
     return (
       <View style={styles.container}>
@@ -13,7 +13,7 @@ export default function ModificationProjectScreen(route){
           {([token, setToken]) => {
                 return(
                 <View style={styles.container}>
-                  <ModificationTask token={token} task={task}/>
+                  <ModificationTask token={token} task={task}  onUpdateTask={onUpdateTask}/>
                 </View>)
           }}
         </TokenContext.Consumer>

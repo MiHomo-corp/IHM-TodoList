@@ -34,7 +34,7 @@ const UPDATEMANAGER =
 
 const CREATEPROJECT = 
   `mutation($title:String!,$date:Date!,$description:String!,$owner:String!){
-  	createProjects(input:{title:$title, date:$date, description:$description, status:"Initialisation", owner:{connect:{where:{username:$owner}}}}) {projects{id title date description owner {username}}},
+  	createProjects(input:{title:$title, date:$date, description:$description, status:"Initialisation", owner:{connect:{where:{username:$owner}}}}) {projects{id title date description status owner {username}}},
     task1: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
 	  task2: createTasks(input:{content:"Allocation budget",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
 	  task3: createTasks(input:{content:"Feuille de route du projet",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
@@ -393,7 +393,7 @@ export function createProject (username,token,title,date,description){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.projects
+    return jsonResponse.data
   })
   .catch(error => {
     throw error
@@ -423,7 +423,7 @@ export function createTask(id,token,content,description){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.tasks
+    return jsonResponse.data
   })
   .catch(error => {
     throw error
@@ -453,7 +453,7 @@ export function updateManager(username,exManager,newManager,token){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.projects
+    return jsonResponse.data
   })
   .catch(error => {
     throw error
@@ -484,7 +484,7 @@ export function updateProject(token,id,title,date,description){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.projects
+    return jsonResponse.data
   })
   .catch(error => {
     throw error
@@ -514,7 +514,7 @@ export function updateTask(token,id,content,description){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.tasks
+    return jsonResponse.data
   })
   .catch(error => {
     throw error
@@ -542,7 +542,7 @@ export function closeProject(id,token){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.tasks
+    return jsonResponse.data
   })
   .catch(error => {
     throw error
@@ -570,7 +570,7 @@ export function deleteProject(id,token){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.tasks
+    return jsonResponse.data
   })
   .catch(error => {
     throw error

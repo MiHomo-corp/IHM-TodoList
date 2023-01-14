@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { getTask , deleteTask } from "../API/todoAPI"
 import Logo from "../images/task.svg"
 
-export default function Task({hierarchy,token,id,onDeleteTask}){ //Hierarchie
+export default function Task({hierarchy,token,id,onDeleteTask,onModificationTask}){ //Hierarchie
   
   const {height, width} = useWindowDimensions();
   const [task, setTask] = useState([]);
@@ -21,17 +21,22 @@ export default function Task({hierarchy,token,id,onDeleteTask}){ //Hierarchie
     })
   }
 
+  const handleUpdateTask = (updatedTask) => {
+    setTask(updatedTask);
+    onModificationTask(updatedTask)
+}
+
   useEffect(()=> {
     callback(token, id)
   }, [token, id])
 
-  useEffect(() => {
+  /*useEffect(() => {
     //setTask(task => task.filter(t => t.id !== id));
-  }, [id])
+  }, [id])*/
 
   return(
     <View>
-        <Text variant="headlineLarge" style={styles.title}>{title} </Text>
+        <Text variant="headlineLarge" style={styles.title}>{task?.content} </Text>
         <View style={{borderBottomColor:"gray",borderBottomWidth:1,width: '100%',padding:5,opacity:0.33}}/>
       {task?.description ? (
         <>
@@ -57,10 +62,10 @@ export default function Task({hierarchy,token,id,onDeleteTask}){ //Hierarchie
           } }
           onConfirmPressed={() => {
             deleteTask(id, token).then(response => {
-              setTask(task.filter(t => t.id !== id)); //???
               onDeleteTask(id);
               // Revenir à l'écran précédent une fois le projet supprimé
-              navigation.goBack();})
+              navigation.goBack();
+            });
           }} />
         <View style={{flexDirection:"row",marginTop:height/25}}>
           <Button
@@ -70,10 +75,11 @@ export default function Task({hierarchy,token,id,onDeleteTask}){ //Hierarchie
             mode="contained"
             onPress={() => {
               navigation.navigate("ModificationTask", {
+                onUpdateTask:handleUpdateTask,
                 task:task,
               });
             } }>
-              Modifier projet
+              Modifier tâche
           </Button>
           <Button
             style={styles.button}
@@ -81,7 +87,7 @@ export default function Task({hierarchy,token,id,onDeleteTask}){ //Hierarchie
             buttonColor='#B22222'
             mode="contained"
             onPress={() => setShowable(true)}>
-              Fermer projet
+              Suprimer tâche
           </Button>
         </View></>
       ) : []}

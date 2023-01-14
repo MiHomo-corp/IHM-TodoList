@@ -6,7 +6,7 @@ import { TokenContext } from '../Context/Context'
 
 export default function CreateTaskScreen({navigation,route}){
     
-    const {idProject, titleProject} = route.params
+    const {idProject, titleProject, onHandleNewTask} = route.params
 
     return (
       <View style={styles.container}>
@@ -14,7 +14,7 @@ export default function CreateTaskScreen({navigation,route}){
           {([token, setToken]) => {
                 return (
                 <View style={styles.container}>
-                  <CreateTask token={token} idProject={idProject} titleProject={titleProject}/>
+                  <CreateTask token={token} idProject={idProject} titleProject={titleProject} onHandleNewTask={onHandleNewTask}/>
                 </View>)
           }}
         </TokenContext.Consumer>

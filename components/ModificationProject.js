@@ -9,7 +9,7 @@ import { updateProject } from "../API/todoAPI"
 import Logo from '../images/modifProject.svg';
 
 
-export default function ModificationProject({token,project}){
+export default function ModificationProject({token,project,onUpdateProject}){
   const {height, width} = useWindowDimensions();
   const [projectTitle, setProjectTitle] = useState(project[0].title);
   const [description, setDescription] = useState(project[0].description);
@@ -105,8 +105,11 @@ export default function ModificationProject({token,project}){
               setShowable(false);
             }}
             onConfirmPressed={() => {
-              updateProject(token,project[0].id,projectTitle,dateProject,description).then(navigation.navigate("Projects")) 
-         }}
+              updateProject(token,project[0].id,projectTitle,dateProject,description).then((response) => {
+                onUpdateProject(response.updateProjectss.projects[0])
+                navigation.goBack()
+              }) 
+            }}
           />
           {disabled ? (
             <Button 

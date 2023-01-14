@@ -8,7 +8,7 @@ import { createTask } from "../API/todoAPI"
 import Logo from '../images/createTask.svg';
 
 
-export default function CreateTask({token,idProject,titleProject}){
+export default function CreateTask({token,idProject,titleProject,onHandleNewTask}){
  
   const {height, width} = useWindowDimensions();
   const [taskContent, setTaskContent] = useState("");
@@ -74,7 +74,10 @@ export default function CreateTask({token,idProject,titleProject}){
               setShowable(false);
             }}
             onConfirmPressed={() => {
-              createTask(idProject,token,taskContent,description).then(navigation.goBack())
+              createTask(idProject, token, taskContent, description).then((response) => {
+                onHandleNewTask(response.createTasks.tasks[0]);
+                navigation.goBack();
+              });
             }}
           />
             

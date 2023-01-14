@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from "react";
-import { StyleSheet,View, ScrollView, useWindowDimensions } from 'react-native';
+import { View, ScrollView, useWindowDimensions, LogBox } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { Calendar } from 'react-native-calendars';
@@ -9,7 +9,12 @@ import { createProject } from "../API/todoAPI"
 import Logo from '../images/createProject.svg';
 
 
-export default function CreateProject({username,token}){
+export default function CreateProject({username,token,onHandleNewProject}){
+
+  LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+  ]);
+
   const {height, width} = useWindowDimensions();
   const [projectTitle, setProjectTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -104,7 +109,10 @@ export default function CreateProject({username,token}){
               setShowable(false);
             }}
             onConfirmPressed={() => {
-              createProject(username,token,projectTitle,dateProject,description).then(navigation.navigate("Projects"))  
+              createProject(username,token,projectTitle,dateProject,description).then((response)=>{
+                onHandleNewProject(response.createProjects.projects[0]);
+                navigation.goBack() 
+              })
             }}
           />
           {disabled ? (

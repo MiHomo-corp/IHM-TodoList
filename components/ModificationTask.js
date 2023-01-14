@@ -8,7 +8,7 @@ import { updateTask } from "../API/todoAPI"
 import Logo from '../images/modifTask.svg';
 
 
-export default function ModificationTask({token,task}){
+export default function ModificationTask({token,task,onUpdateTask}){
   const {height, width} = useWindowDimensions();
   const [taskContent, onChangeText] = useState(task.content);
   const [description, onChangeDescription] = useState(task.description);
@@ -71,7 +71,10 @@ export default function ModificationTask({token,task}){
               setShowable(false);
             }}
             onConfirmPressed={() => {
-              updateTask(token,task.id,taskContent,description).then(navigation.navigate("Projects"))
+              updateTask(token,task.id,taskContent,description).then((response)=>{
+                onUpdateTask(response.updateTasks.tasks[0])
+                  navigation.goBack()
+              })
             }}
           />
           {disabled ? (

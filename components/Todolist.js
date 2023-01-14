@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from "react";
-import { StyleSheet, View, TouchableOpacity, useWindowDimensions,ScrollView } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, useWindowDimensions,ScrollView,LogBox } from 'react-native';
 import { Text, Button } from 'react-native-paper'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Checkbox from 'expo-checkbox';
@@ -7,8 +7,12 @@ import Checkbox from 'expo-checkbox';
 import { useNavigation } from "@react-navigation/native";
 import { getTasks, setCheckTask, closeProject, deleteProject, deleteTask, updateProjectStepDone, nextStepProject } from "../API/todoAPI"
 
+export default function TodoList({hierarchy,username,token,title,usernameOfOwner, onDeleteProject, onModificationProject}){
 
-export default function TodoList({hierarchy,username,token,title,usernameOfOwner, onDeleteTaskList}){
+  LogBox.ignoreLogs([
+    'Non-serializable values were found in the navigation state',
+  ]);
+
   const {height, width} = useWindowDimensions();
   const [tasks, setTask] = useState([]);
   const [project, setProject] = useState([]);
@@ -56,12 +60,25 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
     })
   }
 
+  const handleModificationTask = updatedTask => {
+    setTask(tasks.map(task => task.id === updatedTask.id ? updatedTask : task));
+  }
+
   const handleDeleteTask = (taskId) => {
-    deleteTask(taskId, token).then((response) => {
+    deleteTask(taskId, token).then(() => {
       // Mettre à jour la liste de tâches en filtrant les tâches qui ont l'identifiant de la tâche supprimée
       setTask(tasks.filter((task) => task.id !== taskId));
     });
   };
+
+  const handleNewTask = (newTask) => {
+    setTask([...tasks, newTask]);
+  }
+
+  const handleUpdateProject = (updatedProject) => {
+    setProject(updatedProject);
+    onModificationProject(updatedProject)
+  }
 
   useEffect(()=> {
     callback(username, token, title,usernameOfOwner)
@@ -83,6 +100,7 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
           ):[]}
           <View style={{borderBottomColor:"gray",borderBottomWidth:1,width: '100%',padding:5,opacity:0.33}}/>
           <Text variant="titleSmall" style={styles.status}>Status : {project[0]?.status}</Text>
+          <Text variant="titleSmall" style={styles.status}>Date de fin : {project[0]?.date}</Text>
 
           {hierarchy === "ProjectChef" && verifDoneTask() && project[0]?.status !== "Terminé" ? (
             <>
@@ -160,7 +178,7 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
           ) : []}
           <View style={{ paddingLeft: 10, paddingTop:20}}>
           {tasks.map((item) => 
-            <View style={{marginLeft:width/5, flexDirection: 'row', alignItems:"center"}}>
+            <View key={item.id} style={{marginLeft:width/5, flexDirection: 'row', alignItems:"center"}}>
             <Checkbox 
               disabled={hierarchy==="Manager" || project[0]?.projectStepDone || project[0]?.status === "Fermé" || project[0]?.status === "Terminé"} 
               value={item.done} style={styles.checkbox} 
@@ -171,9 +189,9 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                 onDeleteTask:handleDeleteTask
               })
               navigation.navigate("Task", {
-                title: item.content,
-                id: item.id,
-                token: token,
+                onDeleteTask:handleDeleteTask,
+                onModificationTask:handleModificationTask,
+                id:item.id
               });
             }}>
               <Text style={styles.label}>{item.content}</Text>
@@ -201,7 +219,8 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                 onPress={() => {
                   navigation.navigate("CreateTask", {
                     titleProject: project[0].title,
-                    idProject: project[0].id
+                    idProject: project[0].id,
+                    onHandleNewTask: handleNewTask
                   });
                 }} >NOUVELLE TÂCHE</Button>
               )}
@@ -226,7 +245,7 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                   setDeleteShowable(false);
                 } }
                 onConfirmPressed={() => {
-                  deleteProject(project[0].id, token).then(navigation.navigate("Projects"));
+                  deleteProject(project[0].id, token).then(onDeleteProject(project[0].id)).then(navigation.navigate("Projects"));
                 } } />
               <Button
                 style={{ width: 250, margin: 50 }}
@@ -265,6 +284,7 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                   mode="contained"
                   onPress={() => {
                     navigation.navigate("ModificationProject", {
+                      onUpdateProject:handleUpdateProject,
                       project: project
                     });
                   } }>

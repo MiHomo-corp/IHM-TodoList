@@ -29,6 +29,18 @@ export default function Projects({hierarchy,username,token}){
       }
   }
 
+  const handleDeleteProject = (todosId) => {
+    setTodos(todos => todos.filter(t => t.id !== todosId));
+  };
+
+  const handleNewProject = (newProject) => {
+    setTodos([...todos, newProject]);
+  }
+
+  const handleModificationProject = (updatedProject) => {
+    setTodos(todos.map(project => project.id === updatedProject.id ? updatedProject : project));
+  }
+
   useEffect(()=> {
     callback(hierarchy,username, token)
   }, [hierarchy, username, token])
@@ -44,7 +56,12 @@ export default function Projects({hierarchy,username,token}){
             mode="contained"
             icon="briefcase-plus"
             style={{width:width/2.2}}
-            onPress={() => navigation.navigate("CreateProject")}>CREER PROJET</Button></View>) : []}
+            onPress={() => 
+              navigation.navigate("CreateProject",{
+                onHandleNewProject:handleNewProject,
+                coucou:"test"
+            })}>CREER PROJET</Button></View>) : []}
+          
           <View style={{marginTop:height/50,  flex: 1, position: 'relative'}}>
             {todos.map((item)=> 
               <View key={item.id} style={ hierarchy  === "Manager" && item.projectStepDone ? styles.listAction : styles.list}>
@@ -53,7 +70,9 @@ export default function Projects({hierarchy,username,token}){
                     onPress={() => {
                       navigation.push("TodoList", {
                         title: item.title,
-                        usernameOfOwner : item.owner.username
+                        usernameOfOwner : item.owner.username,
+                        onModificationProject:handleModificationProject,
+                        onDeleteProject:handleDeleteProject,
                       });
                     } } style={{width:"100%"}}>
                     <View flexDirection="row">

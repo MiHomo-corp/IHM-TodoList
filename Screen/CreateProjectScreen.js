@@ -4,8 +4,9 @@ import { View, StyleSheet } from 'react-native'
 
 import { TokenContext, UsernameContext } from '../Context/Context'
 
-export default function CreateProjectScreen(){
-    
+export default function CreateProjectScreen(navigation,route){
+    const {onHandleNewProject} = navigation.route.params
+
     return (
       <View style={styles.container}>
         <TokenContext.Consumer>
@@ -14,7 +15,7 @@ export default function CreateProjectScreen(){
               {([username, setUsername]) => {
                 return (
                 <View style={styles.container}>
-                  <CreateProject username={username} token={token}/> 
+                  <CreateProject username={username} token={token} onHandleNewProject={onHandleNewProject}/> 
                 </View>
                 )
               }}

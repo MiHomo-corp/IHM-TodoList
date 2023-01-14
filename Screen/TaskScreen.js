@@ -5,7 +5,7 @@ import Task from '../components/Task'
 import { HierarchyContext, TokenContext } from '../Context/Context'
 
 export default function TaskScreen({ navigation, route }){
-  const { title, id, onDeleteTask} = route.params;
+  const { id, onDeleteTask, onModificationTask} = route.params;
 
   return (
     <View style={styles.container}>
@@ -13,7 +13,7 @@ export default function TaskScreen({ navigation, route }){
         {([token, setToken]) => (
           <HierarchyContext.Consumer>
             {([hierarchy, setToken]) => (
-              <Task hierarchy={hierarchy} token={token} title={title} id={id} onDeleteTask={onDeleteTask}/>
+              <Task hierarchy={hierarchy} token={token} id={id} onDeleteTask={onDeleteTask} onModificationTask={onModificationTask}/>
             )}
           </HierarchyContext.Consumer>
         )}
