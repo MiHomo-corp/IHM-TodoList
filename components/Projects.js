@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { getChefsOfManager, getProjects } from "../API/todoAPI"
 import { TokenContext } from '../Context/Context'
-import Logo from '../images/todoLists.svg';
+import Logo from '../images/projects.svg';
 
 export default function Projects({hierarchy,username,token}){
   const {height, width} = useWindowDimensions();
@@ -41,7 +41,7 @@ export default function Projects({hierarchy,username,token}){
         <>
           <ScrollView>
             {hierarchy === "ProjectChef" ? (
-              <View style={{padding:15, alignItems:"flex-end"}}>
+              <View style={{marginTop:height/50, marginRight:width/15, alignItems:"flex-end"}}>
               <Button
                 labelStyle={{color: '#22577A',fontWeight:"bold"}}
                 buttonColor='#90D7B4'
@@ -49,7 +49,7 @@ export default function Projects({hierarchy,username,token}){
                 icon="briefcase-plus"
                 style={{width:width/2.2}}
                 onPress={() => navigation.navigate("CreateProject")}>CREER PROJET</Button></View>) : []}
-              <View style={{ flex: 1, position: 'relative'}}>
+              <View style={{marginTop:height/50,  flex: 1, position: 'relative'}}>
                 {todos.map((item)=> 
                   <View key={item.id} style={ hierarchy  === "Manager" && item.projectStepDone ? styles.listAction : styles.list}>
                     <View style={{flexDirection: 'row'}}>
@@ -86,6 +86,9 @@ export default function Projects({hierarchy,username,token}){
                     </View>
                   </View>)}
               </View>
+            <View style={{marginTop:"10%", alignItems:"center"}}>
+              <Logo width={width/1.5} height={height/5} />
+            </View>
           </ScrollView>
         </>    
       )}

@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from "react";
 
-import { StyleSheet, View, SafeAreaView,ScrollView} from 'react-native';
+import { StyleSheet, View, SafeAreaView,ScrollView,useWindowDimensions} from 'react-native';
 
 import { TextInput, Button,Text} from 'react-native-paper';
 
@@ -11,16 +11,15 @@ import { useNavigation } from "@react-navigation/native";
 import { createTask } from "../API/todoAPI"
 import Logo from '../images/createTask.svg';
 
-//<Checkbox value={item.done} onValueChange={setStatusTask}/>
 
 export default function CreateTask({username,token,idProject,titleProject}){
-
+ 
+  const {height, width} = useWindowDimensions();
   const [taskContent, setTaskContent] = useState("");
   const [description, onChangeDescription] = useState("");
   const [disabled, setDisabled] = useState(true)
   const [showable,setShowable] = useState(false)
 
-  //const [newTodoText, setNewTodoText] = useState("");
   const navigation = useNavigation();
   
   useEffect(() => {
@@ -34,10 +33,11 @@ export default function CreateTask({username,token,idProject,titleProject}){
 
   return(
     <View>
+      <ScrollView>
         <SafeAreaView>
           <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Nouvelle tâche pour {titleProject}</Text>
             <View style={{marginTop:"5%", alignItems:"center"}}>
-              <Logo width={200} height={150} />
+              <Logo width={width/1.5} height={height/6} />
             </View>
           <TextInput
             style={{marginTop:15,marginHorizontal:15,textAlign:"center"}}
@@ -82,13 +82,14 @@ export default function CreateTask({username,token,idProject,titleProject}){
           />
             
         {disabled ? (
-            <Button style={{marginHorizontal:35,marginTop:15}} disabled={disabled} icon="alert" mode="contained">
+            <Button style={{marginHorizontal:35,marginTop:35}} disabled={disabled} icon="alert" mode="contained">
               Tout les champs ne sont pas remplis...
             </Button>) : (
-            <Button style={{marginHorizontal:35,marginTop:15}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="checkbox-marked" mode="contained" onPress={() => setShowable(true)}>
+            <Button style={{marginHorizontal:35,marginTop:35}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="checkbox-marked" mode="contained" onPress={() => setShowable(true)}>
               <Text style={{color: '#22577A',fontWeight:"bold",textTransform: 'uppercase'}}> Creer {taskContent}</Text>
             </Button>)}
         </SafeAreaView>
+      </ScrollView>
     </View>
   )
 }

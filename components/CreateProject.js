@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from "react";
 
-import { StyleSheet, View,ScrollView } from 'react-native';
+import { StyleSheet,View, ScrollView, useWindowDimensions } from 'react-native';
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -17,7 +17,7 @@ import Logo from '../images/createProject.svg';
 //<Checkbox value={item.done} onValueChange={setStatusTask}/>
 
 export default function CreateProject({username,token}){
-
+  const {height, width} = useWindowDimensions();
   const [projectTitle, setProjectTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dateProject, setDateProject] = useState("")
@@ -52,7 +52,7 @@ export default function CreateProject({username,token}){
       <View>
           <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Nouveau Projet</Text>
             <View style={{marginTop:"5%", alignItems:"center"}}>
-              <Logo width={200} height={150} />
+              <Logo width={width/1.5} height={height/6} />
             </View>
             <TextInput
               style={{marginVertical:15,marginHorizontal:15,textAlign:"center"}}

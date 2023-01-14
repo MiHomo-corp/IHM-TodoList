@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from "react";
 
-import { StyleSheet, View, SafeAreaView, ScrollView} from 'react-native';
+import { StyleSheet, View, SafeAreaView, ScrollView, useWindowDimensions} from 'react-native';
 
 import { Button, TextInput,Text } from 'react-native-paper';
 
@@ -13,6 +13,7 @@ import Logo from '../images/modifTask.svg';
 
 
 export default function ModificationTask({token,task}){
+  const {height, width} = useWindowDimensions();
   const [taskContent, onChangeText] = useState(task.content);
   const [description, onChangeDescription] = useState(task.description);
   const [disabled, setDisabled] = useState(true)
@@ -34,7 +35,7 @@ export default function ModificationTask({token,task}){
         <SafeAreaView>
           <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Modification de {task.content}</Text>
           <View style={{marginTop:"5%", alignItems:"center"}}>
-            <Logo width={200} height={150} />
+            <Logo width={width/1.5} height={height/6} />
           </View>
           <TextInput
             style={{marginTop:15,marginHorizontal:15,textAlign:"center"}}
@@ -76,10 +77,10 @@ export default function ModificationTask({token,task}){
             }}
           />
           {disabled ? (
-            <Button style={{marginHorizontal:35,marginTop:15}} disabled={disabled} icon="alert" mode="contained">
+            <Button style={{marginHorizontal:35,marginTop:35}} disabled={disabled} icon="alert" mode="contained">
               Aucune modification détecté
             </Button>) : (
-            <Button style={{marginHorizontal:35,marginTop:15}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="checkbox-marked" mode="contained" onPress={() => setShowable(true)}>
+            <Button style={{marginHorizontal:35,marginTop:35}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="checkbox-marked" mode="contained" onPress={() => setShowable(true)}>
               <Text style={{color: '#22577A',fontWeight:"bold",textTransform: 'uppercase'}}> Modifier {taskContent}</Text>
             </Button>)}
         </SafeAreaView>

@@ -1,5 +1,5 @@
 import React, {useEffect, useState } from 'react'
-import {StyleSheet, View, FlatList} from 'react-native'
+import {StyleSheet, View, useWindowDimensions} from 'react-native'
 import { List, RadioButton, Text, Button } from 'react-native-paper';
 import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -9,7 +9,8 @@ import Logo from '../images/profil.svg';
 
 
 export default function Profil (hierarchy,username,token){ //Pour une raison étrange (probablement dû au link dans la navigation), tous se trouve dans hierarchy
-
+    
+    const {height, width} = useWindowDimensions();
     const [myManager, setMyManager] = useState('')
     const [listChefs, setListChefs] = useState([])
     const [pendingProject, setPendingProject] = useState([])
@@ -91,7 +92,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
         <View>
             <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Votre Profil : {hierarchy.username.toUpperCase()}</Text>
             <View style={{marginTop:"5%", marginBottom:'5%', alignItems:"center"}}>
-                <Logo width={200} height={150} />
+                <Logo width={width/1.5} height={height/6} />
             </View>
             <List.Section>
                 {hierarchy.hierarchy === "ProjectChef" ? (

@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from "react";
 
-import { StyleSheet, View, SafeAreaView,ScrollView} from 'react-native';
+import { StyleSheet, View, SafeAreaView, ScrollView, useWindowDimensions} from 'react-native';
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -15,6 +15,7 @@ import Logo from '../images/modifProject.svg';
 
 
 export default function ModificationProject({token,project}){
+  const {height, width} = useWindowDimensions();
   const [projectTitle, setProjectTitle] = useState(project[0].title);
   const [description, setDescription] = useState(project[0].description);
   const [dateProject, setDateProject] = useState(project[0].date)
@@ -50,7 +51,7 @@ export default function ModificationProject({token,project}){
         <SafeAreaView>
           <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Modification du projet {project[0].title}</Text>
             <View style={{marginTop:"5%", alignItems:"center"}}>
-              <Logo width={200} height={150} />
+              <Logo width={width/1.5} height={height/6} />
             </View>
             <TextInput
               style={{marginVertical:15,marginHorizontal:15,textAlign:"center"}}

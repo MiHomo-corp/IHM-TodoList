@@ -1,12 +1,19 @@
 import React,{useEffect, useState} from "react";
-import { StyleSheet, View, TextInput, Button, Text, FlatList, Switch, TouchableOpacity, Checkbox } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Text, Button } from 'react-native-paper'
+import AwesomeAlert from 'react-native-awesome-alerts';
 import { useNavigation } from "@react-navigation/native";
+
 import { getTask , deleteTask } from "../API/todoAPI"
+import Logo from "../images/task.svg"
 
 export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarchie
-
+  
+  const {height, width} = useWindowDimensions();
   const [task, setTask] = useState([]);
   const navigation = useNavigation();
+  const [showable,setShowable] = useState(false)
+
 
   const callback = (token, id) => {
     getTask(token,id).then(rep =>{
@@ -24,27 +31,90 @@ export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarc
 
   return(
     <View>
+        <Text variant="headlineLarge" style={styles.title}>{task?.content} </Text>
+        <View style={{borderBottomColor:"gray",borderBottomWidth:1,width: '100%',padding:5,opacity:0.33}}/>
+      {task?.description ? (
+        <>
+          <Text variant="titleSmall" style={{color:"#22577A",marginHorizontal:width/15, marginVertical:height/25}}>Description : {task?.description}</Text>
+        </>
+      ) : <Text variant="titleSmall" style={{color:"#22577A",marginHorizontal:width/15, marginVertical:height/25}}>Cette tâche n'a pas de description</Text>}
       {hierarchy === "ProjectChef" ? (
-        <><Button
-          title="Supprimer cette Task"
-          onPress={() => {
+        <>
+        <AwesomeAlert
+          show={showable}
+          title="ATTENTION"
+          message="Etes-vous sur de vouloir supprimer cette tâche de votre projet ? Cette action est irrémédiable !"
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Annuler"
+          confirmText="Confirmer"
+          confirmButtonColor="#B22222"
+          cancelButtonColor="#01796f"
+          onCancelPressed={() => {
+            setShowable(false);
+          } }
+          onConfirmPressed={() => {
             deleteTask(id, token).then(response => {
               setTask(task.filter(t => t.id !== id)); //???
               onDeleteTask(id);
               // Revenir à l'écran précédent une fois le projet supprimé
-              navigation.goBack();
-            });
-          } } /><Button
-            title="Modifier cette Task"
+              navigation.goBack();})
+          }} />
+        <View style={{flexDirection:"row",marginTop:height/25}}>
+          <Button
+            style={styles.button}
+            labelStyle={{color: '#22577A',fontWeight:"bold",textTransform:"uppercase"}}
+            buttonColor='#90D7B4'
+            mode="contained"
             onPress={() => {
               navigation.navigate("ModificationTask", {
                 task:task,
               });
-            }}/></>
+            } }>
+              Modifier projet
+          </Button>
+          <Button
+            style={styles.button}
+            labelStyle={{color: '#EBF7F3',fontWeight:"bold",textTransform:"uppercase"}}
+            buttonColor='#B22222'
+            mode="contained"
+            onPress={() => setShowable(true)}>
+              Fermer projet
+          </Button>
+        </View></>
       ) : []}
-      
-      <Text>Description : </Text>
-      <Text>{task?.description}</Text>
+      <View style={{marginTop:height/20, alignItems:"center"}}>
+        <Logo width={width/1.5} height={height/5} />
+      </View>      
     </View>
   )
 }
+
+
+const styles = StyleSheet.create({
+  button:{
+    flex:1,
+    margin:5
+  },
+  title: {
+    textTransform:"uppercase",
+    textAlign:"center",
+    color:"#01796F"
+  },
+});
+
+/*<Button
+title="Supprimer cette Task"
+onPress={() => {
+  deleteTask(id, token).then(response => {
+    setTask(task.filter(t => t.id !== id)); //???
+    onDeleteTask(id);
+    // Revenir à l'écran précédent une fois le projet supprimé
+    navigation.goBack();
+  });
+} } /><Button
+  title="Modifier cette Task"
+  onPress={() => {
+    navigation.navigate("ModificationTask", {
+      task:task,
+    });*/
