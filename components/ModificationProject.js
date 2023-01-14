@@ -1,16 +1,11 @@
 import React,{useEffect, useState} from "react";
-
-import { StyleSheet, View, SafeAreaView, ScrollView, useWindowDimensions} from 'react-native';
-
+import { View, SafeAreaView, ScrollView, useWindowDimensions} from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-
 import { Button, TextInput,Text } from 'react-native-paper';
-
 import AwesomeAlert from 'react-native-awesome-alerts';
-
-import { updateProject } from "../API/todoAPI"
 import { Calendar } from 'react-native-calendars';
 
+import { updateProject } from "../API/todoAPI"
 import Logo from '../images/modifProject.svg';
 
 
@@ -100,6 +95,8 @@ export default function ModificationProject({token,project}){
             message="Etes-vous sur de vouloir modifier ce projet ?"
             showCancelButton={true}
             showConfirmButton={true}
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
             cancelText="Annuler"
             confirmText="Confirmer"
             confirmButtonColor="#90D7B4"
@@ -112,10 +109,20 @@ export default function ModificationProject({token,project}){
          }}
           />
           {disabled ? (
-            <Button style={{marginHorizontal:35,marginVertical:50}} disabled={disabled} icon="alert" mode="contained">
+            <Button 
+              style={{marginHorizontal:35,marginVertical:50}} 
+              disabled={disabled} 
+              icon="alert" 
+              mode="contained">
               Aucune modification détecté
             </Button>) : (
-            <Button style={{marginHorizontal:35,marginVertical:50}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="briefcase-edit" mode="contained" onPress={() => setShowable(true)}>
+            <Button 
+              style={{marginHorizontal:35,marginVertical:50}} 
+              labelStyle={{color: '#22577A'}} 
+              buttonColor='#90D7B4' 
+              icon="briefcase-edit" 
+              mode="contained" 
+              onPress={() => setShowable(true)}>
               <Text style={{color: '#22577A',fontWeight:"bold",textTransform: 'uppercase'}}> Modifier {projectTitle}</Text>
             </Button>)}
         </SafeAreaView>
@@ -123,16 +130,3 @@ export default function ModificationProject({token,project}){
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  label: {
-    width: 70
-  },
-  text_error: {
-    color: 'red'
-  },
-  text_input: {
-    backgroundColor: 'white',
-    margin: 5
-  }
-})

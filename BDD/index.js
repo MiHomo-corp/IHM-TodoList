@@ -77,8 +77,6 @@ const resolvers = {
                 },
             });
 
-	    console.log("existing", existing);
-
             if (existing) {
                 throw new Error(`User with username ${username} already exists!`);
             }

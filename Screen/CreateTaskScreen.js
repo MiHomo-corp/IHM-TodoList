@@ -2,7 +2,7 @@ import React from 'react'
 import CreateTask from "../components/CreateTask"
 import { View, StyleSheet } from 'react-native'
 
-import { TokenContext, UsernameContext } from '../Context/Context'
+import { TokenContext } from '../Context/Context'
 
 export default function CreateTaskScreen({navigation,route}){
     
@@ -11,23 +11,12 @@ export default function CreateTaskScreen({navigation,route}){
     return (
       <View style={styles.container}>
         <TokenContext.Consumer>
-          {([token, setToken]) => (
-            <UsernameContext.Consumer>
-              {([username, setUsername]) => {
+          {([token, setToken]) => {
                 return (
-                  <View
-                  style={{
-                    backgroundColor:"#EBF7F3",
-                    flex: 1,
-                    //justifyContent: 'center',
-                    //alignItems: 'center'
-                  }}
-                >
-                <CreateTask username={username} token={token} idProject={idProject} titleProject={titleProject}/>
+                <View style={styles.container}>
+                  <CreateTask token={token} idProject={idProject} titleProject={titleProject}/>
                 </View>)
-              }}
-            </UsernameContext.Consumer>
-          )}
+          }}
         </TokenContext.Consumer>
       </View>
     )

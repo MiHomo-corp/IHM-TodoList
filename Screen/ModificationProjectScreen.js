@@ -12,15 +12,8 @@ export default function ModificationProjectScreen(navigation,route){
         <TokenContext.Consumer>
           {([token, setToken]) => {
                 return(
-                  <View
-                  style={{
-                    backgroundColor:"#EBF7F3",
-                    flex: 1,
-                    //justifyContent: 'center',
-                    //alignItems: 'center'
-                  }}
-                >
-                <ModificationProject token={token} project={project}/>
+                <View style={styles.container}>
+                  <ModificationProject token={token} project={project}/>
                 </View>)
           }}
         </TokenContext.Consumer>

@@ -13,15 +13,8 @@ export default function CreateProjectScreen(){
             <UsernameContext.Consumer>
               {([username, setUsername]) => {
                 return (
-                  <View
-                  style={{
-                    backgroundColor:"#EBF7F3",
-                    flex: 1,
-                    //justifyContent: 'center',
-                    //alignItems: 'center'
-                  }}
-                >
-                <CreateProject username={username} token={token}/> 
+                <View style={styles.container}>
+                  <CreateProject username={username} token={token}/> 
                 </View>
                 )
               }}

@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { getTask , deleteTask } from "../API/todoAPI"
 import Logo from "../images/task.svg"
 
-export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarchie
+export default function Task({hierarchy,token,id,onDeleteTask}){ //Hierarchie
   
   const {height, width} = useWindowDimensions();
   const [task, setTask] = useState([]);
@@ -31,7 +31,7 @@ export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarc
 
   return(
     <View>
-        <Text variant="headlineLarge" style={styles.title}>{task?.content} </Text>
+        <Text variant="headlineLarge" style={styles.title}>{title} </Text>
         <View style={{borderBottomColor:"gray",borderBottomWidth:1,width: '100%',padding:5,opacity:0.33}}/>
       {task?.description ? (
         <>
@@ -46,6 +46,8 @@ export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarc
           message="Etes-vous sur de vouloir supprimer cette tâche de votre projet ? Cette action est irrémédiable !"
           showCancelButton={true}
           showConfirmButton={true}
+          closeOnTouchOutside={false}
+          closeOnHardwareBackPress={false}
           cancelText="Annuler"
           confirmText="Confirmer"
           confirmButtonColor="#B22222"
@@ -102,19 +104,3 @@ const styles = StyleSheet.create({
     color:"#01796F"
   },
 });
-
-/*<Button
-title="Supprimer cette Task"
-onPress={() => {
-  deleteTask(id, token).then(response => {
-    setTask(task.filter(t => t.id !== id)); //???
-    onDeleteTask(id);
-    // Revenir à l'écran précédent une fois le projet supprimé
-    navigation.goBack();
-  });
-} } /><Button
-  title="Modifier cette Task"
-  onPress={() => {
-    navigation.navigate("ModificationTask", {
-      task:task,
-    });*/

@@ -12,7 +12,7 @@ const SIGN_UP_MANAGER =
   'mutation($username:String!, $password:String!){signUpManager(username:$username, password:$password)}'
 
 const MANAGER_LIST = 
-  'query{managers{id username}}' //sortir l'id
+  'query{managers{id username}}'
 
 const CHEF_LIST = 
   'query managers($username: String!){managers(where:{username: $username}){projectChefs{username}}}'
@@ -44,9 +44,6 @@ const CREATEPROJECT =
 
 const CREATETASK = 
   'mutation($content:String!,$id:ID!,$description:String!){createTasks(input:{content:$content,description:$description,belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}}}'
-
-const GETUSERID = 
- 'query userID($username:String!){users(where: {username: $username}) {id}}'
 
 const UPDATETASK =
  'mutation($id:ID!,$newContent:String!,$newDescription:String!){updateTasks(where:{id:$id} update:{content:$newContent,description:$newDescription,}){tasks{content description}}}'
@@ -94,9 +91,6 @@ const FINISHEDSTEP =
 
 const DELTASK =
   "mutation($id:ID!){deleteTasks(where: {id: $id}){nodesDeleted relationshipsDeleted}}"
-
- //fonction suppr une task
- //fonction changer statut d'une task
 
 export function signIn (username, password) {
   return fetch(API_URL, {
@@ -261,34 +255,6 @@ export function signUp (hierarchy, username, password,manager) {
       })  
   }
 }
-/*
-export function getManagerList (username,token){
-  return fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer "+token
-    },
-    body: JSON.stringify({
-      query: GETUSERID,
-      variables: {
-        username: username
-      }
-    })
-  })
-  .then(response => {
-    return response.json()
-  })
-  .then(jsonResponse => {
-    if (jsonResponse.errors != null) {
-      throw jsonResponse.errors[0]
-    }
-    return jsonResponse.data.managers
-  })
-  .catch(error => {
-    throw error
-  })
-}*/
 
 export function getProjects (username,token){
   return fetch(API_URL, {
@@ -699,7 +665,7 @@ export function updateProjectStepDone(id,token){
 export function nextStepProject(validation,id,status,token){
   let NEXTSTEPQUERY = ""
   if(validation){
-    if(status === 'Initialization')
+    if(status === 'Initialisation')
       NEXTSTEPQUERY = DEVELOPMENTSTEP
     if(status === 'Developpement')
       NEXTSTEPQUERY = PRODUCTIONSTEP
@@ -735,8 +701,4 @@ export function nextStepProject(validation,id,status,token){
   .catch(error => {
     throw error
   })
-}
-
-export function setStatusTask(title, token){
-  return console.log("coucou")
 }

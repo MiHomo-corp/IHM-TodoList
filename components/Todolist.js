@@ -1,5 +1,4 @@
 import React,{useEffect, useState} from "react";
-
 import { StyleSheet, View, TouchableOpacity, useWindowDimensions,ScrollView } from 'react-native';
 import { Text, Button } from 'react-native-paper'
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -9,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { getTasks, setCheckTask, closeProject, deleteProject, deleteTask, updateProjectStepDone, nextStepProject } from "../API/todoAPI"
 
 
-export default function TodoList({hierarchy,username,token,title,id,usernameOfOwner, onDeleteTaskList}){
+export default function TodoList({hierarchy,username,token,title,usernameOfOwner, onDeleteTaskList}){
   const {height, width} = useWindowDimensions();
   const [tasks, setTask] = useState([]);
   const [project, setProject] = useState([]);
@@ -22,7 +21,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
   // Fonction de gestion d'événement qui sera appelée lorsque la valeur de la checkbox change
   const handleChange = (item) => {
     setCheckTask(item.id, token, !item.done)
-    .then((response) => {
+    .then(() => {
       // Mise à jour de la valeur de "item.done" dans la liste de tâches
       const updatedTasks = tasks.map((task) => {
         if (task.id === item.id) {
@@ -109,6 +108,8 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
                 message={"Etes-vous sur de vouloir valider cette étape du projet et de passer à la suivante ("+getNextStepProject()+") ? Vous ne pourrez pas revenir en arrière !"}
                 showCancelButton={true}
                 showConfirmButton={true}
+                closeOnTouchOutside={false}
+                closeOnHardwareBackPress={false}
                 cancelText="Annuler"
                 confirmText="Confirmer"
                 confirmButtonColor="#90D7B4"
@@ -125,6 +126,8 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
                 message={"Etes-vous sur de vouloir refuser la validation de l'étape "+project[0].status+" de ce projet ?"}
                 showCancelButton={true}
                 showConfirmButton={true}
+                closeOnTouchOutside={false}
+                closeOnHardwareBackPress={false}
                 cancelText="Annuler"
                 confirmText="Confirmer"
                 confirmButtonColor="#B22222"
@@ -159,7 +162,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
           {tasks.map((item) => 
             <View style={{marginLeft:width/5, flexDirection: 'row', alignItems:"center"}}>
             <Checkbox 
-              disabled={project[0]?.projectStepDone || project[0]?.status === "Fermé" || project[0]?.status === "Terminé"} 
+              disabled={hierarchy==="Manager" || project[0]?.projectStepDone || project[0]?.status === "Fermé" || project[0]?.status === "Terminé"} 
               value={item.done} style={styles.checkbox} 
               onValueChange={() => handleChange(item)} />
 
@@ -213,6 +216,8 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
                 message="Etes-vous sur de vouloir suprimer ce projet ? Cette action est irrémédiable !"
                 showCancelButton={true}
                 showConfirmButton={true}
+                closeOnTouchOutside={false}
+                closeOnHardwareBackPress={false}
                 cancelText="Annuler"
                 confirmText="Confirmer"
                 confirmButtonColor="#B22222"
@@ -240,6 +245,8 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
                 message="Etes-vous sur de vouloir fermer ce projet ? Cette action est irrémédiable !"
                 showCancelButton={true}
                 showConfirmButton={true}
+                closeOnTouchOutside={false}
+                closeOnHardwareBackPress={false}
                 cancelText="Annuler"
                 confirmText="Confirmer"
                 confirmButtonColor="#B22222"

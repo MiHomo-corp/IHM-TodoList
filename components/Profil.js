@@ -146,6 +146,8 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
             message={"Vous vous apprêtez à changer de responsable ("+managerChecked+"), êtes-vous sur ?"}
             showCancelButton={true}
             showConfirmButton={true}
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
             cancelText="Annuler"
             confirmText="Confirmez"
             confirmButtonColor="#B22222"
@@ -167,7 +169,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
                 icon={visible ? "close":"account-switch"} 
                 onPress={() => { setVsisble(!visible) } }>
 
-                <Text style={visible ? {color: "white",fontWeight:"bold",textTransform: 'uppercase'}:{color: "#22577A",fontWeight:"bold",textTransform: 'uppercase'}}>
+                <Text style={visible ? {color: "white",fontWeight:"bold",textTransform: 'uppercase'} : {color: "#22577A",fontWeight:"bold",textTransform: 'uppercase'}}>
                     {visible ? "ANNULER" : "CHANGER DE RESPONSABLE"}
                 </Text>             
    

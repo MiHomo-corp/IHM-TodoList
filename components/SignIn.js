@@ -1,5 +1,4 @@
 import React, { useEffect,useState } from 'react'
-
 import {Text,View,StyleSheet,ActivityIndicator,Image} from 'react-native'
 import { Buffer } from 'buffer'
 import { TextInput,Button } from 'react-native-paper';
@@ -146,6 +145,5 @@ const styles = StyleSheet.create({
   text_input: {
     margin: 10,
     width:250,
-    height:30,
   }
 })

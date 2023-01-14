@@ -1,20 +1,13 @@
 import React,{useEffect, useState} from "react";
-
 import { StyleSheet,View, ScrollView, useWindowDimensions } from 'react-native';
-
 import { useNavigation } from "@react-navigation/native";
-
 import AwesomeAlert from 'react-native-awesome-alerts';
-
+import { Calendar } from 'react-native-calendars';
 import { Button, TextInput,Text } from 'react-native-paper';
 
 import { createProject } from "../API/todoAPI"
-
-import { Calendar } from 'react-native-calendars';
 import Logo from '../images/createProject.svg';
 
-
-//<Checkbox value={item.done} onValueChange={setStatusTask}/>
 
 export default function CreateProject({username,token}){
   const {height, width} = useWindowDimensions();
@@ -101,6 +94,8 @@ export default function CreateProject({username,token}){
             message="Etes-vous sur de vouloir créer ce projet ?"
             showCancelButton={true}
             showConfirmButton={true}
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
             cancelText="Annuler"
             confirmText="Confirmer"
             confirmButtonColor="#90D7B4"
@@ -113,29 +108,23 @@ export default function CreateProject({username,token}){
             }}
           />
           {disabled ? (
-            <Button style={{marginHorizontal:35,marginVertical:50}} disabled={disabled} icon="alert" mode="contained">
+            <Button 
+              style={{marginHorizontal:35,marginVertical:50}}
+              disabled={disabled} 
+              icon="alert" 
+              mode="contained">
               Tout les champs ne sont pas remplis...
             </Button>) : (
-            <Button style={{marginHorizontal:35,marginVertical:50}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="briefcase-plus" mode="contained" onPress={() => setShowable(true)}>
+            <Button 
+              style={{marginHorizontal:35,marginVertical:50}} 
+              labelStyle={{color: '#22577A'}} 
+              buttonColor='#90D7B4' 
+              icon="briefcase-plus" 
+              mode="contained" 
+              onPress={() => setShowable(true)}>
               <Text style={{color: '#22577A',fontWeight:"bold",textTransform: 'uppercase'}}> Creer {projectTitle}</Text>
             </Button>)}
       </View>
     </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  label: {
-    width: 70
-  },
-  text_error: {
-    color: 'red'
-  },
-  text_input: {
-    backgroundColor: 'white',
-    margin: 5
-  }
-})

@@ -124,14 +124,14 @@ export default function SignUp () {
                       </View>
                       <View style={{ flexDirection: 'column' }}>
                       <Text variant="titleMedium" style={styles.radio}>Etes-vous un :</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                          <RadioButton
-                            color='#90D7B4'
-                            status={ checked === 'ProjectChef' ? 'checked' : 'unchecked' }
-                            onPress={() => setChecked('ProjectChef')}
-                          />
-                          <Text variant="titleMedium" style={styles.radio}>Chef de projet</Text>
-                          {checked === "ProjectChef" ? (
+                      <View style={{ flexDirection: 'row' }}>
+                        <RadioButton
+                          color='#90D7B4'
+                          status={ checked === 'ProjectChef' ? 'checked' : 'unchecked' }
+                          onPress={() => setChecked('ProjectChef')}
+                        />
+                        <Text variant="titleMedium" style={styles.radio}>Chef de projet</Text>
+                        {checked === "ProjectChef" ? (
                           <FlatList
                           style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
                           data={managerList}
@@ -142,8 +142,8 @@ export default function SignUp () {
                               onPress={() => setManagerChecked(item.username)}
                             />
                             <Text variant="titleMedium" style={styles.radio}>{item.username}</Text>
-                        </View>}/>
-                        ) : []}
+                          </View>}/>
+                         ) : []}
                         </View>
                         <View style={{ flexDirection: 'row' }}>
                           <RadioButton

@@ -1,18 +1,14 @@
 import React,{useEffect, useState} from "react";
-
-import { StyleSheet, View, SafeAreaView,ScrollView,useWindowDimensions} from 'react-native';
-
+import { View, SafeAreaView,ScrollView,useWindowDimensions} from 'react-native';
 import { TextInput, Button,Text} from 'react-native-paper';
-
 import AwesomeAlert from 'react-native-awesome-alerts';
-
 import { useNavigation } from "@react-navigation/native";
 
 import { createTask } from "../API/todoAPI"
 import Logo from '../images/createTask.svg';
 
 
-export default function CreateTask({username,token,idProject,titleProject}){
+export default function CreateTask({token,idProject,titleProject}){
  
   const {height, width} = useWindowDimensions();
   const [taskContent, setTaskContent] = useState("");
@@ -68,6 +64,8 @@ export default function CreateTask({username,token,idProject,titleProject}){
             message="Etes-vous sur de vouloir créer ce projet ?"
             showCancelButton={true}
             showConfirmButton={true}
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
             cancelText="Annuler"
             confirmText="Confirmer"
             confirmButtonColor="#90D7B4"
@@ -76,16 +74,25 @@ export default function CreateTask({username,token,idProject,titleProject}){
               setShowable(false);
             }}
             onConfirmPressed={() => {
-              createTask(idProject,token,taskContent,description).then((response) => {
-                console.log(response);navigation.goBack();})
+              createTask(idProject,token,taskContent,description).then(navigation.goBack())
             }}
           />
             
         {disabled ? (
-            <Button style={{marginHorizontal:35,marginTop:35}} disabled={disabled} icon="alert" mode="contained">
+            <Button 
+              style={{marginHorizontal:35,marginTop:35}} 
+              disabled={disabled} 
+              icon="alert" 
+              mode="contained">
               Tout les champs ne sont pas remplis...
             </Button>) : (
-            <Button style={{marginHorizontal:35,marginTop:35}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="checkbox-marked" mode="contained" onPress={() => setShowable(true)}>
+            <Button 
+              style={{marginHorizontal:35,marginTop:35}} 
+              labelStyle={{color: '#22577A'}} 
+              buttonColor='#90D7B4' 
+              icon="checkbox-marked" 
+              mode="contained" 
+              onPress={() => setShowable(true)}>
               <Text style={{color: '#22577A',fontWeight:"bold",textTransform: 'uppercase'}}> Creer {taskContent}</Text>
             </Button>)}
         </SafeAreaView>
@@ -93,16 +100,3 @@ export default function CreateTask({username,token,idProject,titleProject}){
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  label: {
-    width: 70
-  },
-  text_error: {
-    color: 'red'
-  },
-  text_input: {
-    backgroundColor: 'white',
-    margin: 5
-  }
-})

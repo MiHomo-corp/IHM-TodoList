@@ -1,11 +1,9 @@
 import React,{useEffect, useState} from "react";
-
 import { StyleSheet, View, TouchableOpacity, ScrollView,useWindowDimensions} from 'react-native';
 import { Text, Button } from 'react-native-paper'
 import { useNavigation } from "@react-navigation/native";
 
 import { getChefsOfManager, getProjects } from "../API/todoAPI"
-import { TokenContext } from '../Context/Context'
 import Logo from '../images/projects.svg';
 
 export default function Projects({hierarchy,username,token}){
@@ -36,63 +34,59 @@ export default function Projects({hierarchy,username,token}){
   }, [hierarchy, username, token])
 
   return(
-    <TokenContext.Consumer>
-      {([token, setToken]) => (
-        <>
-          <ScrollView>
-            {hierarchy === "ProjectChef" ? (
-              <View style={{marginTop:height/50, marginRight:width/15, alignItems:"flex-end"}}>
-              <Button
-                labelStyle={{color: '#22577A',fontWeight:"bold"}}
-                buttonColor='#90D7B4'
-                mode="contained"
-                icon="briefcase-plus"
-                style={{width:width/2.2}}
-                onPress={() => navigation.navigate("CreateProject")}>CREER PROJET</Button></View>) : []}
-              <View style={{marginTop:height/50,  flex: 1, position: 'relative'}}>
-                {todos.map((item)=> 
-                  <View key={item.id} style={ hierarchy  === "Manager" && item.projectStepDone ? styles.listAction : styles.list}>
-                    <View style={{flexDirection: 'row'}}>
-                      <TouchableOpacity 
-                        onPress={() => {
-                          navigation.push("TodoList", {
-                            title: item.title,
-                            usernameOfOwner : item.owner.username
-                          });
-                        } } style={{width:"100%"}}>
-                        <View flexDirection="row">
-                        <Text variant="headlineSmall" style={styles.title}> {item.title}
-                        {hierarchy === "Manager" ?(
-                          <>
-                            <Text variant="labelLarge" style={styles.author}>   par {item.owner.username}</Text>
-                          </>
-                        ):[]}</Text>
-                        </View>
-                        <View flexDirection="row">
-                          <View style={styles.container}>
-                            <Text variant="labelLarge" style={styles.label}>Statut : </Text>
-                            <Text variant="labelLarge" style={styles.label}>Date de fin :</Text>
-                          </View>
-                          <View style={[styles.container]}>
-                            <Text variant="bodyMedium" style={styles.text}>{item.status}</Text>
-                            <Text variant="bodyMedium" style={styles.text}>{item.date}</Text>
-                          </View>
-                        </View>
-                        {hierarchy  === "Manager" && item.projectStepDone ? (
-                          <Text variant="bodyLarge" style={{fontWeight:"bold",textAlign:"right", marginHorizontal:20,marginTop:5, color:"#B22222"}}>ACTION REQUISE</Text>
-                        ):[]}
-                        <View style={{borderBottomColor:"gray",borderBottomWidth:1,width: '100%',padding:5,opacity:0.33}}/>
-                      </TouchableOpacity>
+    <>
+      <ScrollView>
+        {hierarchy === "ProjectChef" ? (
+          <View style={{marginTop:height/50, marginRight:width/15, alignItems:"flex-end"}}>
+          <Button
+            labelStyle={{color: '#22577A',fontWeight:"bold"}}
+            buttonColor='#90D7B4'
+            mode="contained"
+            icon="briefcase-plus"
+            style={{width:width/2.2}}
+            onPress={() => navigation.navigate("CreateProject")}>CREER PROJET</Button></View>) : []}
+          <View style={{marginTop:height/50,  flex: 1, position: 'relative'}}>
+            {todos.map((item)=> 
+              <View key={item.id} style={ hierarchy  === "Manager" && item.projectStepDone ? styles.listAction : styles.list}>
+                <View style={{flexDirection: 'row'}}>
+                  <TouchableOpacity 
+                    onPress={() => {
+                      navigation.push("TodoList", {
+                        title: item.title,
+                        usernameOfOwner : item.owner.username
+                      });
+                    } } style={{width:"100%"}}>
+                    <View flexDirection="row">
+                    <Text variant="headlineSmall" style={styles.title}> {item.title}
+                    {hierarchy === "Manager" ?(
+                      <>
+                        <Text variant="labelLarge" style={styles.author}>   par {item.owner.username}</Text>
+                      </>
+                    ):[]}</Text>
                     </View>
-                  </View>)}
-              </View>
-            <View style={{marginTop:"10%", alignItems:"center"}}>
-              <Logo width={width/1.5} height={height/5} />
-            </View>
-          </ScrollView>
-        </>    
-      )}
-    </TokenContext.Consumer>
+                    <View flexDirection="row">
+                      <View style={styles.container}>
+                        <Text variant="labelLarge" style={styles.label}>Statut : </Text>
+                        <Text variant="labelLarge" style={styles.label}>Date de fin :</Text>
+                      </View>
+                      <View style={[styles.container]}>
+                        <Text variant="bodyMedium" style={styles.text}>{item.status}</Text>
+                        <Text variant="bodyMedium" style={styles.text}>{item.date}</Text>
+                      </View>
+                    </View>
+                    {hierarchy  === "Manager" && item.projectStepDone ? (
+                      <Text variant="bodyLarge" style={{fontWeight:"bold",textAlign:"right", marginHorizontal:20,marginTop:5, color:"#B22222"}}>ACTION REQUISE</Text>
+                    ):[]}
+                    <View style={{borderBottomColor:"gray",borderBottomWidth:1,width: '100%',padding:5,opacity:0.33}}/>
+                  </TouchableOpacity>
+                </View>
+              </View>)}
+          </View>
+        <View style={{marginTop:"10%", alignItems:"center"}}>
+          <Logo width={width/1.5} height={height/5} />
+        </View>
+      </ScrollView>
+    </>    
   )
 }
 

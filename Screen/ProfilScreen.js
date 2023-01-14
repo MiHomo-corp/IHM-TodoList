@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import { View, ScrollView, StyleSheet} from 'react-native'
 import AwesomeAlert from 'react-native-awesome-alerts';
-
 import { Button, Text } from 'react-native-paper';
 
 import { HierarchyContext, TokenContext, UsernameContext } from '../Context/Context'
@@ -28,6 +27,7 @@ export default function ProfilScreen () {
                         message="Etes-vous sur de vouloir vous déconnectez?"
                         showCancelButton={true}
                         showConfirmButton={true}
+                        closeOnTouchOutside={false}
                         cancelText="Rester"
                         confirmText="Confirmez"
                         confirmButtonColor="#90D7B4"

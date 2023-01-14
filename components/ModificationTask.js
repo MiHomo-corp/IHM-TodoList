@@ -1,11 +1,7 @@
 import React,{useEffect, useState} from "react";
-
-import { StyleSheet, View, SafeAreaView, ScrollView, useWindowDimensions} from 'react-native';
-
+import { View, SafeAreaView, ScrollView, useWindowDimensions} from 'react-native';
 import { Button, TextInput,Text } from 'react-native-paper';
-
 import AwesomeAlert from 'react-native-awesome-alerts';
-
 import { useNavigation } from "@react-navigation/native";
 
 import { updateTask } from "../API/todoAPI"
@@ -65,6 +61,8 @@ export default function ModificationTask({token,task}){
             message="Etes-vous sur de vouloir créer ce projet ?"
             showCancelButton={true}
             showConfirmButton={true}
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
             cancelText="Annuler"
             confirmText="Confirmer"
             confirmButtonColor="#90D7B4"
@@ -77,10 +75,20 @@ export default function ModificationTask({token,task}){
             }}
           />
           {disabled ? (
-            <Button style={{marginHorizontal:35,marginTop:35}} disabled={disabled} icon="alert" mode="contained">
+            <Button 
+              style={{marginHorizontal:35,marginTop:35}} 
+              disabled={disabled} 
+              icon="alert" 
+              mode="contained">
               Aucune modification détecté
             </Button>) : (
-            <Button style={{marginHorizontal:35,marginTop:35}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="checkbox-marked" mode="contained" onPress={() => setShowable(true)}>
+            <Button 
+              style={{marginHorizontal:35,marginTop:35}} 
+              labelStyle={{color: '#22577A'}} 
+              buttonColor='#90D7B4' 
+              icon="checkbox-marked"
+              mode="contained" 
+              onPress={() => setShowable(true)}>
               <Text style={{color: '#22577A',fontWeight:"bold",textTransform: 'uppercase'}}> Modifier {taskContent}</Text>
             </Button>)}
         </SafeAreaView>
@@ -88,16 +96,3 @@ export default function ModificationTask({token,task}){
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  label: {
-    width: 70
-  },
-  text_error: {
-    color: 'red'
-  },
-  text_input: {
-    backgroundColor: 'white',
-    margin: 5
-  }
-})
