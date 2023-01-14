@@ -19,7 +19,7 @@ export default function CreateTask({token,idProject,titleProject}){
   const navigation = useNavigation();
   
   useEffect(() => {
-    if(taskContent === "" || description === ""){
+    if(taskContent === ""){
       setDisabled(true)
     }
     else{

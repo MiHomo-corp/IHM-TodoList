@@ -32,7 +32,7 @@ export default function CreateProject({username,token}){
   }    
 
   useEffect(() => {
-    if(projectTitle === "" || dateProject === ""){
+    if(projectTitle === "" || dateProject === "" ||  description === ""){
       setDiasbled(true)
     }
     else{

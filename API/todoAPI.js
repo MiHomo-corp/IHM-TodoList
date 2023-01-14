@@ -33,7 +33,7 @@ const UPDATEMANAGER =
   'mutation($username: String!, $exManager: String!, $newManager: String!){updateProjectChefs(where:{username:$username},update:{manager:{connect:{where:{username:$newManager}},disconnect:{where:{username:$exManager}}}}){projectChefs{username manager{username}}}}'
 
 const CREATEPROJECT = 
-  `mutation($title:String!,$date:Date!,$description:String,$owner:String!){
+  `mutation($title:String!,$date:Date!,$description:String!,$owner:String!){
   	createProjects(input:{title:$title, date:$date, description:$description, status:"Initialisation", owner:{connect:{where:{username:$owner}}}}) {projects{id title date description owner {username}}},
     task1: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
 	  task2: createTasks(input:{content:"Allocation budget",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
@@ -43,13 +43,13 @@ const CREATEPROJECT =
   }`
 
 const CREATETASK = 
-  'mutation($content:String!,$id:ID!,$description:String!){createTasks(input:{content:$content,description:$description,belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}}}'
+  'mutation($content:String!,$id:ID!,$description:String){createTasks(input:{content:$content,description:$description,belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}}}'
 
 const UPDATETASK =
- 'mutation($id:ID!,$newContent:String!,$newDescription:String!){updateTasks(where:{id:$id} update:{content:$newContent,description:$newDescription,}){tasks{content description}}}'
+  'mutation($id:ID!,$newContent:String!,$newDescription:String){updateTasks(where:{id:$id} update:{content:$newContent,description:$newDescription,}){tasks{content description}}}'
 
 const UPDATEPROJECT =
-  'mutation($id:ID!,$newTitle:String!,$newDate:Date!,$newDescription:String){updateProjects(where: {id: $id} update:{title: $newTitle, date: $newDate, description:$newDescription}){projects {id date title description}}}'
+  'mutation($id:ID!,$newTitle:String!,$newDate:Date!,$newDescription:String!){updateProjects(where: {id: $id} update:{title: $newTitle, date: $newDate, description:$newDescription}){projects {id date title description}}}'
 
 const UPDATESTATUSTASK = 
   'mutation ($id:ID!,$done:Boolean!) {updateTasks(where:{id:$id}update:{done:$done}){tasks {id content done}}}'
