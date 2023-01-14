@@ -1,6 +1,6 @@
 import React from 'react'
 import ModificationTask from "../components/ModificationTask"
-import { View } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 
 import { TokenContext } from '../Context/Context'
 
@@ -8,6 +8,7 @@ export default function ModificationProjectScreen(route){
     const { task } = route.route.params;
 
     return (
+      <View style={styles.container}>
         <TokenContext.Consumer>
           {([token, setToken]) => {
                 return(
@@ -23,5 +24,13 @@ export default function ModificationProjectScreen(route){
                 </View>)
           }}
         </TokenContext.Consumer>
+      </View>
     )
 }
+
+const styles = StyleSheet.create({
+  container: {
+      backgroundColor: "#EBF7F3",
+      flex: 1,
+  },
+});

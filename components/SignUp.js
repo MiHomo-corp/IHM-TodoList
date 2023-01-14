@@ -46,22 +46,19 @@ export default function SignUp () {
     }
   })
 
-  const getSignedUp = (setToken, setUsername) => {
+  const getSignedUp = () => {
     setError('')
     if (password !== copyPassword){
         setError("Passwords don't match")
         return
     } 
-    setVisible(false)
     signUp(checked, login, password, managerChecked)
-      .then(token => {
-        //setUsername(login)
-        //setToken(token)
+      .then(() => {
+        navigation.navigate("SignIn")
       })
       .catch(err => {
         setError(err.message)
       })
-    navigation.navigate("SignIn")
   }
 
   return (
@@ -160,7 +157,7 @@ export default function SignUp () {
                       {disabled ? (
                         <Button style={styles.button} disabled={disabled} icon="alert" mode="contained">
                           Tout les champs ne sont pas remplis...
-                        </Button>) : (<Button style={styles.button} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="clipboard-account-outline" mode="contained" onPress={() => getSignedUp(setToken, setUsername, setHierarchy)}>
+                        </Button>) : (<Button style={styles.button} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="clipboard-account-outline" mode="contained" onPress={() => getSignedUp(setToken, setUsername)}>
                           CONNEXION
                         </Button>)}
                     </View>
@@ -205,7 +202,8 @@ const styles = StyleSheet.create({
     fontWeight:"bold",
   },
   text_error: {
-    color: 'red'
+    textAlign:"center",
+    color: '#B22222'
   },
   text_input: {
     margin: 10,

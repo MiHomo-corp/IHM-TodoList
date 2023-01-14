@@ -54,7 +54,7 @@ export default function SignIn () {
               {([hierarchy, setHierarchy]) => {  
                 return (
                   <View>
-                    <Image style={{ marginTop: -200 }} source={require('../images/todovlopHeader.png')}/>
+                    <Image style={{ marginTop: -200 }} source={require('../images/todovlop.png')}/>
                     {visible ? (
                       <>
                         <View style={{ justifyContent: 'center', alignItems:"center"}}>
@@ -140,7 +140,8 @@ const styles = StyleSheet.create({
     marginRight:5
   },
   text_error: {
-    color: 'red'
+    textAlign:"center",
+    color: '#B22222'
   },
   text_input: {
     margin: 10,

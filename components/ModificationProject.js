@@ -95,8 +95,8 @@ export default function ModificationProject({token,project}){
           
           <AwesomeAlert
             show={showable}
-            title={projectTitle}
-            message="Etes-vous sur de vouloir créer ce projet ?"
+            title={project[0].title}
+            message="Etes-vous sur de vouloir modifier ce projet ?"
             showCancelButton={true}
             showConfirmButton={true}
             cancelText="Annuler"

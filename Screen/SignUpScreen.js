@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, Text, Button } from 'react-native'
+import { View } from 'react-native'
 
 import SignUp from '../components/SignUp'
 
-export default function SignUpScreen ({ navigation }) {
+export default function SignUpScreen () {
   return (
     <View
       style={{

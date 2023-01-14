@@ -12,7 +12,7 @@ const SIGN_UP_MANAGER =
   'mutation($username:String!, $password:String!){signUpManager(username:$username, password:$password)}'
 
 const MANAGER_LIST = 
-  'query{managers{username}}' //sortir l'id
+  'query{managers{id username}}' //sortir l'id
 
 const CHEF_LIST = 
   'query managers($username: String!){managers(where:{username: $username}){projectChefs{username}}}'
@@ -21,7 +21,7 @@ const GET_MY_MANAGER =
   'query projectChefs($username: String!){projectChefs(where:{username: $username}){manager{username}}}'
 
 const TASKLIST =
-  'query taskLists($username: [String]!) {taskLists(where: { owner: { username_IN: $username } }) {id title date description status owner{username}}}'
+  'query taskLists($username: [String]!) {taskLists(where: { owner: { username_IN: $username } }) {id title date description status projectStepDone owner{username}}}'
 
 const TASKS =
   'query($title: String!,$username: String!){ tasks(where: {belongsTo: {title: $title}}) {id content done},taskLists(where: {title: $title,owner:{username:$username}}) {id title date status projectStepDone description}}'
@@ -58,7 +58,7 @@ const UPDATESTATUSTASK =
   'mutation ($id:ID!,$done:Boolean!) {updateTasks(where:{id:$id}update:{done:$done}){tasks {id content done}}}'
   
 const CLOSETASKLIST = 
-  'mutation($id:ID!){updateTaskLists(where: {id:$id}, update:{status:"Closed"}){taskLists{title status}}}'
+  'mutation($id:ID!){updateTaskLists(where: {id:$id}, update:{status:"Fermé"}){taskLists{title status}}}'
 
 const DELETETASKLIST =
   'mutation($id:ID!){deleteTasks(where:{belongsTo:{id:$id}}){nodesDeleted},deleteTaskLists(where: {id: $id}){nodesDeleted}}'
@@ -74,7 +74,7 @@ const REJECTPROJECTSTEPDONE =
 
 const DEVELOPMENTSTEP = 
   `mutation($id: ID!){
-    updateTaskLists(where: {id: $id},update:{projectStepDone:false, status:"Development"}){taskLists{projectStepDone}},
+    updateTaskLists(where: {id: $id},update:{projectStepDone:false, status:"Developpement"}){taskLists{projectStepDone}},
     task1: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task2: createTasks(input:{content:"Répartition des tâches",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task3: createTasks(input:{content:"Réunion d'avancement",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
@@ -82,7 +82,7 @@ const DEVELOPMENTSTEP =
   }`
 const PRODUCTIONSTEP =
   `mutation($id: ID!){
-    updateTaskLists(where: {id: $id},update:{projectStepDone:false, status:"Prodution launch"}){taskLists{projectStepDone}},
+    updateTaskLists(where: {id: $id},update:{projectStepDone:false, status:"Mise en production"}){taskLists{projectStepDone}},
     task1: createTasks(input:{content:"Mise en production",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task2: createTasks(input:{content:"Retour utilisateur",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task3: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
@@ -90,7 +90,7 @@ const PRODUCTIONSTEP =
     task4: createTasks(input:{content:"Bilan de déroulement du projet",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}}
   }`
 const FINISHEDSTEP =
-  'mutation($id:ID!){updateTaskLists(where: {id: $id},update:{projectStepDone:false, status:"Finished"}){taskLists{projectStepDone}}}'
+  'mutation($id:ID!){updateTaskLists(where: {id: $id},update:{projectStepDone:false, status:"Terminé"}){taskLists{projectStepDone}}}'
 
 const DELTASK =
   "mutation($id:ID!){deleteTasks(where: {id: $id}){nodesDeleted relationshipsDeleted}}"
@@ -730,9 +730,9 @@ export function nextStepProject(validation,id,status,token){
   if(validation){
     if(status === 'Initialization')
       NEXTSTEPQUERY = DEVELOPMENTSTEP
-    if(status === 'Development')
+    if(status === 'Developpement')
       NEXTSTEPQUERY = PRODUCTIONSTEP
-    if(status === "Prodution launch")
+    if(status === "Mise en production")
       NEXTSTEPQUERY = FINISHEDSTEP
   }
   else{

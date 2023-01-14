@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from "react";
 
-import { StyleSheet,Keyboard, View, SafeAreaView, KeyboardAvoidingView, TouchableWithoutFeedback,ScrollView } from 'react-native';
+import { StyleSheet, View,ScrollView } from 'react-native';
 
 import { useNavigation } from "@react-navigation/native";
 

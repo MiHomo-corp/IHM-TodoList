@@ -1,16 +1,16 @@
 import React,{useEffect, useState} from "react";
 
-import { StyleSheet, View, Button, Text, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, ScrollView,useWindowDimensions} from 'react-native';
+import { Text, Button } from 'react-native-paper'
 import { useNavigation } from "@react-navigation/native";
 
-import { closeTaskList, getChefsOfManager, getTaskLists } from "../API/todoAPI"
+import { getChefsOfManager, getTaskLists } from "../API/todoAPI"
 import { TokenContext } from '../Context/Context'
+import Logo from '../images/todoLists.svg';
 
 export default function Todolists({hierarchy,username,token}){
-  
+  const {height, width} = useWindowDimensions();
   const [todos, setTodos] = useState([]);
-  const [userId, setUserId] = useState();
-  const [newTodoText, setNewTodoText] = useState("");
   const navigation = useNavigation();
   
   const callback = (hierarchy, username, token) => {
@@ -34,32 +34,128 @@ export default function Todolists({hierarchy,username,token}){
   useEffect(()=> {
     callback(hierarchy,username, token)
   }, [hierarchy, username, token])
-  
+
   return(
     <TokenContext.Consumer>
       {([token, setToken]) => (
         <>
-          {hierarchy === "ProjectChef" ? (
-            <Button
-              title="Créer un projet"
-              onPress={() => navigation.navigate("CreateProject")} />) : []}
-
-          <FlatList
-            style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
-            data={todos}
-            renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
-              <TouchableOpacity onPress={() => {
-                navigation.push("TodoList", {
-                  title: item.title,
-                  usernameOfOwner : item.owner.username
-                });
-              } }>
-                <Text style={[{ /*color: '#D6D5A8', textDecorationLine: 'underline'*/ }]}>{item.title+" - "+item.status} {hierarchy === "Manager" ? " - Chef de Projet : "+item.owner.username : ""}</Text>
-              </TouchableOpacity>
-          </View>} /></>    
+          <ScrollView>
+            {hierarchy === "ProjectChef" ? (
+              <View style={{padding:15, alignItems:"flex-end"}}>
+              <Button
+                labelStyle={{color: '#22577A',fontWeight:"bold"}}
+                buttonColor='#90D7B4'
+                mode="contained"
+                icon="briefcase-plus"
+                style={{width:width/2.2}}
+                onPress={() => navigation.navigate("CreateProject")}>CREER PROJET</Button></View>) : []}
+              <View style={{ flex: 1, position: 'relative'}}>
+                {todos.map((item)=> 
+                  <View key={item.id} style={ hierarchy  === "Manager" && item.projectStepDone ? styles.listAction : styles.list}>
+                    <View style={{flexDirection: 'row'}}>
+                      <TouchableOpacity 
+                        onPress={() => {
+                          navigation.push("TodoList", {
+                            title: item.title,
+                            usernameOfOwner : item.owner.username
+                          });
+                        } } style={{width:"100%"}}>
+                        <View flexDirection="row">
+                        <Text variant="headlineSmall" style={styles.title}> {item.title}
+                        {hierarchy === "Manager" ?(
+                          <>
+                            <Text variant="labelLarge" style={styles.author}>   par {item.owner.username}</Text>
+                          </>
+                        ):[]}</Text>
+                        </View>
+                        <View flexDirection="row">
+                          <View style={styles.container}>
+                            <Text variant="labelLarge" style={styles.label}>Statut : </Text>
+                            <Text variant="labelLarge" style={styles.label}>Date de fin :</Text>
+                          </View>
+                          <View style={[styles.container]}>
+                            <Text variant="bodyMedium" style={styles.text}>{item.status}</Text>
+                            <Text variant="bodyMedium" style={styles.text}>{item.date}</Text>
+                          </View>
+                        </View>
+                        {hierarchy  === "Manager" && item.projectStepDone ? (
+                          <Text variant="bodyLarge" style={{fontWeight:"bold",textAlign:"right", marginHorizontal:20,marginTop:5, color:"#B22222"}}>ACTION REQUISE</Text>
+                        ):[]}
+                        <View style={{borderBottomColor:"gray",borderBottomWidth:1,width: '100%',padding:5,opacity:0.33}}/>
+                      </TouchableOpacity>
+                    </View>
+                  </View>)}
+              </View>
+          </ScrollView>
+        </>    
       )}
     </TokenContext.Consumer>
   )
-
-
 }
+
+const styles = StyleSheet.create({
+  list:{
+    textAlign: 'left',
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingLeft:0,
+    marginLeft:0
+  },
+  listAction:{
+    textAlign: 'left',
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingLeft:0,
+    marginLeft:0,
+    backgroundColor:"#f8d4d4"
+  },
+  title:{
+    marginLeft:20,
+    fontWeight:"bold",
+    color:"#01796F",
+    textAlign:"left",
+    paddingBottom:10,
+    paddingTop:5
+  },
+  button: {
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:'#90D7B4',
+    width:300,
+    height:40,
+    marginTop:25,
+    marginBottom:10,
+    elevation:1
+  },
+  author:{
+    fontStyle:"italic",
+    color:"#01796F",
+    marginTop:20
+  },
+  buttonText:{
+    color:'#22577A',
+    fontSize:18,
+    fontWeight:"bold",
+  },
+  label: {
+    paddingRight:10,
+    color:"#22577A",
+    fontWeight:"bold",
+    width:150,
+    textAlign:"right"
+  },
+  text: {
+    paddingLeft:50,
+    width:190,
+    textAlign:"left",
+    color:"#01796F",
+    fontWeight:"bold"
+  },
+  text_error: {
+    color: 'red'
+  },
+  container: {
+    alignItems:"center",
+    flexDirection:"column",
+  }
+})

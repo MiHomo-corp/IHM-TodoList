@@ -1,9 +1,10 @@
 import React from 'react'
+import {View, Image,useWindowDimensions } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer, Link,useNavigation} from '@react-navigation/native'
+import { NavigationContainer, Link } from '@react-navigation/native'
 import { IconButton } from 'react-native-paper';
-/*import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons/faUser'*/
+import logo from '../images/todovlopHeaderTest.png'
+
 
 import TodoListsScreen from '../Screen/TodoListsScreen'
 import ProfilScreen from '../Screen/ProfilScreen'
@@ -17,31 +18,83 @@ import ModificationTaskScreen from '../Screen/ModificationTaskScreen';
 import TaskScreen from '../Screen/TaskScreen';
 import { TokenContext } from '../Context/Context'
 
-const Stack = createStackNavigator() 
-//const navigation = useNavigation() onPress={() => navigation.navigate("ProfilScreen")}*/
-// (permet d'acceder a une page seulement pa un bouton, pas afficher) voir l'image du TP5
-//<Stack.screen>     ne pas oublier de l'imoorter
+const Stack = createStackNavigator()    
 
 export default function Navigation () {
+
+  const {height, width} = useWindowDimensions();
   return (
     <TokenContext.Consumer>
       {([token, setToken]) => (
-        <NavigationContainer>
+        <NavigationContainer style={{backgroundColor:"#EBF7F3"}}>
           {token == null ? (
             <Stack.Navigator>
-              <Stack.Screen name='SignIn' component={SignInScreen} options={{title:"",headerShown:null,}}/>
-              <Stack.Screen name='SignUp' component={SignUpScreen} options={{title:"",headerShown:null,}}/>
+              <Stack.Screen 
+                name='SignIn' 
+                component={SignInScreen} 
+                options={{title:"",headerShown:null}}/>
+              <Stack.Screen 
+                name='SignUp' 
+                component={SignUpScreen} 
+                options={{title:"",headerShown:null}}/>
             </Stack.Navigator>
           ) : (
             <Stack.Navigator initialRouteName='TodoLists'>
-              <Stack.Screen name='TodoLists' component={TodoListsScreen} options={{title:"Vos Projets", headerRight:() =>  <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:15}}><IconButton icon="account" iconColor= '#22577A' containerColor='#90D7B4' mode="contained"/></Link>}}/>
-              <Stack.Screen name='ProfilScreen' component={ProfilScreen} options={{title: "Votre Profil"}}/>
-              <Stack.Screen name='TodoList' component={TodoListScreen} options={({route,navigation}) => ({title: route.params.title})}/>
-              <Stack.Screen name='CreateProject' component={CreationProjectScreen} options={{title: ""}}/>
-              <Stack.Screen name='ModificationProject' component={ModificationProjectScreen} options={({route}) => ({title: "Modification de "+ route.params.project[0].title})}/>
-              <Stack.Screen name='ModificationTask' component={ModificationTaskScreen} options={({route}) => ({title: "Modification de la tâche "+route.params.task.content})}/>
-              <Stack.Screen name='CreateTask' component={CreationTaskScreen} options={{title: ""}}/> 
-              <Stack.Screen name='Task' component={TaskScreen} options={({route}) => ({title:route.params.title})}/>
+              <Stack.Screen 
+                name='TodoLists' 
+                component={TodoListsScreen} 
+                options={{
+                  headerTitle:() => <View style={{}}><Image source={logo} style={{width:width/1.35,height:height/10}}/></View>, 
+                  headerRight:() => <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:15}}><IconButton icon="account" iconColor= '#22577A' containerColor='#90D7B4' mode="contained"/></Link>,
+                  headerStyle:{height:130,backgroundColor: "#EBF7F3"}}}/>
+              <Stack.Screen 
+                name='ProfilScreen' 
+                component={ProfilScreen} 
+                options={{
+                  headerTitle:() => <Image source={logo} style={{ width: width/1.35, height: height/10}}/>,
+                  headerStyle:{height:130,backgroundColor: "#EBF7F3"}}}/>
+              <Stack.Screen 
+                name='TodoList' 
+                component={TodoListScreen} 
+                options={{
+                  headerTitle:() => <Image source={logo} style={{ width: width/1.75, height: height/14}}/>, 
+                  headerRight:() => <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:15}}><IconButton icon="account" iconColor= '#22577A' containerColor='#90D7B4' mode="contained"/></Link>,
+                  headerStyle:{height:130,backgroundColor: "#EBF7F3"}}}/>
+              <Stack.Screen 
+                name='CreateProject' 
+                component={CreationProjectScreen} 
+                options={{
+                  headerTitle:() => <Image source={logo} style={{ width: width/1.75, height: height/14}}/>,
+                  headerRight:() => <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:15}}><IconButton icon="account" iconColor= '#22577A' containerColor='#90D7B4' mode="contained"/></Link>,
+                  headerStyle:{height:130,backgroundColor: "#EBF7F3"}}}/>
+              <Stack.Screen 
+                name='ModificationProject' 
+                component={ModificationProjectScreen} 
+                options={{
+                  headerTitle:() => <Image source={logo} style={{ width: width/1.75, height: height/14}}/>,
+                  headerRight:() => <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:15}}><IconButton icon="account" iconColor= '#22577A' containerColor='#90D7B4' mode="contained"/></Link>,
+                  headerStyle:{height:130,backgroundColor: "#EBF7F3"}}}/>
+              <Stack.Screen 
+                name='ModificationTask' 
+                component={ModificationTaskScreen} 
+                options={{
+                  headerTitle:() => <Image source={logo} style={{ width: width/1.75, height: height/14}}/>,
+                  headerRight:() => <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:15}}><IconButton icon="account" iconColor= '#22577A' containerColor='#90D7B4' mode="contained"/></Link>,
+                  headerStyle:{height:130,backgroundColor: "#EBF7F3"}}}/>
+              <Stack.Screen 
+                name='CreateTask' 
+                component={CreationTaskScreen} 
+                options={{
+                  headerTitle:() => <Image source={logo} style={{ width: width/1.75, height: height/14}}/>,
+                  headerRight:() => <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:15}}><IconButton icon="account" iconColor= '#22577A' containerColor='#90D7B4' mode="contained"/></Link>,
+                  headerStyle:{height:130,backgroundColor: "#EBF7F3"}}}/>
+              <Stack.Screen
+                name='Task' 
+                component={TaskScreen} 
+                options={{
+                  headerTitle:() => <Image source={logo} style={{ width: width/1.75, height: height/14}}/>,
+                  headerRight:() => <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:15}}><IconButton icon="account" iconColor= '#22577A' containerColor='#90D7B4' mode="contained"/></Link>,
+                  headerStyle:{height:130,backgroundColor: "#EBF7F3"}}}/>
             </Stack.Navigator>
           )}
         </NavigationContainer>

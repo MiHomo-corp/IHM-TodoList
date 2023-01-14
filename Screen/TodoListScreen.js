@@ -1,4 +1,5 @@
 import React from 'react'
+import { View, StyleSheet} from 'react-native'
 
 import TodoList from '../components/Todolist'
 import { HierarchyContext, TokenContext, UsernameContext } from '../Context/Context'
@@ -8,6 +9,7 @@ export default function TodoListScreen({navigation,route}){
   const { title } = route.params
 
   return (
+    <View style={styles.container}>
       <TokenContext.Consumer>
         {([token, setToken]) => (
           <UsernameContext.Consumer>
@@ -21,6 +23,13 @@ export default function TodoListScreen({navigation,route}){
           </UsernameContext.Consumer>
         )}
       </TokenContext.Consumer>
-
+    </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+      backgroundColor: "#EBF7F3",
+      flex: 1,
+  },
+});

@@ -176,9 +176,8 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
 
         {visible ? (
             <>
-                {managerList.map((item)=> <View style={{ flexDirection: 'row',paddingLeft: 15, paddingTop: 10 }}>
+                {managerList.map((item)=> <View key={item.id} style={{ flexDirection: 'row',paddingLeft: 15, paddingTop: 10 }}>
                     <RadioButton
-                        key={item}
                         color='#90D7B4'
                         status={managerChecked === item.username ? 'checked' : 'unchecked'}
                         onPress={() => setManagerChecked(item.username)} />
@@ -203,14 +202,3 @@ const styles = StyleSheet.create({
       color:"#01796f"
     }
 })
-
-/*<FlatList
-                    style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
-                    data={managerList}
-                    renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
-                        <RadioButton
-                            color='#90D7B4'
-                            status={managerChecked === item.username ? 'checked' : 'unchecked'}
-                            onPress={() => setManagerChecked(item.username)} />
-                        <Text variant='titleMedium' style={styles.radio}>{item.username}</Text>
-                    </View>*/
