@@ -8,7 +8,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 
 import { Button, TextInput,Text } from 'react-native-paper';
 
-import { createTaskList } from "../API/todoAPI"
+import { createProject } from "../API/todoAPI"
 
 import { Calendar } from 'react-native-calendars';
 import Logo from '../images/createProject.svg';
@@ -16,7 +16,7 @@ import Logo from '../images/createProject.svg';
 
 //<Checkbox value={item.done} onValueChange={setStatusTask}/>
 
-export default function CreationProject({username,token}){
+export default function CreateProject({username,token}){
 
   const [projectTitle, setProjectTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -109,7 +109,7 @@ export default function CreationProject({username,token}){
               setShowable(false);
             }}
             onConfirmPressed={() => {
-              createTaskList(username,token,projectTitle,dateProject,description).then(navigation.navigate("TodoLists"))  
+              createProject(username,token,projectTitle,dateProject,description).then(navigation.navigate("Projects"))  
             }}
           />
           {disabled ? (
@@ -139,7 +139,3 @@ const styles = StyleSheet.create({
     margin: 5
   }
 })
-
-/*
-createTaskList(username,token,projectTitle,dateProject,description).then(navigation.navigate("TodoLists"))  
-*/

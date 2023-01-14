@@ -72,7 +72,7 @@ export default function ModificationTask({token,task}){
               setShowable(false);
             }}
             onConfirmPressed={() => {
-              updateTask(token,task.id,taskContent,description).then(navigation.navigate("TodoLists"))
+              updateTask(token,task.id,taskContent,description).then(navigation.navigate("Projects"))
             }}
           />
           {disabled ? (

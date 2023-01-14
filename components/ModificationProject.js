@@ -8,7 +8,7 @@ import { Button, TextInput,Text } from 'react-native-paper';
 
 import AwesomeAlert from 'react-native-awesome-alerts';
 
-import { updateTaskList } from "../API/todoAPI"
+import { updateProject } from "../API/todoAPI"
 import { Calendar } from 'react-native-calendars';
 
 import Logo from '../images/modifProject.svg';
@@ -107,7 +107,7 @@ export default function ModificationProject({token,project}){
               setShowable(false);
             }}
             onConfirmPressed={() => {
-              updateTaskList(token,project[0].id,projectTitle,dateProject,description).then(navigation.navigate("TodoLists")) 
+              updateProject(token,project[0].id,projectTitle,dateProject,description).then(navigation.navigate("Projects")) 
          }}
           />
           {disabled ? (

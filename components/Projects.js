@@ -4,11 +4,11 @@ import { StyleSheet, View, TouchableOpacity, ScrollView,useWindowDimensions} fro
 import { Text, Button } from 'react-native-paper'
 import { useNavigation } from "@react-navigation/native";
 
-import { getChefsOfManager, getTaskLists } from "../API/todoAPI"
+import { getChefsOfManager, getProjects } from "../API/todoAPI"
 import { TokenContext } from '../Context/Context'
 import Logo from '../images/todoLists.svg';
 
-export default function Todolists({hierarchy,username,token}){
+export default function Projects({hierarchy,username,token}){
   const {height, width} = useWindowDimensions();
   const [todos, setTodos] = useState([]);
   const navigation = useNavigation();
@@ -20,13 +20,13 @@ export default function Todolists({hierarchy,username,token}){
           projectChefs.forEach(element => {
             usernameInArray.push(element.username)
           })
-        }).then(() => getTaskLists(usernameInArray,token).then(taskList =>{
-          setTodos(taskList)
+        }).then(() => getProjects(usernameInArray,token).then(project =>{
+          setTodos(project)
         }))
       }
       else{
-        getTaskLists([username],token).then(taskList =>{
-          setTodos(taskList)
+        getProjects([username],token).then(project =>{
+          setTodos(project)
         })
       }
   }

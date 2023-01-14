@@ -6,7 +6,6 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 
 import { getMyManager, getChefsOfManager, getProjectStepDone, getManager, updateManager } from '../API/todoAPI';
 import Logo from '../images/profil.svg';
-import Todolists from './Todolists';
 
 
 export default function Profil (hierarchy,username,token){ //Pour une raison étrange (probablement dû au link dans la navigation), tous se trouve dans hierarchy
@@ -154,7 +153,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
                 setShowable(false);
             }}
             onConfirmPressed={() => {
-                updateManager(hierarchy.username,myManager,managerChecked,hierarchy.token).then(navigation.navigate("TodoLists"))
+                updateManager(hierarchy.username,myManager,managerChecked,hierarchy.token).then(navigation.navigate("Projects"))
             }}
         />
 

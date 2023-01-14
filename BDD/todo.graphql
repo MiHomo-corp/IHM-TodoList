@@ -1,0 +1,55 @@
+
+type Task{
+  id: ID! @id
+  content: String
+  description: String
+  belongsTo: Project @relationship(type: "BELONGS_TO", direction: OUT)
+  done: Boolean @default(value: false)
+}
+
+extend type Task @auth(rules: [{ operations: [CREATE, READ, UPDATE, DELETE]}])
+#, OR : [{roles: ["admin"]}, {bind: { belongsTo: {owner:{id: "$jwt.sub" }}}, allow: { belongsTo: {owner:{id: "$jwt.sub" }}}}]}])
+
+type Project{
+  id: ID @id
+  title: String
+  date: Date
+  description: String
+  status: String
+  projectStepDone: Boolean @default(value: false)
+#  contains: [Task] @relationship(type: "CONTAINS", direction: OUT)
+  owner: ProjectChef @relationship(type: "OWNED_BY", direction: OUT)
+}
+
+extend type Project @auth(rules: [{ operations: [CREATE, READ, UPDATE, DELETE]}])
+#, OR : [{roles: ["admin"]}, {bind: { owner:{id: "$jwt.sub" }}, allow: { owner:{id: "$jwt.sub" }}}]}])
+
+type ProjectChef{
+  id: ID @id
+  username: String!
+  password: String! @private
+  manager: Manager! @relationship(type: "manager_chef",direction: OUT)
+}
+
+extend type ProjectChef @auth(rules: [{ operations: [CREATE, READ, UPDATE, DELETE]}])
+#, OR : [{ roles: ["admin"] }, { allow: { id: "$jwt.sub" } }] }])
+
+type Manager{
+  id: ID @id
+  username: String!
+  password: String! @private
+  projectChefs: [ProjectChef] @relationship(type: "manager_chef",direction: IN)
+}
+
+extend type Manager @auth(rules: [{ operations: [CREATE, READ, UPDATE, DELETE] }])
+#, OR : [{ roles: ["admin"] }, { allow: { id: "$jwt.sub" } }] }])
+
+type Mutation {
+  signUpProjectChef(username: String!, password: String!, conect: String!): String! ### JWT
+  signUpManager(username: String!, password: String!): String! ### JWT
+  signIn(username: String!, password: String!): String! ### JWT
+}
+
+#input ConnectManagerInput {
+#  manager: Manager!
+#}

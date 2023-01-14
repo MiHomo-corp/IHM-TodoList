@@ -20,11 +20,11 @@ const CHEF_LIST =
 const GET_MY_MANAGER = 
   'query projectChefs($username: String!){projectChefs(where:{username: $username}){manager{username}}}'
 
-const TASKLIST =
-  'query taskLists($username: [String]!) {taskLists(where: { owner: { username_IN: $username } }) {id title date description status projectStepDone owner{username}}}'
+const PROJECT =
+  'query projects($username: [String]!) {projects(where: { owner: { username_IN: $username } }) {id title date description status projectStepDone owner{username}}}'
 
 const TASKS =
-  'query($title: String!,$username: String!){ tasks(where: {belongsTo: {title: $title}}) {id content done},taskLists(where: {title: $title,owner:{username:$username}}) {id title date status projectStepDone description}}'
+  'query($title: String!,$username: String!){ tasks(where: {belongsTo: {title: $title}}) {id content done},projects(where: {title: $title,owner:{username:$username}}) {id title date status projectStepDone description}}'
 
 const TASK = 
   'query task($id: ID!){tasks(where:{id: $id}){id content description done}}'
@@ -32,9 +32,9 @@ const TASK =
 const UPDATEMANAGER = 
   'mutation($username: String!, $exManager: String!, $newManager: String!){updateProjectChefs(where:{username:$username},update:{manager:{connect:{where:{username:$newManager}},disconnect:{where:{username:$exManager}}}}){projectChefs{username manager{username}}}}'
 
-const CREATETASKLIST = 
+const CREATEPROJECT = 
   `mutation($title:String!,$date:Date!,$description:String,$owner:String!){
-  	createTaskLists(input:{title:$title, date:$date, description:$description, status:"Initialisation", owner:{connect:{where:{username:$owner}}}}) {taskLists{id title date description owner {username}}},
+  	createProjects(input:{title:$title, date:$date, description:$description, status:"Initialisation", owner:{connect:{where:{username:$owner}}}}) {projects{id title date description owner {username}}},
     task1: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
 	  task2: createTasks(input:{content:"Allocation budget",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
 	  task3: createTasks(input:{content:"Feuille de route du projet",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
@@ -51,30 +51,30 @@ const GETUSERID =
 const UPDATETASK =
  'mutation($id:ID!,$newContent:String!,$newDescription:String!){updateTasks(where:{id:$id} update:{content:$newContent,description:$newDescription,}){tasks{content description}}}'
 
-const UPDATETASKLIST =
-  'mutation($id:ID!,$newTitle:String!,$newDate:Date!,$newDescription:String){updateTaskLists(where: {id: $id} update:{title: $newTitle, date: $newDate, description:$newDescription}){taskLists {id date title description}}}'
+const UPDATEPROJECT =
+  'mutation($id:ID!,$newTitle:String!,$newDate:Date!,$newDescription:String){updateProjects(where: {id: $id} update:{title: $newTitle, date: $newDate, description:$newDescription}){projects {id date title description}}}'
 
 const UPDATESTATUSTASK = 
   'mutation ($id:ID!,$done:Boolean!) {updateTasks(where:{id:$id}update:{done:$done}){tasks {id content done}}}'
   
-const CLOSETASKLIST = 
-  'mutation($id:ID!){updateTaskLists(where: {id:$id}, update:{status:"Fermé"}){taskLists{title status}}}'
+const CLOSEPROJECT = 
+  'mutation($id:ID!){updateProjects(where: {id:$id}, update:{status:"Fermé"}){projects{title status}}}'
 
-const DELETETASKLIST =
-  'mutation($id:ID!){deleteTasks(where:{belongsTo:{id:$id}}){nodesDeleted},deleteTaskLists(where: {id: $id}){nodesDeleted}}'
+const DELETEPROJECT =
+  'mutation($id:ID!){deleteTasks(where:{belongsTo:{id:$id}}){nodesDeleted},deleteProjects(where: {id: $id}){nodesDeleted}}'
 
 const GETPROJECTSTEPDONE =
-  'query taskLists($username: [String]!) {taskLists(where: { owner: { username_IN: $username }, projectStepDone: true}) {title date status owner{username}}}'
+  'query projects($username: [String]!) {projects(where: { owner: { username_IN: $username }, projectStepDone: true}) {title date status owner{username}}}'
 
 const UPDATEPROJECTSTEPDONE =
-  'mutation($id:ID!){updateTaskLists(where: {id: $id},update:{projectStepDone:true}){taskLists{projectStepDone}}}'
+  'mutation($id:ID!){updateProjects(where: {id: $id},update:{projectStepDone:true}){projects{projectStepDone}}}'
 
 const REJECTPROJECTSTEPDONE =
-  'mutation($id:ID!){updateTaskLists(where: {id: $id},update:{projectStepDone:false}){taskLists{projectStepDone}}}'
+  'mutation($id:ID!){updateProjects(where: {id: $id},update:{projectStepDone:false}){projects{projectStepDone}}}'
 
 const DEVELOPMENTSTEP = 
   `mutation($id: ID!){
-    updateTaskLists(where: {id: $id},update:{projectStepDone:false, status:"Developpement"}){taskLists{projectStepDone}},
+    updateProjects(where: {id: $id},update:{projectStepDone:false, status:"Developpement"}){projects{projectStepDone}},
     task1: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task2: createTasks(input:{content:"Répartition des tâches",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task3: createTasks(input:{content:"Réunion d'avancement",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
@@ -82,7 +82,7 @@ const DEVELOPMENTSTEP =
   }`
 const PRODUCTIONSTEP =
   `mutation($id: ID!){
-    updateTaskLists(where: {id: $id},update:{projectStepDone:false, status:"Mise en production"}){taskLists{projectStepDone}},
+    updateProjects(where: {id: $id},update:{projectStepDone:false, status:"Mise en production"}){projects{projectStepDone}},
     task1: createTasks(input:{content:"Mise en production",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task2: createTasks(input:{content:"Retour utilisateur",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task3: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
@@ -90,7 +90,7 @@ const PRODUCTIONSTEP =
     task4: createTasks(input:{content:"Bilan de déroulement du projet",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}}
   }`
 const FINISHEDSTEP =
-  'mutation($id:ID!){updateTaskLists(where: {id: $id},update:{projectStepDone:false, status:"Terminé"}){taskLists{projectStepDone}}}'
+  'mutation($id:ID!){updateProjects(where: {id: $id},update:{projectStepDone:false, status:"Terminé"}){projects{projectStepDone}}}'
 
 const DELTASK =
   "mutation($id:ID!){deleteTasks(where: {id: $id}){nodesDeleted relationshipsDeleted}}"
@@ -197,7 +197,7 @@ export function getProjectStepDone (username) {
       if (jsonResponse.errors != null) {
         throw jsonResponse.errors[0]
       }
-      return jsonResponse.data.taskLists
+      return jsonResponse.data.projects
     })
     .catch(error => {
       throw error
@@ -290,7 +290,7 @@ export function getManagerList (username,token){
   })
 }*/
 
-export function getTaskLists (username,token){
+export function getProjects (username,token){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -298,7 +298,7 @@ export function getTaskLists (username,token){
       'Authorization': "Bearer "+token
     },
     body: JSON.stringify({
-      query: TASKLIST,
+      query: PROJECT,
       variables: {
         username: username
       }
@@ -311,7 +311,7 @@ export function getTaskLists (username,token){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.taskLists
+    return jsonResponse.data.projects
   })
   .catch(error => {
     throw error
@@ -403,7 +403,7 @@ export function getTask(token,id){
   })
 }
 
-export function createTaskList (username,token,title,date,description){
+export function createProject (username,token,title,date,description){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -411,7 +411,7 @@ export function createTaskList (username,token,title,date,description){
       'Authorization': "Bearer "+token
     },
     body: JSON.stringify({
-      query: CREATETASKLIST,
+      query: CREATEPROJECT,
       variables: {
         owner: username,
         title: title,
@@ -427,7 +427,7 @@ export function createTaskList (username,token,title,date,description){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.taskLists
+    return jsonResponse.data.projects
   })
   .catch(error => {
     throw error
@@ -487,14 +487,14 @@ export function updateManager(username,exManager,newManager,token){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.taskLists
+    return jsonResponse.data.projects
   })
   .catch(error => {
     throw error
   })
 }
 
-export function updateTaskList(token,id,title,date,description){
+export function updateProject(token,id,title,date,description){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -502,7 +502,7 @@ export function updateTaskList(token,id,title,date,description){
       'Authorization': "Bearer "+token
     },
     body: JSON.stringify({
-      query: UPDATETASKLIST,
+      query: UPDATEPROJECT,
       variables: {
         id: id,
         newTitle: title,
@@ -518,7 +518,7 @@ export function updateTaskList(token,id,title,date,description){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.taskLists
+    return jsonResponse.data.projects
   })
   .catch(error => {
     throw error
@@ -555,7 +555,7 @@ export function updateTask(token,id,content,description){
   })
 }
 
-export function closeTaskList(id,token){
+export function closeProject(id,token){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -563,7 +563,7 @@ export function closeTaskList(id,token){
       'Authorization': "Bearer "+token
     },
     body: JSON.stringify({
-      query: CLOSETASKLIST,
+      query: CLOSEPROJECT,
       variables: {
         id: id
       }
@@ -583,7 +583,7 @@ export function closeTaskList(id,token){
   })
 }
 
-export function deleteTaskList(id,token){
+export function deleteProject(id,token){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -591,7 +591,7 @@ export function deleteTaskList(id,token){
       'Authorization': "Bearer "+token
     },
     body: JSON.stringify({
-      query: DELETETASKLIST,
+      query: DELETEPROJECT,
       variables: {
         id: id
       }
@@ -610,35 +610,6 @@ export function deleteTaskList(id,token){
     throw error
   })
 }
-
-
-/*export function deleteTaskList(id,token){
-  return fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': "Bearer "+token
-    },
-    body: JSON.stringify({
-      query: DELTASKLIST,
-      variables: {
-        id: id
-      }
-    })
-  })
-  .then(response => {
-    return response.json()
-  })
-  .then(jsonResponse => {
-    if (jsonResponse.errors != null) {
-      throw jsonResponse.errors[0]
-    }
-    return jsonResponse.data.taskLists
-  })
-  .catch(error => {
-    throw error
-  })
-}*/
 
 export function deleteTask(id,token){
   return fetch(API_URL, {

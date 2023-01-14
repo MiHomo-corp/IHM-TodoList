@@ -1,10 +1,10 @@
 import React from 'react'
-import Todolists from "../components/Todolists"
+import Projects from "../components/Projects"
 import { View, StyleSheet} from 'react-native'
 
 import {UsernameContext, HierarchyContext, TokenContext } from '../Context/Context'
 
-export default function TodoList(){
+export default function ProjectsScreen(){
     return (
       <View style={styles.container}>
         <TokenContext.Consumer>
@@ -13,7 +13,7 @@ export default function TodoList(){
               {([username, setUsername]) => (
                 <HierarchyContext.Consumer>
                   {([hierarchy, setHierarchy]) => {
-                    return (<Todolists hierarchy={hierarchy} username={username} token={token}/>)
+                    return (<Projects hierarchy={hierarchy} username={username} token={token}/>)
                   }}
                 </HierarchyContext.Consumer>
               )}

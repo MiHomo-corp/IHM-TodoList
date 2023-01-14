@@ -6,7 +6,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import Checkbox from 'expo-checkbox';
 
 import { useNavigation } from "@react-navigation/native";
-import { getTasks, setCheckTask, closeTaskList, deleteTaskList, deleteTask, updateProjectStepDone, nextStepProject } from "../API/todoAPI"
+import { getTasks, setCheckTask, closeProject, deleteProject, deleteTask, updateProjectStepDone, nextStepProject } from "../API/todoAPI"
 
 
 export default function TodoList({hierarchy,username,token,title,id,usernameOfOwner, onDeleteTaskList}){
@@ -53,7 +53,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
   const callback = (username, token, title,usernameOfOwner) => {
     getTasks(usernameOfOwner,token,title).then(rep =>{
       setTask(rep.tasks);
-      setProject(rep.taskLists);
+      setProject(rep.projects);
     })
   }
 
@@ -94,7 +94,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
                   buttonColor='#90D7B4'
                   mode="contained"
                   disabled = {project[0]?.projectStepDone}
-                  onPress={() => updateProjectStepDone(project[0].id, token).then(navigation.navigate("TodoLists"))}>
+                  onPress={() => updateProjectStepDone(project[0].id, token).then(navigation.navigate("Projects"))}>
                     {project[0]?.projectStepDone ? "Demande de validation en cours..." : "DEMMANDE DE VALIDATION ETAPE"}
                 </Button>
               </View>
@@ -117,7 +117,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
                   setValidationShowable(false);
                 } }
                 onConfirmPressed={() => {
-                  nextStepProject(true,project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"));
+                  nextStepProject(true,project[0].id,project[0].status, token).then(navigation.navigate("Projects"));
                 } } />
               <AwesomeAlert
                 show={cancelShowable}
@@ -133,7 +133,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
                   setCancelShowable(false);
                 } }
                 onConfirmPressed={() => {
-                  nextStepProject(false,project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"));
+                  nextStepProject(false,project[0].id,project[0].status, token).then(navigation.navigate("Projects"));
                 } } />
               <View style={{flexDirection:"row",padding:5}}>
                 <Button
@@ -221,7 +221,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
                   setDeleteShowable(false);
                 } }
                 onConfirmPressed={() => {
-                  deleteTaskList(project[0].id, token).then(navigation.navigate("TodoLists"));
+                  deleteProject(project[0].id, token).then(navigation.navigate("Projects"));
                 } } />
               <Button
                 style={{ width: 250, margin: 50 }}
@@ -248,7 +248,7 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
                   setCloseShowable(false);
                 } }
                 onConfirmPressed={() => {
-                  closeTaskList(project[0].id, token).then(navigation.navigate("TodoLists"));
+                  closeProject(project[0].id, token).then(navigation.navigate("Projects"));
                 } } />
               <View style={{flexDirection:"row",marginTop:height/25}}>
                 <Button

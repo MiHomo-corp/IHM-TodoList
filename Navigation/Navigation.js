@@ -6,7 +6,7 @@ import { IconButton } from 'react-native-paper';
 import logo from '../images/todovlopHeaderTest.png'
 
 
-import TodoListsScreen from '../Screen/TodoListsScreen'
+import ProjectsScreen from '../Screen/ProjectsScreen'
 import ProfilScreen from '../Screen/ProfilScreen'
 import SignInScreen from '../Screen/SignInScreen'
 import SignUpScreen from '../Screen/SignUpScreen'
@@ -39,10 +39,10 @@ export default function Navigation () {
                 options={{title:"",headerShown:null}}/>
             </Stack.Navigator>
           ) : (
-            <Stack.Navigator initialRouteName='TodoLists'>
+            <Stack.Navigator initialRouteName='Projects'>
               <Stack.Screen 
-                name='TodoLists' 
-                component={TodoListsScreen} 
+                name='Projects' 
+                component={ProjectsScreen} 
                 options={{
                   headerTitle:() => <View style={{}}><Image source={logo} style={{width:width/1.35,height:height/10}}/></View>, 
                   headerRight:() => <Link to={{ screen: "ProfilScreen"}} style={{paddingRight:15}}><IconButton icon="account" iconColor= '#22577A' containerColor='#90D7B4' mode="contained"/></Link>,
