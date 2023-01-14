@@ -1,8 +1,6 @@
 import React,{useEffect, useState} from "react";
 
-import { StyleSheet, View, FlatList, TouchableOpacity } from 'react-native';
-import { Text, Button } from 'react-native-paper'
-import { Divider } from 'react-native-elements';
+import { StyleSheet, View, Button, Text, FlatList, TouchableOpacity } from 'react-native';
 import Checkbox from 'expo-checkbox';
 
 import { useNavigation } from "@react-navigation/native";
@@ -51,137 +49,82 @@ export default function TodoList({hierarchy,username,token,title,id,usernameOfOw
     });
   };
 
+  const updateTask = (newTask) => {
+    setTask([...tasks, newTask]);
+  }
+
   useEffect(()=> {
     callback(username, token, title,usernameOfOwner)
   }, [username, token, title,usernameOfOwner])
 
   return(
       <View>
-        {hierarchy === "Manager" ?(
-          <>
-            <Text variant="headlineLarge" style={styles.title}>{project[0]?.title} </Text>
-            <Text variant="labelSmall" style={styles.subtitle}>par {usernameOfOwner}</Text>
-          </>
-        ):[]}
-        {hierarchy === "ProjectChef" ?(
-          <>
-            <Text variant="headlineLarge" style={styles.title}>{project[0]?.title} </Text>
-          </>
-        ):[]}
-        <Divider />
-        <Text style={styles.status}>Status : {project[0]?.status}</Text>
-
-        {hierarchy === "ProjectChef" && verifDoneTask() && project[0]?.status !== "Finished" ? (
-          <>
-            <View style={{alignItems:"center",marginTop:10,marginBottom:10}}>
-              <Button
-                style={{width:350}}
-                labelStyle={{color: '#22577A'}}
-                buttonColor='#90D7B4'
-                mode="contained"
-                disabled = {project[0]?.projectStepDone}
-                onPress={() => updateProjectStepDone(project[0].id, token).then(navigation.navigate("TodoLists"))}>
-                  {project[0]?.projectStepDone ? "Demande de validation en cours..." : "Demande de validation de l'étape"}
-              </Button>
-            </View>
-          </>
-        ) : []}
-
-        {hierarchy === "Manager" && project[0]?.projectStepDone && project[0]?.status !== "Finished" ? (
-          <>
-            <View style={{flexDirection:"row",padding:5}}>
-              <Button
-                style={styles.button}
-                labelStyle={{color: '#22577A'}}
-                buttonColor='#90D7B4'
-                mode="contained"
-                onPress={() => nextStepProject(true,project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"))} >
-                  Validé l'étape
-              </Button>
-              <Button
-                style={styles.button}
-                labelStyle={{color: '#EBF7F3'}}
-                buttonColor='#B22222'
-                mode="contained"
-                onPress={() => nextStepProject(false,project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"))}>
-                  Refusé l'étape
-              </Button>
-            </View>
-          </>
-        ) : []}
-
-        <FlatList
-          style={{ paddingLeft: 10, paddingTop:20}}
-          data={tasks}
-          renderItem={({item}) => 
-          <View style={{flexDirection: 'row', alignItems:"center", justifyContent:"center"}}>
-            <Checkbox value={item.done} style={styles.checkbox} onValueChange={() => handleChange(item)} />
-            <TouchableOpacity onPress={() => {
-              navigation.setOptions({
-                onDeleteTask:handleDeleteTask
-              })
-              navigation.navigate("Task", {
-                title: item.content,
-                id: item.id,
-                token: token,
-              });
-            }}>
-              <Text style={styles.label}>{item.content}</Text>
-            </TouchableOpacity>
-          </View>
-          }
-        />
-      
-        {project[0]?.status !== "Closed" && project[0]?.status !== "Finished" ? (
-          <View style={{alignItems:"center",marginTop:30}}>
+        <Text>Ce projet est à l'étape de : {project[0]?.status}</Text>
+        
+        {hierarchy === "Manager" && project[0]?.status !== "Closed" ? (
+          <><Button
+              title="Modification projet"
+              onPress={() => {
+                navigation.navigate("ModificationProject", {
+                  project: project
+                });
+              } } />
             <Button
-            style={{width:250,height:50,justifyContent:"center"}}
-            labelStyle={{color: '#22577A'}}
-            buttonColor='#90D7B4'
-            mode="contained"
-            icon="plus-box"
-            onPress={() => {
-              navigation.navigate("CreateTask", {
-                titleProject: project[0].title,
-                idProject: project[0].id
-              });
-            }} >NOUVELLE TÂCHE</Button>
-          </View>
+            title="Fermeture du projet"
+            onPress={() => closeTaskList(project[0].id, token).then(navigation.navigate("TodoLists"))} /></>) : []}
+
+        {project[0]?.status !== "Closed" && project[0]?.status !== "Finished" ? (
+          <Button
+          title="Créer une tâche"
+          onPress={() => {
+            navigation.navigate("CreateTask", {
+              titleProject: project[0].title,
+              idProject: project[0].id,
+              onUpdateTask: updateTask
+            });
+          }} /> 
         ) : []}
 
         {hierarchy === "ProjectChef" && (project[0]?.status === "Closed" || project[0]?.status === "Finished") ? (
           <><Button
               title="Suppresion du projet"
-              onPress={() => deleteTaskList(project[0].id, token).then(navigation.navigate("TodoLists"))} /></>
+              onPress={() => deleteTaskList(project[0].id, token).then(onDeleteTaskList(project[0].id)).then(navigation.navigate("TodoLists"))} /></>
         ) : []}
 
-        {hierarchy === "Manager" && project[0]?.status !== "Closed" ? (
-          <>
-            <View style={{flexDirection:"row",marginTop:40}}>
-              <Button
-                style={styles.button}
-                labelStyle={{color: '#22577A'}}
-                buttonColor='#90D7B4'
-                mode="contained"
-                onPress={() => {
-                  navigation.navigate("ModificationProject", {
-                    project: project
-                  });
-                } }>
-                  Modifier le projet
-              </Button>
-              <Button
-                style={styles.button}
-                labelStyle={{color: '#EBF7F3'}}
-                buttonColor='#B22222'
-                mode="contained"
-                onPress={() => closeTaskList(project[0].id, token).then(navigation.navigate("TodoLists"))}>
-                  Fermer le projet
-              </Button>
-            </View>
-          </>
+        {hierarchy === "ProjectChef" && verifDoneTask() && project[0]?.status !== "Finished" ? (
+          <><Button
+          title={project[0]?.projectStepDone ? "Demande de validation en cours..." : "Demande de validation de l'étape"}
+          disabled = {project[0]?.projectStepDone}
+          onPress={() => updateProjectStepDone(project[0].id, token).then(navigation.navigate("TodoLists"))} /></>
         ) : []}
 
+        {hierarchy === "Manager" && project[0]?.projectStepDone && project[0]?.status !== "Finished" ? (
+          <><Button
+          title="Confirmation de l'étape"
+          onPress={() => nextStepProject(true,project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"))} />
+          <Button
+          title="Refuser la validation de l'étape"
+          onPress={() => nextStepProject(false,project[0].id,project[0].status, token).then(navigation.navigate("TodoLists"))} /></>
+        ) : []}
+
+        <FlatList
+          style={{ textAlign:'left', paddingLeft: 10, paddingTop:20}}
+          data={tasks}
+          renderItem={({item}) => 
+          <View style={{flexDirection: 'row'}}>
+            <Checkbox value={item.done} onValueChange={() => handleChange(item)} />
+            <TouchableOpacity onPress={() => {
+              navigation.navigate("Task", {
+                onDeleteTask:handleDeleteTask,
+                title: item.content,
+                id: item.id,
+              });
+            }}>
+              <Text>{item.content}</Text>
+            </TouchableOpacity>
+          </View>
+          }
+        />
       </View>
   )
 }
@@ -197,33 +140,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   checkbox: {
-    marginVertical:7,
-    padding:10,
-    marginRight:10,
-    marginLeft:0
-  },
-  button:{
-    flex:1,
-    margin:5
-  },
-  title: {
-    textAlign:"center",
-    color:"#22577A"
-  },
-  subtitle:{
-    textAlign:"center",
-    color:"#01796F",
-    marginBottom:5
-  },
-  status:{
-    textAlign:"center",
-    color:"#01796F",
-    marginTop:5
+    alignSelf: "center",
   },
   label: {
-    fontSize:16,
-    color:"#22577A",
-    textDecorationLine:"underline",
-    fontWeight:"bold"
+    margin: 8,
   },
 });

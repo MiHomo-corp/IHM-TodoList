@@ -1,6 +1,6 @@
 import React from 'react'
 
-const API_URL = 'http://192.168.1.164:4000'
+const API_URL = 'http://192.168.1.164:4000' //Rentrer l'ip du Métro
 
 const SIGN_IN =
   'mutation($username:String!, $password:String!){signIn(username:$username, password:$password)}'
@@ -34,7 +34,7 @@ const UPDATEMANAGER =
 
 const CREATETASKLIST = 
   `mutation($title:String!,$date:Date!,$description:String,$owner:String!){
-  	createTaskLists(input:{title:$title, date:$date, description:$description, status:"Initialization", owner:{connect:{where:{username:$owner}}}}) {taskLists{id title date description owner {username}}},
+  	createTaskLists(input:{title:$title, date:$date, description:$description, status:"Initialisation", owner:{connect:{where:{username:$owner}}}}) {taskLists{id title date description status owner {username}}},
     task1: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
 	  task2: createTasks(input:{content:"Allocation budget",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
 	  task3: createTasks(input:{content:"Feuille de route du projet",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
@@ -427,7 +427,7 @@ export function createTaskList (username,token,title,date,description){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.taskLists
+    return jsonResponse.data
   })
   .catch(error => {
     throw error
@@ -457,7 +457,7 @@ export function createTask(id,token,content,description){
     if (jsonResponse.errors != null) {
       throw jsonResponse.errors[0]
     }
-    return jsonResponse.data.tasks
+    return jsonResponse.data
   })
   .catch(error => {
     throw error

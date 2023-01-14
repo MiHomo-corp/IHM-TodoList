@@ -1,25 +1,27 @@
 import React from 'react'
 import ModificationTask from "../components/ModificationTask"
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native'
+
 import { TokenContext } from '../Context/Context'
 
 export default function ModificationProjectScreen(route){
-  const { task } = route.route.params;
+    const { task } = route.route.params;
 
-  return (
-    <View style={styles.container}>
-      <TokenContext.Consumer>
-        {([token, setToken]) => {
-              return(<ModificationTask token={token} task={task}/>)
-        }}
-      </TokenContext.Consumer>
-    </View>
-  )
+    return (
+        <TokenContext.Consumer>
+          {([token, setToken]) => {
+                return(
+                  <View
+                  style={{
+                    backgroundColor:"#EBF7F3",
+                    flex: 1,
+                    //justifyContent: 'center',
+                    //alignItems: 'center'
+                  }}
+                >
+                  <ModificationTask token={token} task={task}/>
+                </View>)
+          }}
+        </TokenContext.Consumer>
+    )
 }
-
-const styles = StyleSheet.create({
-  container: {
-      backgroundColor: "#EBF7F3",
-      flex: 1,
-  },
-});

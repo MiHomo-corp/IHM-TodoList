@@ -1,15 +1,10 @@
-import React, { useState } from 'react'
-import {
-  Text,
-  TextInput,
-  Button,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native'
+import React, { useEffect,useState } from 'react'
+
+import {Text,View,StyleSheet,ActivityIndicator,Image} from 'react-native'
+import { Buffer } from 'buffer'
+import { TextInput,Button } from 'react-native-paper';
 
 import { signIn } from '../API/todoAPI'
-import { Buffer } from "buffer"
 import { TokenContext } from '../Context/Context'
 import { UsernameContext } from '../Context/Context'
 import { HierarchyContext } from '../Context/Context'
@@ -20,19 +15,20 @@ export default function SignIn () {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [visible, setVisible] = useState(true)
+  const [disabled, setDisabled] = useState(true)
 
   function parseJwt (token) {
-    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()).status;
+    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()).status
   }
+
   const getSignedIn = (setToken, setUsername, setHierarchy) => {
     setError('')
-    if (login == '' || password == '') return
     setVisible(false)
     signIn(login, password)
       .then(token => {
         setUsername(login)
-        setToken(token)
         setHierarchy(parseJwt(token))
+        setToken(token)
       })
       .catch(err => {
         setError(err.message)
@@ -40,44 +36,69 @@ export default function SignIn () {
     setVisible(true)
   }
 
+  useEffect(() => {
+    if(login === "" || password === ""){
+      setDisabled(true)
+    }
+    else{
+      setDisabled(false)
+    }
+  })
+
   return (
-    <HierarchyContext.Consumer>
-      {([hierarchy, setHierarchy]) => (
+    <TokenContext.Consumer>
+      {([token, setToken]) => (
         <UsernameContext.Consumer>
           {([username, setUsername]) => (
-            <TokenContext.Consumer>
-              {([token, setToken]) => {  
+            <HierarchyContext.Consumer>
+              {([hierarchy, setHierarchy]) => {  
                 return (
                   <View>
+                    <Image style={{ marginTop: -200 }} source={require('../images/todovlopHeader.png')}/>
                     {visible ? (
                       <>
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.label}>Login</Text>
+                        <View style={{ justifyContent: 'center', alignItems:"center"}}>
+                          <View style={{ flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap'}}>
                           <TextInput
                             style={styles.text_input}
+                            label="Identifiant"
+                            mode="outlined"
+                            cursorColor="#01796f"
+                            outlineColor="#01796f"
+                            textColor="#01796f"
+                            activeOutlineColor="#01796f"
                             onChangeText={setLogin}
                             onSubmitEditing={() =>
                               getSignedIn(setToken, setUsername,setHierarchy)
                             }
                             value={login}
                           />
+                          </View>
+                          <View style={{ flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap' }}>
+                            <TextInput
+                              style={styles.text_input}
+                              label="Mot de Passe"
+                              mode="outlined"
+                              cursorColor="#01796f"
+                              outlineColor="#01796f"
+                              textColor="#01796f"
+                              activeOutlineColor="#01796f"
+                              secureTextEntry={true}
+                              onChangeText={setPassword}
+                              onSubmitEditing={() =>
+                                getSignedIn(setToken, setUsername,setHierarchy)
+                              } 
+                              value={password}
+                            />
+                          </View>
+                          {disabled ? (
+                            <Button style={styles.button} disabled={disabled} icon="login" mode="contained">
+                              CONNEXION
+                            </Button>) : (<Button style={styles.button}  labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="login" mode="contained" onPress={() => getSignedIn(setToken, setUsername, setHierarchy)}>
+                              CONNEXION
+                            </Button>)}
                         </View>
-                        <View style={{ flexDirection: 'row' }}>
-                          <Text style={styles.label}>Password</Text>
-                          <TextInput
-                            style={styles.text_input}
-                            onChangeText={setPassword}
-                            secureTextEntry={true}
-                            onSubmitEditing={() =>
-                              getSignedIn(setToken, setUsername, setHierarchy)
-                            }
-                            value={password}
-                          />
-                        </View>
-                        <Button
-                          onPress={() => getSignedIn(setToken, setUsername, setHierarchy)}
-                          title='Sign In'
-                        />
+                        
                         {error ? (
                           <Text style={styles.text_error}>{error}</Text>
                         ) : (
@@ -90,23 +111,40 @@ export default function SignIn () {
                   </View>
                 )
               }}
-            </TokenContext.Consumer>
+            </HierarchyContext.Consumer>
           )}
         </UsernameContext.Consumer>
       )}
-    </HierarchyContext.Consumer>
+    </TokenContext.Consumer>
   )
 }
 
 const styles = StyleSheet.create({
+  login: {
+    marginRight:2,
+  },
+  button: {
+    fontWeight:"bold",
+    justifyContent:'center',
+    alignItems:'center',
+    width:300,
+    height:40,
+    marginTop:25,
+    marginBottom:10,
+    elevation:1
+  },
   label: {
-    width: 70
+    marginTop:7,
+    textAlign: 'right',
+    minWidth: 70,
+    marginRight:5
   },
   text_error: {
     color: 'red'
   },
   text_input: {
-    backgroundColor: 'white',
-    margin: 5
+    margin: 10,
+    width:250,
+    height:30,
   }
 })

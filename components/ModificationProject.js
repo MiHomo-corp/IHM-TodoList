@@ -1,61 +1,124 @@
 import React,{useEffect, useState} from "react";
 
-import { StyleSheet, View, TextInput, Button, Text, SafeAreaView, componentWillMount} from 'react-native';
+import { StyleSheet, View, SafeAreaView,ScrollView} from 'react-native';
 
 import { useNavigation } from "@react-navigation/native";
 
-import { updateTaskList } from "../API/todoAPI"
+import { Button, TextInput,Text } from 'react-native-paper';
 
-//<Checkbox value={item.done} onValueChange={setStatusTask}/>
+import AwesomeAlert from 'react-native-awesome-alerts';
+
+import { updateTaskList } from "../API/todoAPI"
+import { Calendar } from 'react-native-calendars';
+
+import Logo from '../images/modifProject.svg';
+
 
 export default function ModificationProject({token,project}){
-  const [projectTitle, onChangeText] = useState(project[0].title);
-  const [description, onChangeDescription] = useState(project[0].description);
-  const [dateProject, onChangeDateProject] = useState(project[0].date)
-  const [diasbled, setDiasbled] = useState(true)
+  const [projectTitle, setProjectTitle] = useState(project[0].title);
+  const [description, setDescription] = useState(project[0].description);
+  const [dateProject, setDateProject] = useState(project[0].date)
+  const [disabled, setDisabled] = useState(true)
+  const [showable,setShowable] = useState(false)
+
   const navigation = useNavigation();
 
   const date = new Date();
-  const day = date.getDate();
-  const month = date.getMonth()+1;
+  let day = date.getDate();
+  let month = date.getMonth()+1;
   const year = date.getFullYear();
+  if(day<10) day="0"+day;
+  if(month<10) month="0"+month;
+  const currentDate = ''+year+'-'+month+'-'+day
+
+  const handleDayPress = (day) => {
+    setDateProject(day.dateString);
+  }
 
   useEffect(() => {
     if(projectTitle === project[0].title && dateProject === project[0].date && description === project[0].description){
-      setDiasbled(true)
+      setDisabled(true)
     }
     else{
-      setDiasbled(false)
+      setDisabled(false)
     }
   })
 
   return(
     <View>
-      <SafeAreaView>
-        <Text>Titre du projet</Text>
-        <TextInput
-          onChangeText={onChangeText}
-          value={projectTitle}
-        />
-        <Text>Date de fin</Text>
-        <input 
-          type="date" 
-          value={dateProject} 
-          min={year+"-"+month+"-"+day}
-          onChange={d => onChangeDateProject(d.target.value)}/>
+      <ScrollView>
+        <SafeAreaView>
+          <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Modification du projet {project[0].title}</Text>
+            <View style={{marginTop:"5%", alignItems:"center"}}>
+              <Logo width={200} height={150} />
+            </View>
+            <TextInput
+              style={{marginVertical:15,marginHorizontal:15,textAlign:"center"}}
+              label="Nom du Projet"
+              mode="outlined"
+              cursorColor="#01796f"
+              outlineColor="#01796f"
+              textColor="#01796f"
+              activeOutlineColor="#01796f"
+              onChangeText={setProjectTitle}
+              value={projectTitle}
+            />
+          <Text variant="titleMedium" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Date de fin</Text>
+          <Calendar
+            style={{marginHorizontal:15,marginVertical:15}}
+            onDayPress={handleDayPress}
+            minDate={currentDate}
+            markedDates={{
+              [dateProject] : {selected: true, selectedColor:"#90D7B4"},
+              [currentDate] : {marked:true, dotColor:'#01796f'}
+            }}
+            theme={{
+              arrowColor: '#01796f',
+              todayTextColor: '#01796f',
+              dayTextColor: '#01796f',
+              selectedDayTextColor: '#22577A',
+              monthTextColor: '#01796f',
+              textSectionTitleColor: '#01796f',
+            }}
+          />
 
-        <Text>Description du projet</Text>
-
-        <TextInput
-          onChangeText={onChangeDescription}
-          value={description}
-        />
-      </SafeAreaView>
-      <Button 
-        disabled={diasbled}
-        title={"Modification de "+projectTitle}
-        onPress={()=>updateTaskList(token,project[0].id,projectTitle,dateProject,description).then(navigation.navigate("TodoLists"))}
-      />
+          <TextInput
+            style={{marginHorizontal:15,marginTop:15 ,textAlign:"center"}}
+            mode="outlined"
+            label="Description du Projet"
+            outlineColor="#01796f"
+            activeOutlineColor="#01796f"
+            textColor="#01796f"
+            onChangeText={setDescription}
+            value={description}
+          />
+          
+          <AwesomeAlert
+            show={showable}
+            title={projectTitle}
+            message="Etes-vous sur de vouloir créer ce projet ?"
+            showCancelButton={true}
+            showConfirmButton={true}
+            cancelText="Annuler"
+            confirmText="Confirmer"
+            confirmButtonColor="#90D7B4"
+            cancelButtonColor="#01796f"
+            onCancelPressed={() => {
+              setShowable(false);
+            }}
+            onConfirmPressed={() => {
+              updateTaskList(token,project[0].id,projectTitle,dateProject,description).then(navigation.navigate("TodoLists")) 
+         }}
+          />
+          {disabled ? (
+            <Button style={{marginHorizontal:35,marginVertical:50}} disabled={disabled} icon="alert" mode="contained">
+              Aucune modification détecté
+            </Button>) : (
+            <Button style={{marginHorizontal:35,marginVertical:50}} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="briefcase-edit" mode="contained" onPress={() => setShowable(true)}>
+              <Text style={{color: '#22577A',fontWeight:"bold",textTransform: 'uppercase'}}> Modifier {projectTitle}</Text>
+            </Button>)}
+        </SafeAreaView>
+      </ScrollView>
     </View>
   )
 }

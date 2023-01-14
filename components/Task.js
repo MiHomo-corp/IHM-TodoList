@@ -19,7 +19,7 @@ export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarc
   }, [token, id])
 
   useEffect(() => {
-    //setTask(task => task.filter(t => t.id !== id));
+    setTask(task.filter(t => t.id !== id));
   }, [id])
 
   return(
@@ -29,7 +29,6 @@ export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarc
           title="Supprimer cette Task"
           onPress={() => {
             deleteTask(id, token).then(response => {
-              setTask(task.filter(t => t.id !== id));
               onDeleteTask(id);
               // Revenir à l'écran précédent une fois le projet supprimé
               navigation.goBack();
@@ -44,7 +43,7 @@ export default function Task({hierarchy,token,title,id,onDeleteTask}){ //Hierarc
       ) : []}
       
       <Text>Description : </Text>
-      <Text>{task[0]?.description}</Text>
+      <Text>{task?.description}</Text>
     </View>
   )
 }

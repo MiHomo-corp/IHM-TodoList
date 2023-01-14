@@ -1,10 +1,13 @@
 import React, {useEffect, useState } from 'react'
-import { View, Text, Button, FlatList,} from 'react-native'
-import { List, RadioButton } from 'react-native-paper';
+import {StyleSheet, View, FlatList} from 'react-native'
+import { List, RadioButton, Text, Button } from 'react-native-paper';
 import { useNavigation } from "@react-navigation/native";
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 import { getMyManager, getChefsOfManager, getProjectStepDone, getManager, updateManager } from '../API/todoAPI';
+import Logo from '../images/profil.svg';
 import Todolists from './Todolists';
+
 
 export default function Profil (hierarchy,username,token){ //Pour une raison étrange (probablement dû au link dans la navigation), tous se trouve dans hierarchy
 
@@ -14,6 +17,8 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
     const [managerChecked, setManagerChecked] = useState("")
     const [managerList, setManagerList] = useState([])
     const [visible, setVsisble] = useState(false)
+    const [showable,setShowable] = useState(false)
+
 
     const navigation = useNavigation();
 
@@ -22,8 +27,10 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
         for(let item of listChefs){
             listItems.push(
                 <List.Item
+                    titleStyle={{color:"#01796f"}}
                     key={item}
                     title={item}
+                    left={props => <List.Icon {...props} icon="account" color='#01796f'/>}
                 />
             );
         }
@@ -32,17 +39,14 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
 
 
     const renderListItemProject = () => {
-        if(hierarchy.hierarchy === "Manager"){ // Nous pouvons pas le mettre dans le callback car il y avait des erreurs avec le "usernameInArray" qui était de longueur 0 même si il était rempli
-            getProjectStepDone(listChefs).then(project => {
-                setPendingProject(project)
-            });
-        }
         const listItems = []
         for(let item of Object.keys(pendingProject)){
             listItems.push(
                 <List.Item
+                    titleStyle={{color:"#01796f",fontWeight:"bold"}}
                     key={pendingProject[item].title}
                     title={pendingProject[item].title} 
+                    left={props => <List.Icon {...props} icon="eye" color='#01796f'/>}
                     onPress={() => {
                         navigation.navigate("TodoList", {
                             title: pendingProject[item].title,
@@ -72,58 +76,141 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
                 projectChefs.forEach(element => {
                     usernameInArray.push(element.username)
                 });
+                getProjectStepDone(usernameInArray).then(project => {
+                    setPendingProject(project)
+                });
                 setListChefs(usernameInArray)
             });
         }
-    }   
+    }
+
     useEffect(()=> {
         callback()
     }, [])
 
     return (
         <View>
-            <Text style={{fontWeight:"bold", padding:20}}>{hierarchy.username}</Text>
+            <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Votre Profil : {hierarchy.username.toUpperCase()}</Text>
+            <View style={{marginTop:"5%", marginBottom:'5%', alignItems:"center"}}>
+                <Logo width={200} height={150} />
+            </View>
             <List.Section>
                 {hierarchy.hierarchy === "ProjectChef" ? (
-                 <><List.Accordion
-                        title="Votre responsable"
-                        left={props => <List.Icon {...props} icon="folder" />}>
-                        <List.Item title={myManager} />
-                    </List.Accordion>
+                 <>
                     <List.Accordion
+                        theme={{ colors: { primary: '#22577A' }}}
+                        titleStyle={{fontWeight:"bold"}}
+                        style={{padding:15, backgroundColor:"#90D7B4"}}
+                        title="Votre responsable"
+                        left={props => <List.Icon {...props} icon="account-multiple" />}>
+                        <List.Item left={props => <List.Icon {...props} icon="account" color='#01796f'/>} titleStyle={{color:"#01796f",fontWeight:"bold"}} title={myManager} />
+                    </List.Accordion>
+                    <View
+                        style={{
+                            borderBottomColor: '#01796f',
+                            borderBottomWidth: StyleSheet.hairlineWidth,
+                        }}
+                    />
+                    <List.Accordion
+                        theme={{ colors: { primary: '#22577A' }}}
+                        titleStyle={{fontWeight:"bold"}}
+                        style={{padding:15, backgroundColor:"#90D7B4"}}
                         title="Vos demandes en cours"
-                        left={props => <List.Icon {...props} icon="folder" />}>
-                            {pendingProject.length !==0 ? renderListItemProject() : []}
+                        left={props => <List.Icon {...props} icon="briefcase-clock" />}>
+                        {pendingProject.length !==0 ? renderListItemProject() : []}
                     </List.Accordion>
                 </>): (
-                <><List.Accordion
-                    title="Vos esclaves"
-                    left={props => <List.Icon {...props} icon="folder" />}>
-                        {listChefs.length !== 0 ? renderListItemChefs() : []}
-                </List.Accordion>
-                <List.Accordion
-                    title="Les projets nécessitant une réponse"
-                    left={props => <List.Icon {...props} icon="folder" />}>
-                        {renderListItemProject()}
-                </List.Accordion>
-            </>
-                )}
+                <>
+                    <List.Accordion
+                        theme={{ colors: { primary: '#22577A' }}}
+                        style={{padding:15, backgroundColor:"#90D7B4"}}
+                        title="Vos subordonnés"
+                        left={props => <List.Icon {...props} icon="account-multiple" />}>
+                            {listChefs.length !== 0 ? renderListItemChefs() : []}
+                    </List.Accordion>
+
+                    <List.Accordion
+                        theme={{ colors: { primary: '#22577A' }}}
+                        style={{padding:15, backgroundColor:"#90D7B4"}}
+                        title="Les projets nécessitant une action"
+                        left={props => <List.Icon {...props} icon="briefcase-clock" />}>
+                            {renderListItemProject()}
+                    </List.Accordion>
+                </>
+            )}
         </List.Section>
+        
+        <AwesomeAlert
+            show={showable}
+            title="ATTENTION"
+            message={"Vous vous apprêtez à changer de responsable ("+managerChecked+"), êtes-vous sur ?"}
+            showCancelButton={true}
+            showConfirmButton={true}
+            cancelText="Annuler"
+            confirmText="Confirmez"
+            confirmButtonColor="#B22222"
+            cancelButtonColor="#90D7B4"
+            onCancelPressed={() => {
+                setShowable(false);
+            }}
+            onConfirmPressed={() => {
+                updateManager(hierarchy.username,myManager,managerChecked,hierarchy.token).then(navigation.navigate("TodoLists"))
+            }}
+        />
+
         { hierarchy.hierarchy === "ProjectChef" ? (
-            <Button title={visible ? "Annuler" : "Changer de responsable"} onPress={() => { setVsisble(!visible) } } />
+            <Button 
+                style={{marginHorizontal:35,marginTop:30,}} 
+                labelStyle={visible ? {color:'white'}:{color:'#22577A'}} 
+                buttonColor={!visible ? '#90D7B4' : '#01796f'} 
+                mode="contained" 
+                icon={visible ? "close":"account-switch"} 
+                onPress={() => { setVsisble(!visible) } }>
+
+                <Text style={visible ? {color: "white",fontWeight:"bold",textTransform: 'uppercase'}:{color: "#22577A",fontWeight:"bold",textTransform: 'uppercase'}}>
+                    {visible ? "ANNULER" : "CHANGER DE RESPONSABLE"}
+                </Text>             
+   
+            </Button>
             ) : []} 
+
         {visible ? (
-            <><FlatList
-                style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
-                data={managerList}
-                renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
+            <>
+                {managerList.map((item)=> <View style={{ flexDirection: 'row',paddingLeft: 15, paddingTop: 10 }}>
                     <RadioButton
+                        key={item}
+                        color='#90D7B4'
                         status={managerChecked === item.username ? 'checked' : 'unchecked'}
                         onPress={() => setManagerChecked(item.username)} />
-                    <Text>{item.username}</Text>
-                </View>} />
-                <Button title='Valider' onPress={() => { updateManager(hierarchy.username,myManager,managerChecked,hierarchy.token).then(navigation.navigate("TodoLists"))} } /></>
+                    <Text variant='titleMedium' style={styles.radio}>{item.username}</Text>
+                </View>)} 
+                <Button 
+                    style={{marginHorizontal:35,marginTop:20}} 
+                    buttonColor={'#B22222'} 
+                    mode="contained" 
+                    icon="alert" 
+                    onPress={() => {setShowable(true)} }>
+                        Valider
+                </Button>
+            </>
         ) : []}
         </View>
     )
 }
+const styles = StyleSheet.create({
+    radio:{
+      marginVertical:7, 
+      color:"#01796f"
+    }
+})
+
+/*<FlatList
+                    style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
+                    data={managerList}
+                    renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
+                        <RadioButton
+                            color='#90D7B4'
+                            status={managerChecked === item.username ? 'checked' : 'unchecked'}
+                            onPress={() => setManagerChecked(item.username)} />
+                        <Text variant='titleMedium' style={styles.radio}>{item.username}</Text>
+                    </View>*/
