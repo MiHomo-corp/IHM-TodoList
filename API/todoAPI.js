@@ -1,6 +1,6 @@
 import React from 'react'
 
-const API_URL = 'http://192.168.1.18:4000' //Rentrer l'ip du Métro
+const API_URL = 'http://192.168.1.164:4000' //Rentrer l'ip du Métro
 
 const SIGN_IN =
   'mutation($username:String!, $password:String!){signIn(username:$username, password:$password)}'
@@ -38,8 +38,8 @@ const CREATEPROJECT =
     task1: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
 	  task2: createTasks(input:{content:"Allocation budget",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
 	  task3: createTasks(input:{content:"Feuille de route du projet",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
-	  task4: createTasks(input:{content:"Maquete projet",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
-	  task5: createTasks(input:{content:"Presentation devant comité",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}}
+	  task4: createTasks(input:{content:"Maquette projet",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}},
+	  task5: createTasks(input:{content:"Présentation devant comité",belongsTo:{connect:{where:{title:$title}}}}){tasks{id content done belongsTo{owner{username}}}}
   }`
 
 const CREATETASK = 

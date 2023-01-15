@@ -101,7 +101,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
                         theme={{ colors: { primary: '#22577A' }}}
                         titleStyle={{fontWeight:"bold"}}
                         style={{padding:15, backgroundColor:"#90D7B4"}}
-                        title="Votre responsable"
+                        title="Votre manager"
                         left={props => <List.Icon {...props} icon="account-multiple" />}>
                         <List.Item left={props => <List.Icon {...props} icon="account" color='#01796f'/>} titleStyle={{color:"#01796f",fontWeight:"bold"}} title={myManager} />
                     </List.Accordion>
@@ -124,7 +124,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
                     <List.Accordion
                         theme={{ colors: { primary: '#22577A' }}}
                         style={{padding:15, backgroundColor:"#90D7B4"}}
-                        title="Vos subordonnés"
+                        title="Vos collaborateur"
                         left={props => <List.Icon {...props} icon="account-multiple" />}>
                             {listChefs.length !== 0 ? renderListItemChefs() : []}
                     </List.Accordion>
@@ -132,7 +132,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
                     <List.Accordion
                         theme={{ colors: { primary: '#22577A' }}}
                         style={{padding:15, backgroundColor:"#90D7B4"}}
-                        title="Les projets nécessitant une action"
+                        title="Action(s) Requise(s)"
                         left={props => <List.Icon {...props} icon="briefcase-clock" />}>
                             {renderListItemProject()}
                     </List.Accordion>
@@ -143,7 +143,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
         <AwesomeAlert
             show={showable}
             title="ATTENTION"
-            message={"Vous vous apprêtez à changer de responsable ("+managerChecked+"), êtes-vous sur ?"}
+            message={"Vous vous apprêtez à changer de manager ("+managerChecked+"), êtes-vous sur ?"}
             showCancelButton={true}
             showConfirmButton={true}
             closeOnTouchOutside={false}
@@ -170,7 +170,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
                 onPress={() => { setVsisble(!visible) } }>
 
                 <Text style={visible ? {color: "white",fontWeight:"bold",textTransform: 'uppercase'} : {color: "#22577A",fontWeight:"bold",textTransform: 'uppercase'}}>
-                    {visible ? "ANNULER" : "CHANGER DE RESPONSABLE"}
+                    {visible ? "ANNULER" : "CHANGER DE MANAGER"}
                 </Text>             
    
             </Button>

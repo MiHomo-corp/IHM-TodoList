@@ -9,6 +9,7 @@ import {
 
 import { RadioButton,Button,TextInput,Text } from 'react-native-paper';
 import { getManager, signUp } from '../API/todoAPI'
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -25,6 +26,7 @@ export default function SignUp () {
   const [managerChecked, setManagerChecked] = useState('')
   const [managerList, setManagerList] = useState([])
   const [disabled, setDisabled] = useState(true)
+  const [showable,setShowable] = useState(false)
   const navigation = useNavigation();
 
   const callback = () => {
@@ -72,6 +74,18 @@ export default function SignUp () {
                 {visible ? (
                   <>
                     <View style={{ justifyContent: 'center', alignItems:"center"}}>
+                      <AwesomeAlert
+                        show={showable}
+                        title="Inscription"
+                        message="Votre compte à bien été créer"
+                        showCancelButton={false}
+                        showConfirmButton={true}
+                        closeOnTouchOutside={true}
+                        closeOnHardwareBackPress={false}
+                        confirmText="Ok"
+                        confirmButtonColor="#90D7B4"
+                        onConfirmPressed={() => getSignedUp(setToken, setUsername)}
+                      />
                       <View style={{ flexDirection: 'row' }}>
                         <TextInput
                           style={styles.text_input}
@@ -123,42 +137,43 @@ export default function SignUp () {
                         />
                       </View>
                       <View style={{ flexDirection: 'column' }}>
-                      <Text variant="titleMedium" style={styles.radio}>Etes-vous un :</Text>
-                      <View style={{ flexDirection: 'row' }}>
-                        <RadioButton
-                          color='#90D7B4'
-                          status={ checked === 'ProjectChef' ? 'checked' : 'unchecked' }
-                          onPress={() => setChecked('ProjectChef')}
-                        />
-                        <Text variant="titleMedium" style={styles.radio}>Chef de projet</Text>
-                        {checked === "ProjectChef" ? (
-                          <FlatList
-                          style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
-                          data={managerList}
-                          renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
-                            <RadioButton
-                              color='#90D7B4'
-                              status={ managerChecked === item.username ? 'checked' : 'unchecked' }
-                              onPress={() => setManagerChecked(item.username)}
-                            />
-                            <Text variant="titleMedium" style={styles.radio}>{item.username}</Text>
-                          </View>}/>
-                         ) : []}
-                        </View>
+                        <Text variant="titleMedium" style={styles.radio}>Etes-vous un :</Text>
                         <View style={{ flexDirection: 'row' }}>
                           <RadioButton
                             color='#90D7B4'
                             status={ checked === 'Manager' ? 'checked' : 'unchecked' }
                             onPress={() => setChecked('Manager')}
                           />
-                          <Text variant="titleMedium" style={styles.radio}>Responsable</Text>
+                          <Text variant="titleMedium" style={styles.radio}>Manager</Text>
                         </View>
+                        <View style={{ flexDirection: 'row' }}>
+                          <RadioButton
+                            color='#90D7B4'
+                            status={ checked === 'ProjectChef' ? 'checked' : 'unchecked' }
+                            onPress={() => setChecked('ProjectChef')}
+                          />
+                          <Text variant="titleMedium" style={styles.radio}>Chef de projet</Text>
+                          {checked === "ProjectChef" ? (
+                            <FlatList
+                            style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
+                            data={managerList}
+                            renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
+                              <RadioButton
+                                color='#90D7B4'
+                                status={ managerChecked === item.username ? 'checked' : 'unchecked' }
+                                onPress={() => setManagerChecked(item.username)}
+                              />
+                              <Text variant="titleMedium" style={styles.radio}>{item.username}</Text>
+                            </View>}/>
+                          ) : []}
+                        </View>
+                        
                       </View>
                       {disabled ? (
                         <Button style={styles.button} disabled={disabled} icon="alert" mode="contained">
                           Tout les champs ne sont pas remplis...
-                        </Button>) : (<Button style={styles.button} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="clipboard-account-outline" mode="contained" onPress={() => getSignedUp(setToken, setUsername)}>
-                          CONNEXION
+                        </Button>) : (<Button style={styles.button} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="clipboard-account-outline" mode="contained" onPress={() => setShowable(true)}>
+                          S'INSCRIRE
                         </Button>)}
                     </View>
                     {error ? (

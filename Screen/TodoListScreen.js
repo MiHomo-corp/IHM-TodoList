@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, StyleSheet} from 'react-native'
 
-import TodoList from '../components/TodoList'
+import TodoList from '../components/Todolist'
 import { HierarchyContext, TokenContext, UsernameContext } from '../Context/Context'
 
 export default function TodoListScreen({navigation,route}){

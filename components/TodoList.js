@@ -21,6 +21,8 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
   const [closeShowable,setCloseShowable] = useState(false)
   const [validationShowable,setValidationShowable] = useState(false)
   const [cancelShowable,setCancelShowable] = useState(false)
+  const [showable,setShowable] = useState(false)
+
 
   // Fonction de gestion d'événement qui sera appelée lorsque la valeur de la checkbox change
   const handleChange = (item) => {
@@ -87,6 +89,18 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
   return(
     <ScrollView>
         <View>
+          <AwesomeAlert
+            show={showable}
+            title="Validation d'étape"
+            message="Votre demmande de Validation à bien été prise en compte."
+            showCancelButton={false}
+            showConfirmButton={true}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            confirmText="OK"
+            confirmButtonColor="#90D7B4"
+            onConfirmPressed={() => updateProjectStepDone(project[0].id, token).then(navigation.navigate("Projects"))}
+          />
           {hierarchy === "Manager" ?(
             <>
               <Text variant="headlineLarge" style={styles.title}>{project[0]?.title} </Text>
@@ -111,8 +125,8 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                   buttonColor='#90D7B4'
                   mode="contained"
                   disabled = {project[0]?.projectStepDone}
-                  onPress={() => updateProjectStepDone(project[0].id, token).then(navigation.navigate("Projects"))}>
-                    {project[0]?.projectStepDone ? "Demande de validation en cours..." : "DEMMANDE DE VALIDATION ETAPE"}
+                  onPress={() => setShowable(true)}>
+                    {project[0]?.projectStepDone ? "Demmande de validation en cours..." : "DEMMANDE DE VALIDATION ETAPE"}
                 </Button>
               </View>
             </>
