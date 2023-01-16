@@ -93,7 +93,7 @@ export default function TodoList({hierarchy,token,id, onDeleteProject, onModific
           <AwesomeAlert
             show={showable}
             title="Validation d'étape"
-            message="Votre demmande de Validation à bien été prise en compte."
+            message="Votre demmande de validation à bien été prise en compte."
             showCancelButton={false}
             showConfirmButton={true}
             closeOnTouchOutside={true}
@@ -301,7 +301,9 @@ export default function TodoList({hierarchy,token,id, onDeleteProject, onModific
                   setCloseShowable(false);
                 } }
                 onConfirmPressed={() => {
-                  closeProject(id, token).then(navigation.navigate("Projects"));
+                  closeProject(id, token).then((response) => {
+                    onNextStepProject(response.updateProjects.projects[0]);
+                    navigation.goBack()})
                 } } />
               <View style={{justifyContent:"center" ,flexDirection:"row",marginTop:height/25}}>
                 <Button

@@ -79,6 +79,7 @@ export default function ModificationProject({token,project,onUpdateProject}){
           />
 
           <TextInput
+            multiline = {true}
             style={{marginHorizontal:15,marginTop:15 ,textAlign:"center"}}
             mode="outlined"
             label="Description du Projet"

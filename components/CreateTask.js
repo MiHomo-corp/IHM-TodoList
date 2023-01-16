@@ -49,6 +49,7 @@ export default function CreateTask({token,idProject,titleProject,onHandleNewTask
           />
 
           <TextInput
+            multiline={true}
             style={{marginTop:15,marginHorizontal:15,textAlign:"center"}}
             label="Description de la tâche"
             mode="outlined"
@@ -62,7 +63,7 @@ export default function CreateTask({token,idProject,titleProject,onHandleNewTask
           <AwesomeAlert
             show={showable}
             title={taskContent}
-            message="Etes-vous sur de vouloir créer ce projet ?"
+            message="Etes-vous sur de vouloir créer cette tâche ?"
             showCancelButton={true}
             showConfirmButton={true}
             closeOnTouchOutside={false}

@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  View,
-  StyleSheet,
-  ActivityIndicator,
-  FlatList,
-  Image,
-} from 'react-native'
+import { View, StyleSheet, ActivityIndicator, FlatList, Image, ScrollView, useWindowDimensions} from 'react-native'
 
 import { RadioButton,Button,TextInput,Text } from 'react-native-paper';
 import { getManager, signUp } from '../API/todoAPI'
@@ -17,6 +11,7 @@ import { TokenContext } from '../Context/Context'
 import { UsernameContext } from '../Context/Context'
 
 export default function SignUp () {
+  const {height, width} = useWindowDimensions();
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
   const [copyPassword, setCopyPassword] = useState('')
@@ -35,6 +30,19 @@ export default function SignUp () {
     })
   }
   
+  const renderManagers = () => {
+    return managerList.map((item) => 
+      <View style={{ flexDirection: 'row' }}>
+        <RadioButton
+          color='#90D7B4'
+          status={ managerChecked === item.username ? 'checked' : 'unchecked' }
+          onPress={() => setManagerChecked(item.username)}
+        />
+        <Text variant="titleMedium" style={styles.radio}>{item.username}</Text>
+        <Text style={{flex:0.1}}></Text>
+      </View>)
+  }
+
   useEffect(()=> {
     callback()
   }, [])
@@ -50,15 +58,12 @@ export default function SignUp () {
 
   const getSignedUp = () => {
     setError('')
-    if (password !== copyPassword){
-        setError("Passwords don't match")
-        return
-    } 
     signUp(checked, login, password, managerChecked)
       .then(() => {
         navigation.navigate("SignIn")
       })
       .catch(err => {
+        setShowable(false);
         setError(err.message)
       })
   }
@@ -70,14 +75,15 @@ export default function SignUp () {
           {([username, setUsername]) => {
             return (
               <View>
-                <Image style={{ marginTop: -200 }} source={require('../images/todovlop.png')}/>
+                <ScrollView>
+                <Image style={{width:width/1.2, height:height/3}} source={require('../images/todovlop.png')}/>
                 {visible ? (
                   <>
                     <View style={{ justifyContent: 'center', alignItems:"center"}}>
                       <AwesomeAlert
                         show={showable}
                         title="Inscription"
-                        message="Votre compte à bien été créer"
+                        message="Votre compte a été créé avec succés"
                         showCancelButton={false}
                         showConfirmButton={true}
                         closeOnTouchOutside={false}
@@ -136,45 +142,50 @@ export default function SignUp () {
                           value={copyPassword}
                         />
                       </View>
-                      <View style={{ flexDirection: 'column' }}>
-                        <Text variant="titleMedium" style={styles.radio}>Etes-vous un :</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                          <RadioButton
-                            color='#90D7B4'
-                            status={ checked === 'Manager' ? 'checked' : 'unchecked' }
-                            onPress={() => setChecked('Manager')}
-                          />
-                          <Text variant="titleMedium" style={styles.radio}>Manager</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row' }}>
-                          <RadioButton
-                            color='#90D7B4'
-                            status={ checked === 'ProjectChef' ? 'checked' : 'unchecked' }
-                            onPress={() => setChecked('ProjectChef')}
-                          />
-                          <Text variant="titleMedium" style={styles.radio}>Chef de projet</Text>
-                          {checked === "ProjectChef" ? (
-                            <FlatList
-                            style={{ textAlign: 'left', paddingLeft: 10, paddingTop: 20 }}
-                            data={managerList}
-                            renderItem={({ item }) => <View style={{ flexDirection: 'row' }}>
-                              <RadioButton
-                                color='#90D7B4'
-                                status={ managerChecked === item.username ? 'checked' : 'unchecked' }
-                                onPress={() => setManagerChecked(item.username)}
-                              />
-                              <Text variant="titleMedium" style={styles.radio}>{item.username}</Text>
-                            </View>}/>
-                          ) : []}
-                        </View>
-                        
+                    </View>
+                    <View style={{ flexDirection: 'column', paddingLeft:60 }}>
+                      <Text variant="titleMedium" style={styles.radio}>Etes-vous un :</Text>
+                      <View style={{ flexDirection: 'row', paddingLeft:20,paddingTop:10 }}>
+                        <RadioButton
+                          color='#90D7B4'
+                          status={ checked === 'Manager' ? 'checked' : 'unchecked' }
+                          onPress={() => setChecked('Manager')}
+                        />
+                        <Text variant="titleMedium" style={styles.radio}>Manager</Text>
                       </View>
-                      {disabled ? (
-                        <Button style={styles.button} disabled={disabled} icon="alert" mode="contained">
-                          Tout les champs ne sont pas remplis...
-                        </Button>) : (<Button style={styles.button} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="clipboard-account-outline" mode="contained" onPress={() => setShowable(true)}>
-                          S'INSCRIRE
-                        </Button>)}
+                      <View style={{ flexDirection: 'row',  paddingLeft:20,paddingTop:10 }}>
+                        <RadioButton
+                          color='#90D7B4'
+                          status={ checked === 'ProjectChef' ? 'checked' : 'unchecked' }
+                          onPress={() => setChecked('ProjectChef')}
+                        />
+                        <Text variant="titleMedium" style={styles.radio}>Chef de projet</Text>
+                      </View>
+                      {checked === "ProjectChef" ? (
+                        <View style={{flexDirection:"column",paddingTop:0}}>
+                          <View style={{flexDirection:"row", paddingLeft:30}}>
+                            <Text variant="titleSmall" style={styles.radio}>Selectionnez votre manager :</Text>
+                          </View>
+                          <View style={{flexDirection:"column", paddingLeft:60}}>
+                            {renderManagers()}
+                          </View>
+                        </View>
+                      ) : []}
+                    </View>
+                    <View style={{ justifyContent: 'center', alignItems:"center"}}>
+                    {disabled ? (
+                      <Button style={styles.button} disabled={true} icon="alert" mode="contained">
+                        Tout les champs ne sont pas remplis...
+                      </Button>) : []
+                    }
+                    {!disabled && password === copyPassword ? (
+                      <Button style={styles.button} labelStyle={{color: '#22577A'}} buttonColor='#90D7B4' icon="clipboard-account-outline" mode="contained" onPress={() => setShowable(true)}>
+                        S'INSCRIRE
+                      </Button>) : []
+                    }
+                    {!disabled && password !== copyPassword ? (<Button style={styles.button} disabled={true} icon="alert" mode="contained">
+                        Les mots de passe sont différents
+                      </Button>) : []}
                     </View>
                     {error ? (
                       <Text style={styles.text_error}>{error}</Text>
@@ -185,6 +196,7 @@ export default function SignUp () {
                 ) : (
                   <ActivityIndicator />
                 )}
+                </ScrollView>
               </View>
             )
           }}
@@ -199,7 +211,6 @@ const styles = StyleSheet.create({
     marginRight:2,
   },
   radio:{
-    marginVertical:7, 
     color:"#01796f"
   },
   button: {

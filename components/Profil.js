@@ -146,7 +146,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
             closeOnTouchOutside={false}
             closeOnHardwareBackPress={false}
             cancelText="Annuler"
-            confirmText="Confirmez"
+            confirmText="Confirmer"
             confirmButtonColor="#B22222"
             cancelButtonColor="#90D7B4"
             onCancelPressed={() => {

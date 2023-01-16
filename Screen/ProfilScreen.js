@@ -29,7 +29,7 @@ export default function ProfilScreen () {
                         showConfirmButton={true}
                         closeOnTouchOutside={false}
                         cancelText="Rester"
-                        confirmText="Confirmez"
+                        confirmText="Confirmer"
                         confirmButtonColor="#90D7B4"
                         cancelButtonColor="#01796f"
                         onCancelPressed={() => {

@@ -4,7 +4,6 @@ import { Text, Button } from 'react-native-paper'
 import { useNavigation } from "@react-navigation/native";
 
 import { getChefsOfManager, getProjects } from "../API/todoAPI"
-import Logo from '../images/projects.svg';
 
 export default function Projects({hierarchy,username,token}){
   const {height, width} = useWindowDimensions();

@@ -55,7 +55,7 @@ const UPDATESTATUSTASK =
   'mutation ($id:ID!,$done:Boolean!) {updateTasks(where:{id:$id}update:{done:$done}){tasks {id content done}}}'
   
 const CLOSEPROJECT = 
-  'mutation($id:ID!){updateProjects(where: {id:$id}, update:{status:"Fermé"}){projects{title status}}}'
+  'mutation($id:ID!){updateProjects(where: {id:$id}, update:{status:"Fermé"}){projects{id date title description status owner{username} projectStepDone}}}'
 
 const DELETEPROJECT =
   'mutation($id:ID!){deleteTasks(where:{belongsTo:{id:$id}}){nodesDeleted},deleteProjects(where: {id: $id}){nodesDeleted}}'

@@ -46,6 +46,7 @@ export default function ModificationTask({token,task,onUpdateTask}){
           />
           <TextInput
             style={{marginTop:15,marginHorizontal:15,textAlign:"center"}}
+            multiline={true}
             label="Description"
             mode="outlined"
             cursorColor="#01796f"
@@ -58,7 +59,7 @@ export default function ModificationTask({token,task,onUpdateTask}){
           <AwesomeAlert
             show={showable}
             title={taskContent}
-            message="Etes-vous sur de vouloir créer ce projet ?"
+            message="Etes-vous sur de vouloir modifier cette tâche ?"
             showCancelButton={true}
             showConfirmButton={true}
             closeOnTouchOutside={false}
