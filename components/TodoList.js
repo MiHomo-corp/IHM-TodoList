@@ -1,13 +1,13 @@
 import React,{useEffect, useState} from "react";
 import { StyleSheet, View, TouchableOpacity, useWindowDimensions,ScrollView,LogBox } from 'react-native';
-import { Text, Button } from 'react-native-paper'
+import { Text, Button, TextInput } from 'react-native-paper'
 import AwesomeAlert from 'react-native-awesome-alerts';
 import Checkbox from 'expo-checkbox';
 
 import { useNavigation } from "@react-navigation/native";
 import { getTasks, setCheckTask, closeProject, deleteProject, deleteTask, updateProjectStepDone, nextStepProject } from "../API/todoAPI"
 
-export default function TodoList({hierarchy,username,token,title,usernameOfOwner, onDeleteProject, onModificationProject, onNextStepProject}){
+export default function TodoList({hierarchy,token,id, onDeleteProject, onModificationProject, onNextStepProject}){
 
   LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
@@ -16,6 +16,7 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
   const {height, width} = useWindowDimensions();
   const [tasks, setTask] = useState([]);
   const [project, setProject] = useState([]);
+  const [commentaire, setCommentaire] = useState([]);
   const navigation = useNavigation();
   const [deleteShowable,setDeleteShowable] = useState(false)
   const [closeShowable,setCloseShowable] = useState(false)
@@ -55,8 +56,8 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
     return "Terminé"    
   }
 
-  const callback = (username, token, title,usernameOfOwner) => {
-    getTasks(usernameOfOwner,token,title).then(rep =>{
+  const callback = (token, id) => {
+    getTasks(token,id).then(rep =>{
       setTask(rep.tasks);
       setProject(rep.projects);
     })
@@ -84,8 +85,8 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
   }
 
   useEffect(()=> {
-    callback(username, token, title, usernameOfOwner)
-  }, [username, token, title, usernameOfOwner])
+    callback(token, id)
+  }, [token, id])
 
   return(
     <ScrollView>
@@ -105,7 +106,7 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
           {hierarchy === "Manager" ?(
             <>
               <Text variant="headlineLarge" style={styles.title}>{project[0]?.title} </Text>
-              <Text variant="labelLarge" style={styles.subtitle}>par {usernameOfOwner}</Text>
+              <Text variant="labelLarge" style={styles.subtitle}>par {project[0]?.owner.username}</Text>
             </>
           ):[]}
           {hierarchy === "ProjectChef" ?(
@@ -156,46 +157,53 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                     navigation.navigate("Projects")
                   })
                 } } />
-              <AwesomeAlert
-                show={cancelShowable}
-                title="REFUSER"
-                message={"Etes-vous sur de vouloir refuser la validation de l'étape "+project[0].status+" de ce projet ?"}
-                showCancelButton={true}
-                showConfirmButton={true}
-                closeOnTouchOutside={false}
-                closeOnHardwareBackPress={false}
-                cancelText="Annuler"
-                confirmText="Confirmer"
-                confirmButtonColor="#B22222"
-                cancelButtonColor="#01796f"
-                onCancelPressed={() => {
-                  setCancelShowable(false);
-                } }
-                onConfirmPressed={() => {
-                  nextStepProject(false,project[0].id,project[0].status, token).then(navigation.navigate("Projects"));
-                } } />
-              <View style={{flexDirection:"row",padding:5}}>
+              <View style={{justifyContent:"center", flexDirection:"row",padding:5}}>
                 <Button
                   style={styles.button}
                   labelStyle={{color: '#22577A',fontWeight:"bold",textTransform:"uppercase"}}
                   buttonColor='#90D7B4'
                   mode="contained"
-                  onPress={() => setValidationShowable(true)} >
-                    Valider étape
+                  onPress={() => setCancelShowable(!cancelShowable)}>
+                    {cancelShowable ? "ANNULER" : "REFUSER ÉTAPE"}
                 </Button>
                 <Button
                   style={styles.button}
-                  labelStyle={{color: '#EBF7F3',fontWeight:"bold",textTransform:"uppercase"}}
+                  labelStyle={{fontWeight:"bold",textTransform:"uppercase"}}
                   buttonColor='#B22222'
                   mode="contained"
-                  onPress={() => setCancelShowable(true)}>
-                    Refuser étape
+                  onPress={() => setValidationShowable(true)} >
+                    Valider étape
                 </Button>
               </View>
             </>
           ) : []}
-          <View style={{ paddingLeft: 10, paddingTop:20}}>
-          {tasks.map((item) => 
+          <View style={{ paddingHorizontal: 10, paddingTop:20}}>
+            
+            {cancelShowable? (
+              <>
+                <Text variant="titleSmall" style={styles.status}>Décriver la raison du refus :</Text>
+                <TextInput
+                  style={{ marginHorizontal: 20, marginVertical: 10, textAlign: "center" }}
+                  mode="outlined"
+                  label="Commentaire"
+                  outlineColor="#01796f"
+                  activeOutlineColor="#01796f"
+                  textColor="#01796f"
+                  onChangeText={setCommentaire}
+                  value={commentaire}
+                  multiline={true} />
+                <Button
+                  style={{ marginHorizontal: 20, marginVertical: 10, textAlign: "center" }}
+                  labelStyle={{color: '#EBF7F3',fontWeight:"bold",textTransform:"uppercase"}}
+                  icon="email-fast"
+                  buttonColor='#B22222'
+                  mode="contained"
+                  onPress={() => nextStepProject(false,commentaire,project[0].id,project[0].status, token).then(navigation.navigate("Projects"))}>
+                    ENVOYER
+                </Button>
+              </>
+            ) : []}
+            {tasks.map((item) => 
             <View key={item.id} style={{marginLeft:width/5, flexDirection: 'row', alignItems:"center"}}>
             <Checkbox 
               disabled={hierarchy==="Manager" || project[0]?.projectStepDone || project[0]?.status === "Fermé" || project[0]?.status === "Terminé"} 
@@ -237,7 +245,7 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                 onPress={() => {
                   navigation.navigate("CreateTask", {
                     titleProject: project[0].title,
-                    idProject: project[0].id,
+                    idProject: id,
                     onHandleNewTask: handleNewTask
                   });
                 }} >NOUVELLE TÂCHE</Button>
@@ -260,7 +268,7 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                 confirmButtonColor="#B22222"
                 cancelButtonColor="#01796f"
                 onCancelPressed={() => {
-                  setDeleteShowable(false);
+                  setDeleteShowable(false); 
                 } }
                 onConfirmPressed={() => {
                   deleteProject(project[0].id, token).then(onDeleteProject(project[0].id)).then(navigation.navigate("Projects"));
@@ -292,9 +300,9 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                   setCloseShowable(false);
                 } }
                 onConfirmPressed={() => {
-                  closeProject(project[0].id, token).then(navigation.navigate("Projects"));
+                  closeProject(id, token).then(navigation.navigate("Projects"));
                 } } />
-              <View style={{flexDirection:"row",marginTop:height/25}}>
+              <View style={{justifyContent:"center" ,flexDirection:"row",marginTop:height/25}}>
                 <Button
                   style={styles.button}
                   labelStyle={{color: '#22577A',fontWeight:"bold",textTransform:"uppercase"}}

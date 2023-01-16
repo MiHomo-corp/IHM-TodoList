@@ -53,6 +53,7 @@ export default function CreateProject({username,token,onHandleNewProject}){
               <Logo width={width/1.5} height={height/6} />
             </View>
             <TextInput
+              maxLength={20}
               style={{marginVertical:15,marginHorizontal:15,textAlign:"center"}}
               label="Nom du Projet"
               mode="outlined"
@@ -91,6 +92,7 @@ export default function CreateProject({username,token,onHandleNewProject}){
               textColor="#01796f"
               onChangeText={setDescription}
               value={description}
+              multiline={true}
             />
 
           <AwesomeAlert

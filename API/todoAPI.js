@@ -24,7 +24,7 @@ const PROJECT =
   'query projects($username: [String]!) {projects(where: { owner: { username_IN: $username } }) {id title date description status projectStepDone owner{username}}}'
 
 const TASKS =
-  'query($title: String!,$username: String!){ tasks(where: {belongsTo: {title: $title}}) {id content done},projects(where: {title: $title,owner:{username:$username}}) {id title date status projectStepDone description}}'
+  'query($id: ID!,$username: String!){ tasks(where: {belongsTo: {id: $id}}) {id content done},projects(where: {id: $id,owner:{username:$username}}) {id title date status projectStepDone description owner{username}}}' // <-
 
 const TASK = 
   'query task($id: ID!){tasks(where:{id: $id}){id content description done}}'
@@ -67,7 +67,9 @@ const UPDATEPROJECTSTEPDONE =
   'mutation($id:ID!){updateProjects(where: {id: $id},update:{projectStepDone:true}){projects{projectStepDone}}}'
 
 const REJECTPROJECTSTEPDONE =
-  'mutation($id:ID!){updateProjects(where: {id: $id},update:{projectStepDone:false}){projects{projectStepDone}}}'
+  `mutation($id:ID!,$commentaire: String!){
+    updateProjects(where: {id: $id},update:{projectStepDone:false}){projects{projectStepDone}},
+    createTasks(input:{content:"Refus Manager",description:$commentaire,belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}}}`
 
 const DEVELOPMENTSTEP = 
   `mutation($id: ID!){
@@ -312,7 +314,7 @@ export function getChefsOfManager(username,token){
   })
 }
 
-export function getTasks(username,token,title){
+export function getTasks(username,token,id){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -323,7 +325,7 @@ export function getTasks(username,token,title){
       query: TASKS,
       variables: {
         username: username,
-        title: title
+        id: id
       }
     })
   })
@@ -662,18 +664,28 @@ export function updateProjectStepDone(id,token){
   })
 }
 
-export function nextStepProject(validation,id,status,token){
+export function nextStepProject(validation,commentaire,id,status,token){
   let NEXTSTEPQUERY = ""
+  let varia
   if(validation){
     if(status === 'Initialisation')
       NEXTSTEPQUERY = DEVELOPMENTSTEP
-    if(status === 'Developpement')
+    else if(status === 'Developpement')
       NEXTSTEPQUERY = PRODUCTIONSTEP
-    if(status === "Mise en production")
+    else if(status === "Mise en production")
       NEXTSTEPQUERY = FINISHEDSTEP
+    varia = {
+      id: id,
+      validation: validation,
+    }
   }
   else{
     NEXTSTEPQUERY = REJECTPROJECTSTEPDONE
+    varia = {
+      id: id,
+      validation: validation,
+      commentaire: commentaire
+    }
   }
   return fetch(API_URL, {
     method: 'POST',
@@ -683,10 +695,7 @@ export function nextStepProject(validation,id,status,token){
     },
     body: JSON.stringify({
       query: NEXTSTEPQUERY,
-      variables: {
-        id: id,
-        validation: validation
-      }
+      variables: varia
     })
   })
   .then(response => {

@@ -48,6 +48,7 @@ export default function ModificationProject({token,project,onUpdateProject}){
             <View style={{marginTop:"5%", alignItems:"center"}}>
             </View>
             <TextInput
+              maxLength={20}
               style={{marginVertical:15,marginHorizontal:15,textAlign:"center"}}
               label="Nom du Projet"
               mode="outlined"

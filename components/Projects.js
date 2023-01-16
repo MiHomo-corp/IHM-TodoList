@@ -47,7 +47,7 @@ export default function Projects({hierarchy,username,token}){
 
   useEffect(()=> {
     callback(hierarchy,username, token)
-  }, [hierarchy, username, token])
+  },[])
 
   return(
     <>
@@ -73,8 +73,7 @@ export default function Projects({hierarchy,username,token}){
                   <TouchableOpacity 
                     onPress={() => {
                       navigation.push("TodoList", {
-                        title: item.title,
-                        usernameOfOwner : item.owner.username,
+                        id: item.id,
                         onModificationProject:handleModificationProject,
                         onDeleteProject:handleDeleteProject,
                         onNextStepProject:handleNextStepProject

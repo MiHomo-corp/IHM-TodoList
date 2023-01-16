@@ -36,6 +36,7 @@ export default function CreateTask({token,idProject,titleProject,onHandleNewTask
               <Logo width={width/1.5} height={height/6} />
             </View>
           <TextInput
+            maxLength={20}
             style={{marginTop:15,marginHorizontal:15,textAlign:"center"}}
             label="Titre de la tâche"
             mode="outlined"

@@ -33,6 +33,7 @@ export default function ModificationTask({token,task,onUpdateTask}){
           <View style={{marginTop:"5%", alignItems:"center"}}>
           </View>
           <TextInput
+            maxLength={20}
             style={{marginTop:15,marginHorizontal:15,textAlign:"center"}}
             label="Nom de la tâche"
             mode="outlined"

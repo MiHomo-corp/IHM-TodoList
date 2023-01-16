@@ -80,7 +80,7 @@ export default function SignUp () {
                         message="Votre compte à bien été créer"
                         showCancelButton={false}
                         showConfirmButton={true}
-                        closeOnTouchOutside={true}
+                        closeOnTouchOutside={false}
                         closeOnHardwareBackPress={false}
                         confirmText="Ok"
                         confirmButtonColor="#90D7B4"
@@ -203,10 +203,7 @@ const styles = StyleSheet.create({
     color:"#01796f"
   },
   button: {
-    justifyContent:'center',
-    alignItems:'center',
     width:300,
-    height:40,
     marginTop:25,
     marginBottom:10,
     elevation:1
@@ -223,6 +220,5 @@ const styles = StyleSheet.create({
   text_input: {
     margin: 10,
     width:250,
-    height:30,
   }
 })

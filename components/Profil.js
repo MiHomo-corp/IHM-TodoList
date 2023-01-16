@@ -48,10 +48,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
                     title={pendingProject[item].title} 
                     left={props => <List.Icon {...props} icon="eye" color='#01796f'/>}
                     onPress={() => {
-                        navigation.navigate("TodoList", {
-                            title: pendingProject[item].title,
-                            usernameOfOwner : pendingProject[item].owner.username
-                        });
+                        navigation.navigate("TodoList");
                     }}/>
             );
         }

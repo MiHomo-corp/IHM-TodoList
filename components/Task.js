@@ -67,7 +67,7 @@ export default function Task({hierarchy,token,id,onDeleteTask,onModificationTask
               navigation.goBack();
             });
           }} />
-        <View style={{flexDirection:"row",marginTop:height/25}}>
+        <View style={{justifyContent:"center" ,flexDirection:"row",marginTop:height/25}}>
           <Button
             style={styles.button}
             labelStyle={{color: '#22577A',fontWeight:"bold",textTransform:"uppercase"}}
@@ -100,8 +100,7 @@ export default function Task({hierarchy,token,id,onDeleteTask,onModificationTask
 
 const styles = StyleSheet.create({
   button:{
-    flex:1,
-    margin:5
+    margin:5,
   },
   title: {
     textTransform:"uppercase",
