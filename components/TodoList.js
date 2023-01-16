@@ -180,7 +180,7 @@ export default function TodoList({hierarchy,token,id, onDeleteProject, onModific
             
             {cancelShowable? (
               <>
-                <Text variant="titleSmall" style={styles.status}>Décriver la raison du refus :</Text>
+                <Text variant="titleSmall" style={styles.status}>Décrivez la raison du refus :</Text>
                 <TextInput
                   style={{ marginHorizontal: 20, marginVertical: 10, textAlign: "center" }}
                   mode="outlined"
@@ -197,7 +197,9 @@ export default function TodoList({hierarchy,token,id, onDeleteProject, onModific
                   icon="email-fast"
                   buttonColor='#B22222'
                   mode="contained"
-                  onPress={() => nextStepProject(false,project[0].id,project[0].status, token,commentaire).then(navigation.navigate("Projects"))}>
+                  onPress={() => nextStepProject(false,project[0].id,project[0].status, token,commentaire).then((response) =>{
+                    onNextStepProject(response.updateProjects.projects[0])
+                    navigation.navigate("Projects")})}>
                     ENVOYER
                 </Button>
               </>

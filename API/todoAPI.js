@@ -68,7 +68,7 @@ const UPDATEPROJECTSTEPDONE =
 
 const REJECTPROJECTSTEPDONE =
   `mutation($id:ID!,$commentaire: String!){
-    updateProjects(where: {id: $id},update:{projectStepDone:false}){projects{projectStepDone}},
+    updateProjects(where: {id: $id},update:{projectStepDone:false}){projects {id date title description status owner{username} projectStepDone}},
     createTasks(input:{content:"Refus Manager",description:$commentaire,belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}}}`
 
 const DEVELOPMENTSTEP = 
