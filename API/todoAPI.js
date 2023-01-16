@@ -684,7 +684,6 @@ export function nextStepProject(validation,id,status,token,commentaire){
       commentaire: commentaire
     }
   }
-  console.log(varia)
   return fetch(API_URL, {
     method: 'POST',
     headers: {
