@@ -46,10 +46,10 @@ const CREATETASK =
   'mutation($content:String!,$id:ID!,$description:String){createTasks(input:{content:$content,description:$description,belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}}}'
 
 const UPDATETASK =
-  'mutation($id:ID!,$newContent:String!,$newDescription:String){updateTasks(where:{id:$id} update:{content:$newContent,description:$newDescription,}){tasks{content description}}}'
+  'mutation($id:ID!,$newContent:String!,$newDescription:String){updateTasks(where:{id:$id} update:{content:$newContent,description:$newDescription,}){tasks{content description id}}}'
 
 const UPDATEPROJECT =
-  'mutation($id:ID!,$newTitle:String!,$newDate:Date!,$newDescription:String!){updateProjects(where: {id: $id} update:{title: $newTitle, date: $newDate, description:$newDescription}){projects {id date title description}}}'
+  'mutation($id:ID!,$newTitle:String!,$newDate:Date!,$newDescription:String!){updateProjects(where: {id: $id} update:{title: $newTitle, date: $newDate, description:$newDescription}){projects {id date title description status owner{username} projectStepDone}}}'
 
 const UPDATESTATUSTASK = 
   'mutation ($id:ID!,$done:Boolean!) {updateTasks(where:{id:$id}update:{done:$done}){tasks {id content done}}}'
@@ -71,7 +71,7 @@ const REJECTPROJECTSTEPDONE =
 
 const DEVELOPMENTSTEP = 
   `mutation($id: ID!){
-    updateProjects(where: {id: $id},update:{projectStepDone:false, status:"Developpement"}){projects{projectStepDone}},
+    updateProjects(where: {id: $id},update:{projectStepDone:false, status:"Developpement"}){projects {id date title description status owner{username} projectStepDone}},
     task1: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task2: createTasks(input:{content:"Répartition des tâches",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task3: createTasks(input:{content:"Réunion d'avancement",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
@@ -79,7 +79,7 @@ const DEVELOPMENTSTEP =
   }`
 const PRODUCTIONSTEP =
   `mutation($id: ID!){
-    updateProjects(where: {id: $id},update:{projectStepDone:false, status:"Mise en production"}){projects{projectStepDone}},
+    updateProjects(where: {id: $id},update:{projectStepDone:false, status:"Mise en production"}){projects {id date title description status owner{username} projectStepDone}},
     task1: createTasks(input:{content:"Mise en production",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task2: createTasks(input:{content:"Retour utilisateur",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
     task3: createTasks(input:{content:"Réunion d'équipe",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}},
@@ -87,7 +87,7 @@ const PRODUCTIONSTEP =
     task4: createTasks(input:{content:"Bilan de déroulement du projet",belongsTo:{connect:{where:{id:$id}}}}){tasks{id content done belongsTo{owner{username}}}}
   }`
 const FINISHEDSTEP =
-  'mutation($id:ID!){updateProjects(where: {id: $id},update:{projectStepDone:false, status:"Terminé"}){projects{projectStepDone}}}'
+  'mutation($id:ID!){updateProjects(where: {id: $id},update:{projectStepDone:false, status:"Terminé"}){projects {id date title description status owner{username} projectStepDone}}}'
 
 const DELTASK =
   "mutation($id:ID!){deleteTasks(where: {id: $id}){nodesDeleted relationshipsDeleted}}"

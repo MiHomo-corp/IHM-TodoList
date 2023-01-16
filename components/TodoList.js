@@ -7,7 +7,7 @@ import Checkbox from 'expo-checkbox';
 import { useNavigation } from "@react-navigation/native";
 import { getTasks, setCheckTask, closeProject, deleteProject, deleteTask, updateProjectStepDone, nextStepProject } from "../API/todoAPI"
 
-export default function TodoList({hierarchy,username,token,title,usernameOfOwner, onDeleteProject, onModificationProject}){
+export default function TodoList({hierarchy,username,token,title,usernameOfOwner, onDeleteProject, onModificationProject, onNextStepProject}){
 
   LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
@@ -62,7 +62,8 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
     })
   }
 
-  const handleModificationTask = updatedTask => {
+  const handleModificationTask = (updatedTask) => {
+    console.log(updatedTask.id)
     setTask(tasks.map(task => task.id === updatedTask.id ? updatedTask : task));
   }
 
@@ -78,13 +79,13 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
   }
 
   const handleUpdateProject = (updatedProject) => {
-    setProject(updatedProject);
+    setProject([updatedProject]);
     onModificationProject(updatedProject)
   }
 
   useEffect(()=> {
-    callback(username, token, title,usernameOfOwner)
-  }, [username, token, title,usernameOfOwner])
+    callback(username, token, title, usernameOfOwner)
+  }, [username, token, title, usernameOfOwner])
 
   return(
     <ScrollView>
@@ -150,7 +151,10 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                   setValidationShowable(false);
                 } }
                 onConfirmPressed={() => {
-                  nextStepProject(true,project[0].id,project[0].status, token).then(navigation.navigate("Projects"));
+                  nextStepProject(true,project[0].id,project[0].status, token).then((response) =>{
+                    onNextStepProject(response.updateProjects.projects[0])
+                    navigation.navigate("Projects")
+                  })
                 } } />
               <AwesomeAlert
                 show={cancelShowable}
@@ -302,7 +306,7 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                       project: project
                     });
                   } }>
-                    Modifier projet
+                    Modifier
                 </Button>
                 <Button
                   style={styles.button}
@@ -310,7 +314,7 @@ export default function TodoList({hierarchy,username,token,title,usernameOfOwner
                   buttonColor='#B22222'
                   mode="contained"
                   onPress={() => setCloseShowable(true)}>
-                    Fermer projet
+                    Fermer
                 </Button>
               </View>
             </>
@@ -338,7 +342,8 @@ const styles = StyleSheet.create({
   },
   button:{
     flex:1,
-    margin:5
+    margin:5,
+    fontSize:1,
   },
   title: {
     textTransform:"uppercase",

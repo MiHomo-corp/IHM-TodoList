@@ -79,7 +79,7 @@ export default function Task({hierarchy,token,id,onDeleteTask,onModificationTask
                 task:task,
               });
             } }>
-              Modifier tâche
+              Modifier
           </Button>
           <Button
             style={styles.button}
@@ -87,12 +87,11 @@ export default function Task({hierarchy,token,id,onDeleteTask,onModificationTask
             buttonColor='#B22222'
             mode="contained"
             onPress={() => setShowable(true)}>
-              Suprimer tâche
+              Supprimer
           </Button>
         </View></>
       ) : []}
       <View style={{marginTop:height/20, alignItems:"center"}}>
-        <Logo width={width/1.5} height={height/5} />
       </View>      
     </View>
   )

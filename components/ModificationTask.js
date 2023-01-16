@@ -31,7 +31,6 @@ export default function ModificationTask({token,task,onUpdateTask}){
         <SafeAreaView>
           <Text variant="displaySmall" style={{marginTop:15,marginLeft:15, color:"#01796f"}}>Modification de {task.content}</Text>
           <View style={{marginTop:"5%", alignItems:"center"}}>
-            <Logo width={width/1.5} height={height/6} />
           </View>
           <TextInput
             style={{marginTop:15,marginHorizontal:15,textAlign:"center"}}
@@ -73,7 +72,7 @@ export default function ModificationTask({token,task,onUpdateTask}){
             onConfirmPressed={() => {
               updateTask(token,task.id,taskContent,description).then((response)=>{
                 onUpdateTask(response.updateTasks.tasks[0])
-                  navigation.goBack()
+                navigation.goBack()
               })
             }}
           />

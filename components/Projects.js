@@ -29,6 +29,10 @@ export default function Projects({hierarchy,username,token}){
       }
   }
 
+  const handleNextStepProject = (updatedProject) => {
+    setTodos(todos.map(project => project.id === updatedProject.id ? updatedProject : project));
+  }
+
   const handleDeleteProject = (todosId) => {
     setTodos(todos => todos.filter(t => t.id !== todosId));
   };
@@ -73,6 +77,7 @@ export default function Projects({hierarchy,username,token}){
                         usernameOfOwner : item.owner.username,
                         onModificationProject:handleModificationProject,
                         onDeleteProject:handleDeleteProject,
+                        onNextStepProject:handleNextStepProject
                       });
                     } } style={{width:"100%"}}>
                     <View flexDirection="row">
@@ -102,7 +107,6 @@ export default function Projects({hierarchy,username,token}){
               </View>)}
           </View>
         <View style={{marginTop:"10%", alignItems:"center"}}>
-          <Logo width={width/1.5} height={height/5} />
         </View>
       </ScrollView>
     </>    
