@@ -121,7 +121,7 @@ export default function Profil (hierarchy,username,token){ //Pour une raison ét
                     <List.Accordion
                         theme={{ colors: { primary: '#22577A' }}}
                         style={{padding:15, backgroundColor:"#90D7B4"}}
-                        title="Vos collaborateur"
+                        title="Vos collaborateurs"
                         left={props => <List.Icon {...props} icon="account-multiple" />}>
                             {listChefs.length !== 0 ? renderListItemChefs() : []}
                     </List.Accordion>

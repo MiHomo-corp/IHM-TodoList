@@ -31,6 +31,6 @@ Pour pouvoir vous connecter à l'API avec votre mobile, il faudra modifier l'adr
 
 -----
 
-Démonstration : https://youtu.be/qSMgp6u1U3A
 Pour toute information : 21805239@unicaen.fr 
+
 Réalisé par : Alexandre BELLEBON (21808613) - Léo VINCENT (21805239)

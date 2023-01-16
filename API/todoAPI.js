@@ -1,6 +1,6 @@
 import React from 'react'
 
-const API_URL = 'http://192.168.1.164:4000' //Rentrer l'ip du Métro
+const API_URL = 'http://192.168.1.18:4000' //Rentrer l'ip du Métro
 
 const SIGN_IN =
   'mutation($username:String!, $password:String!){signIn(username:$username, password:$password)}'
@@ -24,7 +24,7 @@ const PROJECT =
   'query projects($username: [String]!) {projects(where: { owner: { username_IN: $username } }) {id title date description status projectStepDone owner{username}}}'
 
 const TASKS =
-  'query($id: ID!,$username: String!){ tasks(where: {belongsTo: {id: $id}}) {id content done},projects(where: {id: $id,owner:{username:$username}}) {id title date status projectStepDone description owner{username}}}' // <-
+  'query($id: ID!){ tasks(where: {belongsTo: {id: $id}}) {id content done},projects(where: {id: $id}) {id title date status projectStepDone description owner{username}}}' // <-
 
 const TASK = 
   'query task($id: ID!){tasks(where:{id: $id}){id content description done}}'
@@ -314,7 +314,7 @@ export function getChefsOfManager(username,token){
   })
 }
 
-export function getTasks(username,token,id){
+export function getTasks(token,id){
   return fetch(API_URL, {
     method: 'POST',
     headers: {
@@ -324,7 +324,6 @@ export function getTasks(username,token,id){
     body: JSON.stringify({
       query: TASKS,
       variables: {
-        username: username,
         id: id
       }
     })
@@ -664,7 +663,7 @@ export function updateProjectStepDone(id,token){
   })
 }
 
-export function nextStepProject(validation,commentaire,id,status,token){
+export function nextStepProject(validation,id,status,token,commentaire){
   let NEXTSTEPQUERY = ""
   let varia
   if(validation){
@@ -675,18 +674,17 @@ export function nextStepProject(validation,commentaire,id,status,token){
     else if(status === "Mise en production")
       NEXTSTEPQUERY = FINISHEDSTEP
     varia = {
-      id: id,
-      validation: validation,
+      id: id
     }
   }
   else{
     NEXTSTEPQUERY = REJECTPROJECTSTEPDONE
     varia = {
       id: id,
-      validation: validation,
       commentaire: commentaire
     }
   }
+  console.log(varia)
   return fetch(API_URL, {
     method: 'POST',
     headers: {

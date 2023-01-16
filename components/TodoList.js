@@ -64,7 +64,6 @@ export default function TodoList({hierarchy,token,id, onDeleteProject, onModific
   }
 
   const handleModificationTask = (updatedTask) => {
-    console.log(updatedTask.id)
     setTask(tasks.map(task => task.id === updatedTask.id ? updatedTask : task));
   }
 
@@ -198,7 +197,7 @@ export default function TodoList({hierarchy,token,id, onDeleteProject, onModific
                   icon="email-fast"
                   buttonColor='#B22222'
                   mode="contained"
-                  onPress={() => nextStepProject(false,commentaire,project[0].id,project[0].status, token).then(navigation.navigate("Projects"))}>
+                  onPress={() => nextStepProject(false,project[0].id,project[0].status, token,commentaire).then(navigation.navigate("Projects"))}>
                     ENVOYER
                 </Button>
               </>
