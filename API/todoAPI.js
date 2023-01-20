@@ -61,7 +61,7 @@ const DELETEPROJECT =
   'mutation($id:ID!){deleteTasks(where:{belongsTo:{id:$id}}){nodesDeleted},deleteProjects(where: {id: $id}){nodesDeleted}}'
 
 const GETPROJECTSTEPDONE =
-  'query projects($username: [String]!) {projects(where: { owner: { username_IN: $username }, projectStepDone: true}) {title date status owner{username}}}'
+  'query projects($username: [String]!) {projects(where: { owner: { username_IN: $username }, projectStepDone: true}) {id title date status owner{username}}}'
 
 const UPDATEPROJECTSTEPDONE =
   'mutation($id:ID!){updateProjects(where: {id: $id},update:{projectStepDone:true}){projects{projectStepDone}}}'

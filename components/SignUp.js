@@ -32,7 +32,7 @@ export default function SignUp () {
   
   const renderManagers = () => {
     return managerList.map((item) => 
-      <View style={{ flexDirection: 'row' }}>
+      <View key={item.id} style={{ flexDirection: 'row' }}>
         <RadioButton
           color='#90D7B4'
           status={ managerChecked === item.username ? 'checked' : 'unchecked' }
